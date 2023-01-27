@@ -3,6 +3,7 @@ import 'package:cashier_app/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  //test comment
   runApp(const MyApp());
 }
 
