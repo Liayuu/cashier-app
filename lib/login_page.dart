@@ -72,96 +72,85 @@ class _LoginPageState extends State<LoginPage> {
               key: _formKey,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: emailC,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(labelText: "Email"),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      controller: passwordC,
-                      obscureText: _isObsecure,
-                      decoration: InputDecoration(
-                        labelText: "Password",
-                        suffixIcon: IconButton(
-                          icon: Icon(_isObsecure
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility),
-                          onPressed: () {
-                            setState(() {
-                              _isObsecure = !_isObsecure;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    CheckboxListTile(
-                      title: const Text("Remember me"),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      value: check,
-                      onChanged: (value) => setState(
-                        () {
-                          check = !check;
+                child: Column(children: [
+                  TextFormField(
+                    controller: emailC,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(labelText: "Email"),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: passwordC,
+                    obscureText: _isObsecure,
+                    decoration: InputDecoration(
+                      labelText: "Password",
+                      suffixIcon: IconButton(
+                        icon: Icon(_isObsecure
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility),
+                        onPressed: () {
+                          setState(() {
+                            _isObsecure = !_isObsecure;
+                          });
                         },
                       ),
-                      activeColor: Colors.indigo,
-                      checkColor: Colors.white,
                     ),
-                    const SizedBox(
-                      height: 25,
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  CheckboxListTile(
+                    title: const Text("Remember me"),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    value: check,
+                    onChanged: (value) => setState(
+                      () {
+                        check = !check;
+                      },
                     ),
-                    ButtonTheme(
-                      minWidth: Get.width,
-                      height: 60,
-                      // ignore: deprecated_member_use
-                      child: FlatButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          side: const BorderSide(color: Colors.indigo),
-                        ),
-                        color: Colors.indigo,
-                        textColor: Colors.white,
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        onPressed: () =>
-                            // authC.login(emailC.text, passwordC.text),
-                            //   ),
-                            // ),
-                            // const SizedBox(height: 45),
-                            Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Don't have an accoun't ? ",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            GestureDetector(
-                              child: const Text(
-                                'Register',
-                                style: TextStyle(
-                                    color: Colors.indigo,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18),
-                              ),
-                              onTap: () {
-                                Get.back();
-                              },
-                            )
-                          ],
-                        ),
+                    activeColor: Colors.indigo,
+                    checkColor: Colors.white,
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+
+                  // authC.login(emailC.text, passwordC.text),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 45),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Don't have an accoun't ? ",
+                        style: TextStyle(fontSize: 18),
                       ),
-                    ),
-                  ],
-                ),
+                      GestureDetector(
+                        child: const Text(
+                          'Register',
+                          style: TextStyle(
+                              color: Colors.indigo,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18),
+                        ),
+                        onTap: () {
+                          Get.back();
+                        },
+                      )
+                    ],
+                  ),
+                ]),
               ),
             ),
           ),
