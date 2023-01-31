@@ -64,22 +64,21 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   width: widget.currentIndex == index
-                      ? MediaQuery.of(context).size.width / widget.children.length + 45
+                      ? MediaQuery.of(context).size.width / widget.children.length + 40
                       : 50,
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   margin: const EdgeInsets.only(top: 10, bottom: 10),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
                       color: widget.currentIndex == index ? color : Colors.transparent,
-                      borderRadius: BorderRadius.circular(24)),
+                      borderRadius: BorderRadius.circular(9)),
                   child: badges.Badge(
                     badgeStyle: badges.BadgeStyle(
                         borderRadius: BorderRadius.circular(6),
                         shape: badges.BadgeShape.square,
                         badgeColor: widget.selectedColor),
-                    position: (widget.currentIndex == index)
-                        ? badges.BadgePosition.topEnd()
-                        : badges.BadgePosition.custom(),
+                    position: (widget.currentIndex == index) ? badges.BadgePosition.topEnd() : null,
                     showBadge: (isNotified) ? true : false,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -88,11 +87,11 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                             ? Icon(
                                 icon,
                                 size: 24,
-                                color: widget.currentIndex == index ? widget.itemColor : color,
+                                color: widget.currentIndex == index ? widget.selectedColor : color,
                               )
                             : SvgPicture.asset(
                                 assetIcon!,
-                                color: widget.currentIndex == index ? widget.itemColor : color,
+                                color: widget.currentIndex == index ? widget.selectedColor : color,
                                 width: 24,
                                 height: 24,
                               ),
@@ -105,7 +104,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: widget.currentIndex == index
-                                          ? widget.itemColor
+                                          ? widget.selectedColor
                                           : Colors.transparent,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -115,22 +114,22 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                     ),
                   ),
                 ),
-                Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      width: widget.currentIndex == index
-                          ? MediaQuery.of(context).size.width / widget.children.length + 45
-                          : 50,
-                      height: 3,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: widget.currentIndex == index ? color : Colors.transparent,
-                          borderRadius: BorderRadius.circular(24)),
-                    ),
-                  ),
-                )
+                // Positioned.fill(
+                //   child: Align(
+                //     alignment: Alignment.topCenter,
+                //     child: AnimatedContainer(
+                //       duration: const Duration(milliseconds: 200),
+                //       width: widget.currentIndex == index
+                //           ? MediaQuery.of(context).size.width / widget.children.length + 45
+                //           : 50,
+                //       height: 3,
+                //       alignment: Alignment.center,
+                //       decoration: BoxDecoration(
+                //           color: widget.currentIndex == index ? color : Colors.transparent,
+                //           borderRadius: BorderRadius.circular(24)),
+                //     ),
+                //   ),
+                // )
               ],
             ),
           );
@@ -150,6 +149,5 @@ class CustomBottomNavigationItem {
   CustomBottomNavigationItem(
       {this.icon, required this.label, this.color, this.isNotified = false, this.assetIcon})
       : assert(icon == null || assetIcon == null,
-            'Select one type only\n' 'Do you want to use custom icon or default icon'),
-        assert(icon != null && assetIcon != null, 'Please select one only');
+            'Select one type only\n' 'Do you want to use custom icon or default icon');
 }

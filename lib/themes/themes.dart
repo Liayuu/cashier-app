@@ -6,12 +6,15 @@ import 'package:get/get.dart';
 class Themes {
   /// Theme for light mode
   static ThemeData lightTheme(BuildContext context) {
+    settingStatusBarColor(isDark: false);
     return ThemeData(
         cardColor: Pallete.white,
         primaryColor: Pallete.primary,
         shadowColor: Pallete.lightShadow,
-        colorScheme:
-            const ColorScheme.light(primary: Pallete.primary, background: Pallete.lightBackground),
+        colorScheme: const ColorScheme.light(
+            primary: Pallete.primary,
+            background: Pallete.lightBackground,
+            secondary: Pallete.lightSecBackground),
         unselectedWidgetColor: Pallete.lightunselectedColor,
         visualDensity: VisualDensity.comfortable,
         scaffoldBackgroundColor: Pallete.lightBackground,
@@ -204,12 +207,15 @@ class Themes {
   }
 
   static ThemeData darkTheme(BuildContext context) {
+    settingStatusBarColor(isDark: true);
     return ThemeData(
         cardColor: Pallete.white,
         primaryColor: Pallete.primary,
         shadowColor: Pallete.darkShadow,
-        colorScheme:
-            const ColorScheme.dark(primary: Pallete.primary, background: Pallete.darkBackground),
+        colorScheme: const ColorScheme.dark(
+            primary: Pallete.primary,
+            background: Pallete.darkBackground,
+            secondary: Pallete.darkSecBackground),
         unselectedWidgetColor: Pallete.darkunselectedColor,
         visualDensity: VisualDensity.comfortable,
         scaffoldBackgroundColor: Pallete.darkBackground,

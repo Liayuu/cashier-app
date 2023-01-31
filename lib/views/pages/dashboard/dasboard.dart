@@ -1,3 +1,4 @@
+import 'package:cashier_app/configs/language_config.dart';
 import 'package:cashier_app/themes/asset_dir.dart';
 import 'package:cashier_app/views/components/bottom_bar.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/main_menu.dart';
@@ -16,11 +17,11 @@ class MainDashboard extends StatefulWidget {
 
 class _MainDashboardState extends State<MainDashboard> {
   int _currentIndex = 0;
-  PageController? _pageController;
+  late PageController _pageController;
 
   @override
   void initState() {
-    // TODO: implement initState
+    _pageController = PageController();
     super.initState();
   }
 
@@ -40,17 +41,28 @@ class _MainDashboardState extends State<MainDashboard> {
       bottomNavigationBar: CustomBottomNavigationBar(
         backgroundColor: Get.theme.colorScheme.background,
         itemColor: Get.theme.primaryColor,
+        selectedColor: Get.theme.colorScheme.onBackground,
+        onChange: (p0) {
+          _pageController.animateToPage(p0,
+              duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        },
         children: [
           CustomBottomNavigationItem(
-              assetIcon: AssetsDirectory.homeIcon, color: Get.theme.primaryColor, label: "Home"),
+              assetIcon: AssetsDirectory.homeIcon,
+              color: Get.theme.primaryColor,
+              label: lang().home),
           CustomBottomNavigationItem(
               assetIcon: AssetsDirectory.promoIcon,
               color: Get.theme.primaryColor,
-              label: "Promotion"),
+              label: lang().promotion),
           CustomBottomNavigationItem(
-              assetIcon: AssetsDirectory.homeIcon, color: Get.theme.primaryColor, label: "Home"),
+              assetIcon: AssetsDirectory.reportIcon,
+              color: Get.theme.primaryColor,
+              label: lang().report),
           CustomBottomNavigationItem(
-              assetIcon: AssetsDirectory.homeIcon, color: Get.theme.primaryColor, label: "Home")
+              assetIcon: AssetsDirectory.settingIcon,
+              color: Get.theme.primaryColor,
+              label: lang().setting)
         ],
         currentIndex: _currentIndex,
       ),

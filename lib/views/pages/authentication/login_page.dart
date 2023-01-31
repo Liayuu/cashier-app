@@ -1,4 +1,5 @@
 import 'package:cashier_app/configs/language_config.dart';
+import 'package:cashier_app/views/pages/dashboard/dasboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -54,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 30),
-                child: Text(lang(context).loginTitle,
+                child: Text(lang().loginTitle,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
             ],
@@ -71,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     controller: emailC,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(labelText: lang(context).email),
+                    decoration: InputDecoration(labelText: lang().email),
                   ),
                   const SizedBox(
                     height: 10,
@@ -80,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                     controller: passwordC,
                     obscureText: _isObsecure,
                     decoration: InputDecoration(
-                      labelText: lang(context).password,
+                      labelText: lang().password,
                       suffixIcon: IconButton(
                         icon: Icon(_isObsecure ? Icons.visibility_off_outlined : Icons.visibility),
                         onPressed: () {
@@ -95,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 8,
                   ),
                   CheckboxListTile(
-                    title: Text(lang(context).rememberOption),
+                    title: Text(lang().rememberOption),
                     controlAffinity: ListTileControlAffinity.leading,
                     value: check,
                     onChanged: (value) => setState(
@@ -111,9 +112,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
 
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(() => const MainDashboard());
+                    },
                     child: Text(
-                      lang(context).login,
+                      lang().login,
                       style: Get.textTheme.labelLarge,
                     ),
                   ),
@@ -126,12 +129,12 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        lang(context).notHaveAccountMsg,
+                        lang().notHaveAccountMsg,
                         style: TextStyle(fontSize: 18),
                       ),
                       GestureDetector(
                         child: Text(
-                          lang(context).register,
+                          lang().register,
                           style: TextStyle(
                               color: Colors.indigo, fontWeight: FontWeight.w600, fontSize: 18),
                         ),
