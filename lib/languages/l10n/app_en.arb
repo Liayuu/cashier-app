@@ -1,0 +1,17 @@
+{
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "home": "Home",
+  "promotion": "Promotion",
+  "report": "Report",
+  "setting": "Setting",
+  "loginTitle": "Login to your account",
+  "email": "Email",
+  "password": "Password",
+  "rememberOption": "Remember Me",
+  "login": "Login",
+  "register": "Register",
+  "notHaveAccountMsg": "Don't have an account?"
+}

@@ -1,5 +1,7 @@
+import 'package:cashier_app/configs/language_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -45,22 +47,15 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.all(30),
             child: SizedBox(
               height: MediaQuery.of(context).size.height / 3,
-              // child: Lottie.asset('assets/gif-book.json')
-              // decoration: const BoxDecoration(
-              //   image: DecorationImage(
-              //     image: AssetImage('assets/logo.png'),
-              //   ),
-              // ),
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
+            children: [
               Padding(
                 padding: EdgeInsets.only(left: 30),
-                child: Text("Login to Your Account",
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                child: Text(lang(context).loginTitle,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -76,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     controller: emailC,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(labelText: "Email"),
+                    decoration: InputDecoration(labelText: lang(context).email),
                   ),
                   const SizedBox(
                     height: 10,
@@ -85,11 +80,9 @@ class _LoginPageState extends State<LoginPage> {
                     controller: passwordC,
                     obscureText: _isObsecure,
                     decoration: InputDecoration(
-                      labelText: "Password",
+                      labelText: lang(context).password,
                       suffixIcon: IconButton(
-                        icon: Icon(_isObsecure
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility),
+                        icon: Icon(_isObsecure ? Icons.visibility_off_outlined : Icons.visibility),
                         onPressed: () {
                           setState(() {
                             _isObsecure = !_isObsecure;
@@ -102,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 8,
                   ),
                   CheckboxListTile(
-                    title: const Text("Remember me"),
+                    title: Text(lang(context).rememberOption),
                     controlAffinity: ListTileControlAffinity.leading,
                     value: check,
                     onChanged: (value) => setState(
@@ -119,9 +112,9 @@ class _LoginPageState extends State<LoginPage> {
 
                   ElevatedButton(
                     onPressed: () {},
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    child: Text(
+                      lang(context).login,
+                      style: Get.textTheme.labelLarge,
                     ),
                   ),
 
@@ -132,17 +125,15 @@ class _LoginPageState extends State<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Don't have an accoun't ? ",
+                      Text(
+                        lang(context).notHaveAccountMsg,
                         style: TextStyle(fontSize: 18),
                       ),
                       GestureDetector(
-                        child: const Text(
-                          'Register',
+                        child: Text(
+                          lang(context).register,
                           style: TextStyle(
-                              color: Colors.indigo,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18),
+                              color: Colors.indigo, fontWeight: FontWeight.w600, fontSize: 18),
                         ),
                         onTap: () {
                           Get.back();
@@ -160,5 +151,4 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // ignore: unused_element
-
 }

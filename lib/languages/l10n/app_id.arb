@@ -1,0 +1,17 @@
+{
+  "helloWorld": "Halo Dunia!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "home": "Beranda",
+  "promotion": "Promosi",
+  "report": "Laporan",
+  "setting": "Pengaturan",
+  "loginTitle": "Masuk dengan akun anda",
+  "email": "Email",
+  "password": "Kata sandi",
+  "rememberOption": "Ingat saya",
+  "login": "Masuk",
+  "register": "Daftar",
+  "notHaveAccountMsg": "Tidak punya akun?"
+}
