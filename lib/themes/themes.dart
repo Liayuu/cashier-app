@@ -8,7 +8,7 @@ class Themes {
   static ThemeData lightTheme(BuildContext context) {
     settingStatusBarColor(isDark: false);
     return ThemeData(
-        cardColor: Pallete.white,
+        cardColor: Pallete.lightSecBackground,
         primaryColor: Pallete.primary,
         shadowColor: Pallete.lightShadow,
         colorScheme: const ColorScheme.light(
@@ -209,7 +209,7 @@ class Themes {
   static ThemeData darkTheme(BuildContext context) {
     settingStatusBarColor(isDark: true);
     return ThemeData(
-        cardColor: Pallete.white,
+        cardColor: Pallete.darkSecBackground,
         primaryColor: Pallete.primary,
         shadowColor: Pallete.darkShadow,
         colorScheme: const ColorScheme.dark(
@@ -415,7 +415,7 @@ class Themes {
           statusBarBrightness: Brightness.dark,
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.light,
-          systemNavigationBarColor: Colors.white,
+          systemNavigationBarColor: Pallete.darkLine,
           systemNavigationBarIconBrightness: Brightness.light,
         ),
       );
@@ -425,8 +425,8 @@ class Themes {
           statusBarBrightness: Brightness.light,
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark,
-          systemNavigationBarColor: Colors.black,
-          systemNavigationBarIconBrightness: Brightness.dark,
+          systemNavigationBarColor: Pallete.darkLine,
+          systemNavigationBarIconBrightness: Brightness.light,
         ),
       );
     }

@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart' as badges;
+import 'package:cashier_app/themes/color_pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -96,17 +97,21 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                                 height: 24,
                               ),
                         widget.currentIndex == index
-                            ? Expanded(
-                                flex: 1,
+                            ? Flexible(
+                                fit: FlexFit.loose,
                                 child: Text(
                                   label,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
+                                  style: Get.textTheme.labelLarge!.copyWith(
                                       color: widget.currentIndex == index
                                           ? widget.selectedColor
-                                          : Colors.transparent,
-                                      fontWeight: FontWeight.bold),
+                                          : Pallete.transparent),
+                                  // style: TextStyle(
+                                  //     color: widget.currentIndex == index
+                                  //         ? widget.selectedColor
+                                  //         : Colors.transparent,
+                                  //     fontWeight: FontWeight.bold),
                                 ),
                               )
                             : Container()
@@ -114,22 +119,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                     ),
                   ),
                 ),
-                // Positioned.fill(
-                //   child: Align(
-                //     alignment: Alignment.topCenter,
-                //     child: AnimatedContainer(
-                //       duration: const Duration(milliseconds: 200),
-                //       width: widget.currentIndex == index
-                //           ? MediaQuery.of(context).size.width / widget.children.length + 45
-                //           : 50,
-                //       height: 3,
-                //       alignment: Alignment.center,
-                //       decoration: BoxDecoration(
-                //           color: widget.currentIndex == index ? color : Colors.transparent,
-                //           borderRadius: BorderRadius.circular(24)),
-                //     ),
-                //   ),
-                // )
               ],
             ),
           );
