@@ -49,7 +49,7 @@ class MenuCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: ClipOval(
                         child: AspectRatio(
                           aspectRatio: 1,
