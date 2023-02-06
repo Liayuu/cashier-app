@@ -2,7 +2,6 @@ import 'package:cashier_app/configs/language_config.dart';
 import 'package:cashier_app/views/pages/dashboard/dasboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -56,8 +55,7 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: EdgeInsets.only(left: 30),
                 child: Text(lang().loginTitle,
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -84,9 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: InputDecoration(
                       labelText: lang().password,
                       suffixIcon: IconButton(
-                        icon: Icon(_isObsecure
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility),
+                        icon: Icon(_isObsecure ? Icons.visibility_off_outlined : Icons.visibility),
                         onPressed: () {
                           setState(() {
                             _isObsecure = !_isObsecure;
@@ -113,7 +109,6 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 25,
                   ),
-
                   ElevatedButton(
                     onPressed: () {
                       Get.to(() => const MainDashboard());
@@ -123,30 +118,6 @@ class _LoginPageState extends State<LoginPage> {
                       style: Get.textTheme.labelLarge,
                     ),
                   ),
-
-                  // authC.login(emailC.text, passwordC.text),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 45),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     Text(
-                  //       lang().notHaveAccountMsg,
-                  //       style: TextStyle(fontSize: 18),
-                  //     ),
-                  //     GestureDetector(
-                  //       child: Text(
-                  //         lang().register,
-                  //         style: TextStyle(
-                  //             color: Colors.indigo, fontWeight: FontWeight.w600, fontSize: 18),
-                  //       ),
-                  //       onTap: () {
-                  //         Get.back();
-                  //       },
-                  //     )
-                  //   ],
-                  // ),
                 ]),
               ),
             ),

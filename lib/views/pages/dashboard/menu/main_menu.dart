@@ -1,7 +1,7 @@
 import 'package:cashier_app/themes/color_pallete.dart';
 import 'package:cashier_app/views/components/in_page_search_bar.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/menu_card.dart';
-import 'package:cashier_app/views/pages/dashboard/menu/components/menu_popup.dart';
+import 'package:cashier_app/views/components/menu_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/app_bar_menu.dart';
 import 'package:get/get.dart';
@@ -139,38 +139,7 @@ class _MainMenuState extends State<MainMenu> {
           fit: FlexFit.tight,
           child: GestureDetector(
             onTap: () {
-              Get.dialog(
-                MenuPopUp(
-                  width: Get.width * 0.8,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Align(
-                            alignment: Alignment.topCenter,
-                            child: SizedBox(
-                              height: 100,
-                              width: 100,
-                              child: ClipOval(
-                                child: Image.network(
-                                  "https://www.bango.co.id/gfx/recipes/1460572810.jpg",
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            )),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                        child: Text("Nasi Goreng Mak Jalal Biadap",
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: Get.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w700)),
-                      )
-                    ],
-                  ),
-                ),
-              );
+              Get.dialog(_popUpMenu());
             },
             child: Padding(
               padding: EdgeInsets.all(8.0),
@@ -205,6 +174,39 @@ class _MainMenuState extends State<MainMenu> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _popUpMenu() {
+    return CustomPopUp(
+      width: Get.width * 0.8,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Align(
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  height: 100,
+                  width: 100,
+                  child: ClipOval(
+                    child: Image.network(
+                      "https://www.bango.co.id/gfx/recipes/1460572810.jpg",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: Text("Nasi Goreng Mak Jalal Biadap",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: Get.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w700)),
+          )
+        ],
+      ),
     );
   }
 }

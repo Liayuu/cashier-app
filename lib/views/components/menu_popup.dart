@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
-class MenuPopUp extends StatelessWidget {
+class CustomPopUp extends StatelessWidget {
   final double? width;
   final double? height;
   final Widget? child;
-  const MenuPopUp({super.key, this.width, this.height, this.child});
+  const CustomPopUp({super.key, this.width, this.height, this.child});
 
   @override
   Widget build(BuildContext context) {

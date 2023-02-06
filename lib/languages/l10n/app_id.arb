@@ -13,5 +13,31 @@
   "rememberOption": "Ingat saya",
   "login": "Masuk",
   "register": "Daftar",
-  "notHaveAccountMsg": "Tidak punya akun?"
+  "notHaveAccountMsg": "Tidak punya akun?",
+  "payment": "pembayaran",
+  "paymentMethod": "Metode Pembayaran",
+  "paymentMethodAvailability": "{count, plural, =0{Tidak ada metode pembayaran yang tersedia} =1{Tersedia 1 metode pembayaran} other{Tersedia {count} methode pembayaran}}",
+  "@paymentMethodAvailability": {
+    "description": "A plural message",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    } 
+  },
+  "paymentType": "{payment, select, CASH{uang tunai} CREDITCARD{kartu kredit} other{{payment}}}",
+  "@paymentType": {
+    "description": "A selected message",
+    "placeholders": {
+      "payment": {
+        "type": "String"
+      }
+    } 
+  },
+  "subTotal": "Total harga",
+  "cash": "Dibayarkan",
+  "change": "Kembalian",
+  "orderType": "Tipe pemesanan",
+  "custEmail": "Email pelanggan"
 }

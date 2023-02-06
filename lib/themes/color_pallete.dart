@@ -22,7 +22,8 @@ class Pallete {
   static const darkSecBackground = Color(0xFF1F1D2B);
   static const darkFormBackground = Color(0xFF2D303E);
   static const darkShadow = Color(0xFF333333);
-  static const darkunselectedColor = Color(0xFF261b09);
+  static const darkunselectedColor = Color(0XFF2a2d38);
+  static const darkSelectedColor = Color(0xFF555c67);
 
   //! Light Theme Color
   static const lightWhiteBg = Color(0xFFFAFAFA);
@@ -32,6 +33,7 @@ class Pallete {
   static const lightFormBackground = Color(0xFFd2cfc1);
   static const lightShadow = Color(0xFFC2C2C2);
   static const lightunselectedColor = Color(0xFFd9e4f6);
+  static const lightSelectedColor = Color(0xffd5d2c7);
 
   //! Text Color
   static const darkText = Color(0xFF3B5162);

@@ -13,5 +13,31 @@
   "rememberOption": "Remember Me",
   "login": "Login",
   "register": "Register",
-  "notHaveAccountMsg": "Don't have an account?"
+  "payment": "payment",
+  "paymentMethod": "Payment Method",
+  "notHaveAccountMsg": "Don't have an account?",
+  "paymentMethodAvailability": "{count, plural, =0{No payment method available} =1{1 payment method is available} other{{count} payment methods are available}}",
+  "@paymentMethodAvailability": {
+    "description": "A plural message",
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    } 
+  },
+  "paymentType": "{payment, select, CASH{cash} CREDITCARD{credit cart} other{{payment}}}",
+  "@paymentType": {
+    "description": "A selected message",
+    "placeholders": {
+      "payment": {
+        "type": "String"
+      }
+    } 
+  },
+  "subTotal": "Total Price",
+  "cash": "Cash",
+  "change": "Change",
+  "orderType": "Order Type",
+  "custEmail": "Customer email"
 }
