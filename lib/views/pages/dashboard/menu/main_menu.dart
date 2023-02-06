@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:cashier_app/themes/color_pallete.dart';
 import 'package:cashier_app/views/components/in_page_search_bar.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/menu_card.dart';
+import 'package:cashier_app/views/pages/dashboard/menu/components/menu_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/app_bar_menu.dart';
 import 'package:get/get.dart';
@@ -17,10 +16,9 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu> {
   int _selectedIndex = 0;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    log(_selectedIndex.toString(), name: "Selected Index");
     return Scaffold(
       // Dummy only. Change this in the next dev
       body: SafeArea(
@@ -136,34 +134,73 @@ class _MainMenuState extends State<MainMenu> {
 
   Widget _dummyCard() {
     return Row(
-      children: const [
+      children: [
         Flexible(
           fit: FlexFit.tight,
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: AspectRatio(
-              aspectRatio: 2 / 3,
-              child: MenuCard(
-                  images: "https://www.bango.co.id/gfx/recipes/1460572810.jpg",
-                  price: 15000,
-                  availability: 15,
-                  name: "Nasi Goreng Mak Jalal Biadap",
-                  unit: "Portion"),
+          child: GestureDetector(
+            onTap: () {
+              Get.dialog(
+                MenuPopUp(
+                  width: Get.width * 0.8,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Align(
+                            alignment: Alignment.topCenter,
+                            child: SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: ClipOval(
+                                child: Image.network(
+                                  "https://www.bango.co.id/gfx/recipes/1460572810.jpg",
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                        child: Text("Nasi Goreng Mak Jalal Biadap",
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: Get.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w700)),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: AspectRatio(
+                aspectRatio: 2 / 3,
+                child: MenuCard(
+                    images: "https://www.bango.co.id/gfx/recipes/1460572810.jpg",
+                    price: 15000,
+                    availability: 15,
+                    name: "Nasi Goreng Mak Jalal Biadap",
+                    unit: "Portion"),
+              ),
             ),
           ),
         ),
         Flexible(
           fit: FlexFit.tight,
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: AspectRatio(
-              aspectRatio: 2 / 3,
-              child: MenuCard(
-                  images: "https://www.bango.co.id/gfx/recipes/1460572810.jpg",
-                  price: 15000,
-                  availability: 15,
-                  name: "Nasi Goreng",
-                  unit: "Portion"),
+          child: GestureDetector(
+            onTap: () {},
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: AspectRatio(
+                aspectRatio: 2 / 3,
+                child: MenuCard(
+                    images: "https://www.bango.co.id/gfx/recipes/1460572810.jpg",
+                    price: 15000,
+                    availability: 15,
+                    name: "Nasi Goreng",
+                    unit: "Portion"),
+              ),
             ),
           ),
         ),
