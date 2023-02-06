@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cashier_app/languages/locale_provider.dart';
+import 'package:cashier_app/views/pages/payment/payment.dart';
 import 'package:cashier_app/views/pages/splashscreen/splash_screen.dart';
 import 'package:cashier_app/themes/themes.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
             theme: Themes.lightTheme(context),
             darkTheme: Themes.darkTheme(context),
             themeMode: ThemeMode.system,
-            home: const SplashScreen(),
+            home: const Payment(),
             locale: provider.locale,
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: const [

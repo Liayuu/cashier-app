@@ -56,7 +56,8 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: EdgeInsets.only(left: 30),
                 child: Text(lang().loginTitle,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -83,7 +84,9 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: InputDecoration(
                       labelText: lang().password,
                       suffixIcon: IconButton(
-                        icon: Icon(_isObsecure ? Icons.visibility_off_outlined : Icons.visibility),
+                        icon: Icon(_isObsecure
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility),
                         onPressed: () {
                           setState(() {
                             _isObsecure = !_isObsecure;
@@ -125,25 +128,25 @@ class _LoginPageState extends State<LoginPage> {
                   //   ),
                   // ),
                   // const SizedBox(height: 45),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        lang().notHaveAccountMsg,
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      GestureDetector(
-                        child: Text(
-                          lang().register,
-                          style: TextStyle(
-                              color: Colors.indigo, fontWeight: FontWeight.w600, fontSize: 18),
-                        ),
-                        onTap: () {
-                          Get.back();
-                        },
-                      )
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Text(
+                  //       lang().notHaveAccountMsg,
+                  //       style: TextStyle(fontSize: 18),
+                  //     ),
+                  //     GestureDetector(
+                  //       child: Text(
+                  //         lang().register,
+                  //         style: TextStyle(
+                  //             color: Colors.indigo, fontWeight: FontWeight.w600, fontSize: 18),
+                  //       ),
+                  //       onTap: () {
+                  //         Get.back();
+                  //       },
+                  //     )
+                  //   ],
+                  // ),
                 ]),
               ),
             ),
