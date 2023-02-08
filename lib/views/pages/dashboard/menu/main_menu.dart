@@ -1,5 +1,7 @@
 import 'package:cashier_app/themes/color_pallete.dart';
+import 'package:cashier_app/views/components/button_main.dart';
 import 'package:cashier_app/views/components/in_page_search_bar.dart';
+import 'package:cashier_app/views/components/underline_input_text.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/menu_card.dart';
 import 'package:cashier_app/views/components/menu_popup.dart';
 import 'package:flutter/material.dart';
@@ -180,7 +182,9 @@ class _MainMenuState extends State<MainMenu> {
   Widget _popUpMenu() {
     return CustomPopUp(
       width: Get.width * 0.8,
+      height: Get.height,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.all(8),
@@ -198,12 +202,65 @@ class _MainMenuState extends State<MainMenu> {
                 )),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            padding: EdgeInsets.fromLTRB(8, 16, 8, 4),
             child: Text("Nasi Goreng Mak Jalal Biadap",
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: Get.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w700)),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Text(
+              "\$ 6.99",
+              style: Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w700),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ButtonMain(
+                  onTap: () {},
+                  width: 40,
+                  height: 40,
+                  label: "-",
+                  style: Get.textTheme.labelLarge,
+                  background: Get.theme.primaryColor,
+                ),
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: UnderlineInputText(
+                    initValue: 1.toString(),
+                    maxLines: 1,
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                  ),
+                )),
+                ButtonMain(
+                  onTap: () {},
+                  width: 40,
+                  height: 40,
+                  label: "+",
+                  style: Get.textTheme.labelLarge,
+                  background: Get.theme.primaryColor,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ButtonMain(
+              onTap: () {},
+              background: Get.theme.primaryColor,
+              height: 50,
+              width: Get.width * 0.7,
+              label: "Tambahkan",
+              style: Get.textTheme.labelLarge,
+            ),
           )
         ],
       ),

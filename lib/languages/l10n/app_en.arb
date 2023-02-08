@@ -39,5 +39,8 @@
   "cash": "Cash",
   "change": "Change",
   "orderType": "Order Type",
-  "custEmail": "Customer email"
+  "custEmail": "Customer email",
+  "order": "Order",
+  "cancel": "Cancel",
+  "confirmPay": "Confirm Payment"
 }

@@ -39,5 +39,8 @@
   "cash": "Dibayarkan",
   "change": "Kembalian",
   "orderType": "Tipe pemesanan",
-  "custEmail": "Email pelanggan"
+  "custEmail": "Email pelanggan",
+  "order": "Pemesanan",
+  "cancel": "Cancel",
+  "confirmPay": "Confirm Payment"
 }

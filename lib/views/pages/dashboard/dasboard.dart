@@ -36,7 +36,7 @@ class _MainDashboardState extends State<MainDashboard> {
             _currentIndex = value;
           });
         },
-        children: const [MainMenu(), MainPromo(), MainReport(), SettingPage()],
+        children: const [MainPromo(), MainMenu(), MainReport(), SettingPage()],
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
         backgroundColor: Get.theme.colorScheme.background,
@@ -50,11 +50,11 @@ class _MainDashboardState extends State<MainDashboard> {
           CustomBottomNavigationItem(
               assetIcon: AssetsDirectory.homeIcon,
               color: Get.theme.primaryColor,
-              label: lang().home),
-          CustomBottomNavigationItem(
-              assetIcon: AssetsDirectory.promoIcon,
-              color: Get.theme.primaryColor,
               label: lang().promotion),
+          CustomBottomNavigationItem(
+              assetIcon: AssetsDirectory.menuIcon,
+              color: Get.theme.primaryColor,
+              label: lang().home),
           CustomBottomNavigationItem(
               assetIcon: AssetsDirectory.reportIcon,
               color: Get.theme.primaryColor,

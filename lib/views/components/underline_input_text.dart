@@ -1,3 +1,4 @@
+import 'package:cashier_app/themes/color_pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -34,8 +35,13 @@ class UnderlineInputText extends StatelessWidget {
       },
       style: Get.textTheme.bodyMedium,
       decoration: InputDecoration(
+          fillColor: Pallete.transparent,
+          border: UnderlineInputBorder(borderSide: BorderSide(color: Get.theme.primaryColor)),
           isDense: true,
-          focusedBorder: Get.theme.inputDecorationTheme.focusedBorder,
+          focusedBorder: Get.theme.inputDecorationTheme.focusedBorder!
+              .copyWith(borderSide: BorderSide(color: Get.theme.colorScheme.secondary)),
+          enabledBorder: Get.theme.inputDecorationTheme.focusedBorder!
+              .copyWith(borderSide: BorderSide(color: Get.theme.colorScheme.secondary)),
           disabledBorder: Get.theme.inputDecorationTheme.disabledBorder),
     );
   }

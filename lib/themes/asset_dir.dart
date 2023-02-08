@@ -4,4 +4,5 @@ class AssetsDirectory {
   static String reportIcon = "assets/images/icons/Dashboard.svg";
   static String promoIcon = "assets/images/icons/Discount.svg";
   static String settingIcon = "assets/images/icons/Setting.svg";
+  static String menuIcon = "assets/images/icons/Menu.svg";
 }

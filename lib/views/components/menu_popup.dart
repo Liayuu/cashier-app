@@ -11,10 +11,10 @@ class CustomPopUp extends StatelessWidget {
     return AlertDialog(
       content: ConstrainedBox(
         constraints: BoxConstraints(
-          minHeight: 0,
+          minHeight: 200,
           maxHeight: height ?? 200,
           maxWidth: width ?? 200,
-          minWidth: 0,
+          minWidth: 200,
         ),
         child: child,
       ),

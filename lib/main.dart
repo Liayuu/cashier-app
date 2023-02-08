@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
             theme: Themes.lightTheme(context),
             darkTheme: Themes.darkTheme(context),
             themeMode: ThemeMode.system,
-            home: const Payment(),
+            home: const SplashScreen(),
             locale: provider.locale,
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: const [
