@@ -24,6 +24,7 @@ class Pallete {
   static const darkShadow = Color(0xFF333333);
   static const darkunselectedColor = Color(0XFF2a2d38);
   static const darkSelectedColor = Color(0xFF555c67);
+  static const darkCursorColor = Color.fromARGB(255, 115, 124, 139);
 
   //! Light Theme Color
   static const lightWhiteBg = Color(0xFFFAFAFA);

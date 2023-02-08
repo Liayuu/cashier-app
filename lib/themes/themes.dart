@@ -214,6 +214,7 @@ class Themes {
         shadowColor: Pallete.darkShadow,
         colorScheme: const ColorScheme.dark(
             primary: Pallete.primary,
+            outline: Pallete.white,
             background: Pallete.darkBackground,
             secondary: Pallete.darkSecBackground),
         unselectedWidgetColor: Pallete.darkunselectedColor,
@@ -308,16 +309,17 @@ class Themes {
             fontSize: 13.0,
             fontWeight: FontWeight.normal,
             height: 1.5,
-            color: Colors.white54,
+            color: Pallete.darkCursorColor,
           ),
           filled: true,
           fillColor: Pallete.darkFormBackground,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide.none,
+            borderSide: BorderSide(color: Pallete.darkunselectedColor),
           ),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0), borderSide: BorderSide.none),
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(color: Pallete.darkCursorColor)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0), borderSide: BorderSide.none),
           focusedErrorBorder: OutlineInputBorder(
