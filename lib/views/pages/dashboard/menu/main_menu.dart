@@ -1,9 +1,14 @@
+import 'dart:async';
+
+import 'package:cashier_app/configs/language_config.dart';
 import 'package:cashier_app/themes/color_pallete.dart';
 import 'package:cashier_app/views/components/button_main.dart';
 import 'package:cashier_app/views/components/in_page_search_bar.dart';
+import 'package:cashier_app/views/components/snackbar_order.dart';
 import 'package:cashier_app/views/components/underline_input_text.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/menu_card.dart';
 import 'package:cashier_app/views/components/menu_popup.dart';
+import 'package:cashier_app/views/pages/payment/payment.dart';
 import 'package:flutter/material.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/app_bar_menu.dart';
 import 'package:get/get.dart';
@@ -19,6 +24,8 @@ class MainMenu extends StatefulWidget {
 class _MainMenuState extends State<MainMenu> {
   int _selectedIndex = 0;
   final ScrollController _scrollController = ScrollController();
+  StreamController<bool> streamController = StreamController<bool>();
+  GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -254,7 +261,11 @@ class _MainMenuState extends State<MainMenu> {
           Padding(
             padding: const EdgeInsets.all(8),
             child: ButtonMain(
-              onTap: () {},
+              onTap: () {
+                Get.back();
+                Get.to(() => Payment());
+                // _orderTrackingSnackbar();
+              },
               background: Get.theme.primaryColor,
               height: 50,
               width: Get.width * 0.7,
@@ -264,6 +275,18 @@ class _MainMenuState extends State<MainMenu> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _orderTrackingSnackbar() {
+    streamController.add(true);
+    return SnackbarOrder(
+      key: _globalKey,
+      stream: streamController.stream,
+      hyperlinkText: lang().payment,
+      primaryMessage: "1 Pesanan",
+      onTap: () {},
+      secondaryMessage: "Nasi Goreng Mak Jalal Biadap",
     );
   }
 }

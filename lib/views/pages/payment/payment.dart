@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:cashier_app/configs/language_config.dart';
 import 'package:cashier_app/themes/color_pallete.dart';
 import 'package:cashier_app/views/components/bordered_input_text.dart';
 import 'package:flutter/material.dart';
 import 'package:cashier_app/views/components/button_main.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 
 class Payment extends StatefulWidget {
