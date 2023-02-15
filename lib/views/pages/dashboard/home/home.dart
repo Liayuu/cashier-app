@@ -26,12 +26,12 @@ class Home extends StatelessWidget {
                 SizedBox(
                   height: 100,
                   width: Get.width,
-                  child: AppBarMenu(
+                  child: const AppBarMenu(
                       companyLogo:
                           "https://w7.pngwing.com/pngs/236/376/png-transparent-pepsi-logo-fizzy-drinks-company-pepsi.png",
                       companyName: "Toko Lorem"),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 Row(
@@ -155,7 +155,7 @@ class Home extends StatelessWidget {
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(12),
           color: Get.theme.cardColor),
-      child: LineChartDashboard(),
+      child: const LineChartDashboard(),
     );
   }
 
