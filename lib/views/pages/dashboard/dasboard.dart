@@ -1,6 +1,7 @@
 import 'package:cashier_app/configs/language_config.dart';
 import 'package:cashier_app/themes/asset_dir.dart';
 import 'package:cashier_app/views/components/bottom_bar.dart';
+import 'package:cashier_app/views/pages/dashboard/home/home.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/main_menu.dart';
 import 'package:cashier_app/views/pages/dashboard/promo/main_promo.dart';
 import 'package:cashier_app/views/pages/dashboard/reports/main_report.dart';
@@ -36,7 +37,7 @@ class _MainDashboardState extends State<MainDashboard> {
             _currentIndex = value;
           });
         },
-        children: const [MainPromo(), MainMenu(), MainReport(), SettingPage()],
+        children: const [Home(), MainMenu(), MainReport(), SettingPage()],
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
         backgroundColor: Get.theme.colorScheme.background,
