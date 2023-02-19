@@ -1,8 +1,6 @@
 import 'package:cashier_app/views/pages/dashboard/home/components/line_chart.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/app_bar_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 
 class Home extends StatelessWidget {
@@ -34,6 +32,16 @@ class Home extends StatelessWidget {
                 const SizedBox(
                   height: 16,
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    "Statistik Hari ini",
+                    style: Get.textTheme.headlineSmall,
+                  ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,21 +52,8 @@ class Home extends StatelessWidget {
                         child: _miniCard(
                             height: 100,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Total Income",
-                                    style: Get.textTheme.bodyLarge,
-                                  ),
-                                  Text(
-                                    "200k",
-                                    style: Get.textTheme.bodyLarge,
-                                  )
-                                ],
-                              ),
-                            )),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                child: _cardChild(title: "Transaksi", info: "39"))),
                       ),
                     ),
                     Expanded(
@@ -67,21 +62,8 @@ class Home extends StatelessWidget {
                         child: _miniCard(
                             height: 100,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Total Income",
-                                    style: Get.textTheme.bodyLarge,
-                                  ),
-                                  Text(
-                                    "200k",
-                                    style: Get.textTheme.bodyLarge,
-                                  )
-                                ],
-                              ),
-                            )),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                child: _cardChild(title: "Pemasukan", info: "200K"))),
                       ),
                     )
                   ],
@@ -96,21 +78,8 @@ class Home extends StatelessWidget {
                         child: _miniCard(
                             height: 100,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Total Income",
-                                    style: Get.textTheme.bodyLarge,
-                                  ),
-                                  Text(
-                                    "200k",
-                                    style: Get.textTheme.bodyLarge,
-                                  )
-                                ],
-                              ),
-                            )),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                child: _cardChild(title: "Menu Terjual", info: "50"))),
                       ),
                     ),
                     Expanded(
@@ -119,21 +88,8 @@ class Home extends StatelessWidget {
                         child: _miniCard(
                             height: 100,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Total Income",
-                                    style: Get.textTheme.bodyLarge,
-                                  ),
-                                  Text(
-                                    "200k",
-                                    style: Get.textTheme.bodyLarge,
-                                  )
-                                ],
-                              ),
-                            )),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                child: _cardChild(title: "Transaksi Terbesar", info: "75K"))),
                       ),
                     )
                   ],
@@ -144,6 +100,35 @@ class Home extends StatelessWidget {
           ),
         ),
       )),
+    );
+  }
+
+  Widget _cardChild({required String title, required String info}) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.left,
+            style: Get.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w700),
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            info,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.right,
+            style: Get.textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.w700),
+          ),
+        )
+      ],
     );
   }
 

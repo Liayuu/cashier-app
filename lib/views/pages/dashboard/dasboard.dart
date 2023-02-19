@@ -3,7 +3,6 @@ import 'package:cashier_app/themes/asset_dir.dart';
 import 'package:cashier_app/views/components/bottom_bar.dart';
 import 'package:cashier_app/views/pages/dashboard/home/home.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/main_menu.dart';
-import 'package:cashier_app/views/pages/dashboard/promo/main_promo.dart';
 import 'package:cashier_app/views/pages/dashboard/reports/main_report.dart';
 import 'package:cashier_app/views/pages/dashboard/settings/setting_page.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +44,7 @@ class _MainDashboardState extends State<MainDashboard> {
         selectedColor: Get.theme.colorScheme.onBackground,
         onChange: (p0) {
           _pageController.animateToPage(p0,
-              duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+              duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
         },
         children: [
           CustomBottomNavigationItem(

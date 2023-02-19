@@ -5,4 +5,6 @@ class AssetsDirectory {
   static String promoIcon = "assets/images/icons/Discount.svg";
   static String settingIcon = "assets/images/icons/Setting.svg";
   static String menuIcon = "assets/images/icons/Menu.svg";
+  static String shopIcon = "assets/images/icons/shop.svg";
+  static String logoutIcon = "assets/images/icons/sign-out-alt.svg";
 }
