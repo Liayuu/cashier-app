@@ -8,6 +8,7 @@ import 'package:cashier_app/views/components/snackbar_order.dart';
 import 'package:cashier_app/views/components/underline_input_text.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/menu_card.dart';
 import 'package:cashier_app/views/components/menu_popup.dart';
+import 'package:cashier_app/views/pages/forms/menus/edit_menu.dart';
 import 'package:cashier_app/views/pages/payment/payment.dart';
 import 'package:flutter/material.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/app_bar_menu.dart';
@@ -15,7 +16,8 @@ import 'package:get/get.dart';
 import 'dart:math' as math;
 
 class MainMenu extends StatefulWidget {
-  const MainMenu({super.key});
+  final bool isForMainMenu;
+  const MainMenu({super.key, this.isForMainMenu = true});
 
   @override
   State<MainMenu> createState() => _MainMenuState();
@@ -40,7 +42,7 @@ class _MainMenuState extends State<MainMenu> {
               physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverAppBar(
-                  expandedHeight: 150,
+                  expandedHeight: widget.isForMainMenu ? 150 : 70,
                   pinned: false,
                   floating: true,
                   foregroundColor: Pallete.transparent,
@@ -51,15 +53,17 @@ class _MainMenuState extends State<MainMenu> {
                   stretch: false,
                   flexibleSpace: FlexibleSpaceBar(
                     background: SizedBox(
-                      height: 150,
+                      height: widget.isForMainMenu ? 150 : 70,
                       width: Get.width,
                       child: Column(
-                        children: const [
-                          AppBarMenu(
-                              companyLogo:
-                                  "https://w7.pngwing.com/pngs/236/376/png-transparent-pepsi-logo-fizzy-drinks-company-pepsi.png",
-                              companyName: "Toko Lorem"),
-                          Padding(
+                        children: [
+                          widget.isForMainMenu
+                              ? const AppBarMenu(
+                                  companyLogo:
+                                      "https://w7.pngwing.com/pngs/236/376/png-transparent-pepsi-logo-fizzy-drinks-company-pepsi.png",
+                                  companyName: "Toko Lorem")
+                              : const SizedBox(),
+                          const Padding(
                             padding: EdgeInsets.all(8.0),
                             child: InPageSearchBar(),
                           ),
@@ -148,7 +152,7 @@ class _MainMenuState extends State<MainMenu> {
           fit: FlexFit.tight,
           child: GestureDetector(
             onTap: () {
-              Get.dialog(_popUpMenu());
+              widget.isForMainMenu ? Get.dialog(_popUpMenu()) : Get.to(() => EditMenu());
             },
             child: Padding(
               padding: EdgeInsets.all(8.0),
