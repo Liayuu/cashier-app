@@ -1,5 +1,7 @@
 import 'package:cashier_app/themes/asset_dir.dart';
 import 'package:cashier_app/views/components/image_viewer.dart';
+import 'package:cashier_app/views/pages/dashboard/menu/main_menu.dart';
+import 'package:cashier_app/views/pages/forms/merchants/edit_merchant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -106,7 +108,9 @@ class SettingPage extends StatelessWidget {
                                 title: "Merchant Management",
                                 icon: SvgPicture.asset(AssetsDirectory.shopIcon,
                                     color: Get.theme.primaryColor),
-                                onTap: () async {},
+                                onTap: () async {
+                                  await Get.to(() => EditMerchant());
+                                },
                               ),
                               const SizedBox(
                                 height: 24,
@@ -115,7 +119,11 @@ class SettingPage extends StatelessWidget {
                                 title: "Menu Management",
                                 icon: SvgPicture.asset(AssetsDirectory.menuIcon,
                                     color: Get.theme.primaryColor),
-                                onTap: () async {},
+                                onTap: () async {
+                                  await Get.to(() => const MainMenu(
+                                        isForMainMenu: false,
+                                      ));
+                                },
                               ),
                               const SizedBox(
                                 height: 24,

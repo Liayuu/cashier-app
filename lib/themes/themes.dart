@@ -214,6 +214,7 @@ class Themes {
         shadowColor: Pallete.darkShadow,
         colorScheme: const ColorScheme.dark(
             primary: Pallete.primary,
+            // onPrimaryContainer: Pallete.darkSelectedColor,
             outline: Pallete.white,
             background: Pallete.darkBackground,
             secondary: Pallete.darkSecBackground),
