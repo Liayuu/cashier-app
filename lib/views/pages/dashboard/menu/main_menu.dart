@@ -31,6 +31,15 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: widget.isForMainMenu
+          ? null
+          : FloatingActionButton(
+              onPressed: () {
+                // Add your onPressed code here!
+              },
+              backgroundColor: Get.theme.primaryColor,
+              child: const Icon(Icons.add),
+            ),
       // Dummy only. Change this in the next dev
       body: SafeArea(
         child: SizedBox(
