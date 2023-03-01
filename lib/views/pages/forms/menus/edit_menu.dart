@@ -1,3 +1,5 @@
+import 'package:cashier_app/views/components/button_main.dart';
+import 'package:cashier_app/views/components/confirmation_popup.dart';
 import 'package:cashier_app/views/components/image_picker_popup.dart';
 import 'package:cashier_app/views/components/profile_textfield.dart';
 import 'package:cashier_app/views/pages/forms/menus/add_category.dart';
@@ -27,7 +29,54 @@ class _EditMenuState extends State<EditMenu> {
         actions: [
           IconButton(
               onPressed: () {
-                // Get.dialog(widget)
+                Get.dialog(ConfirmationPopup(
+                  title: Text(
+                    "Hapus Menu",
+                    style: Get.textTheme.titleMedium,
+                  ),
+                  content: Center(
+                    child: Text(
+                      "Apakah anda yakin ingin menghapus menu ini?",
+                      style: Get.textTheme.bodyMedium,
+                    ),
+                  ),
+                  width: Get.width * 0.8,
+                  action: Flexible(
+                    fit: FlexFit.loose,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                                borderRadius: BorderRadius.circular(12),
+                                splashColor: Colors.white.withOpacity(0.8),
+                                onTap: () {},
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Text(
+                                    "Ya",
+                                    style: Get.textTheme.labelMedium,
+                                  ),
+                                ))),
+                        Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                                borderRadius: BorderRadius.circular(12),
+                                splashColor: Colors.white.withOpacity(0.8),
+                                onTap: () {},
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Text(
+                                    "Tidak",
+                                    style: Get.textTheme.labelMedium,
+                                  ),
+                                ))),
+                      ],
+                    ),
+                  ),
+                ));
               },
               icon: Icon(
                 Icons.delete_rounded,
@@ -278,7 +327,23 @@ class _EditMenuState extends State<EditMenu> {
                   )
                 ],
               ),
-            ))
+            )),
+            Container(
+                height: Get.height * 0.085,
+                width: Get.width,
+                color: Get.theme.colorScheme.background,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ButtonMain(
+                    height: Get.height,
+                    width: Get.width,
+                    onTap: () {},
+                    color: Get.theme.primaryColor,
+                    background: Get.theme.colorScheme.primary,
+                    style: Get.textTheme.labelLarge,
+                    label: "Simpan",
+                  ),
+                ))
           ],
         ),
       ),
