@@ -1,15 +1,21 @@
+import 'package:cashier_app/views/components/image_picker_popup.dart';
 import 'package:cashier_app/views/components/profile_textfield.dart';
 import 'package:cashier_app/views/pages/forms/menus/add_category.dart';
 import 'package:cashier_app/views/pages/forms/menus/add_topping.dart';
 import 'package:cashier_app/views/pages/forms/menus/add_variant.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
 
-class EditMenu extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>();
+class EditMenu extends StatefulWidget {
   EditMenu({super.key});
+
+  @override
+  State<EditMenu> createState() => _EditMenuState();
+}
+
+class _EditMenuState extends State<EditMenu> {
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +26,9 @@ class EditMenu extends StatelessWidget {
         elevation: 1,
         actions: [
           IconButton(
-              onPressed: () => Get.back(),
+              onPressed: () {
+                // Get.dialog(widget)
+              },
               icon: Icon(
                 Icons.delete_rounded,
                 color: Colors.red,
@@ -69,6 +77,49 @@ class EditMenu extends StatelessWidget {
                                   "https://upload.wikimedia.org/wikipedia/commons/7/7e/Borat_in_Cologne.jpg",
                                   fit: BoxFit.cover,
                                   alignment: Alignment.topCenter,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: () async {
+                                await Get.dialog(
+                                        ImagePickerPopUp(
+                                            width: Get.width * 0.8,
+                                            title: Text("Ambil gambar menggunakan",
+                                                style: Get.textTheme.titleLarge!)),
+                                        useSafeArea: true)
+                                    .then((value) async {
+                                  if (value != null) {
+                                    _imagePickerCommand(value);
+                                  }
+                                });
+                              },
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Get.theme.unselectedWidgetColor, width: 4),
+                                    shape: BoxShape.circle,
+                                    color: Colors.blue,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Get.theme.shadowColor,
+                                          blurRadius: 6,
+                                          offset: const Offset(0, 3),
+                                          spreadRadius: 4)
+                                    ]),
+                                child: ClipOval(
+                                  child: SizedBox.fromSize(
+                                      size: const Size.fromRadius(40),
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        color: Get.theme.colorScheme.background,
+                                        size: 24,
+                                      )),
                                 ),
                               ),
                             ),
@@ -285,5 +336,21 @@ class EditMenu extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _imagePickerCommand(int value) async {
+    if (value == 0) {
+      await ImagePicker()
+          .pickImage(source: ImageSource.camera, maxHeight: 600, maxWidth: 600, imageQuality: 75)
+          .then((value) {
+        setState(() {});
+      });
+    } else {
+      await ImagePicker()
+          .pickImage(source: ImageSource.gallery, maxHeight: 600, maxWidth: 600, imageQuality: 75)
+          .then((value) {
+        setState(() {});
+      });
+    }
   }
 }

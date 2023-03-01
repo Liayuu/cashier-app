@@ -1,7 +1,6 @@
 import 'package:cashier_app/views/components/button_main.dart';
+import 'package:cashier_app/views/components/checkbox.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 
 class AddCategory extends StatelessWidget {
@@ -57,15 +56,18 @@ class AddCategory extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Checkbox(
-                        value: true,
-                        onChanged: (data) {},
-                        shape: CircleBorder(),
-                        checkColor: Get.theme.colorScheme.outline,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CheckboxButton(
+                          isSelected: true,
+                        ),
                       ),
-                      Text(
-                        "Minyak Ikan Mentah",
-                        style: Get.textTheme.bodyLarge,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Minyak Ikan Mentah",
+                          style: Get.textTheme.bodyLarge,
+                        ),
                       ),
                     ],
                   ),
