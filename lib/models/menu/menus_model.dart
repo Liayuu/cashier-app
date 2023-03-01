@@ -1,0 +1,111 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+import 'package:cashier_app/controllers/enums/status_enum.dart';
+
+part 'menus_model.g.dart';
+
+@JsonSerializable()
+class MenuModel {
+  String? id;
+  String? barcode;
+  @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime)
+  DateTime? createdAt;
+  String? description;
+  String? menuAt;
+  String? name;
+  String? sku;
+  List<String>? specifiedAt;
+  StatusEnum? status;
+  @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime)
+  DateTime? updatedAt;
+  MenuModel({
+    this.id,
+    this.barcode,
+    this.createdAt,
+    this.description,
+    this.menuAt,
+    this.name,
+    this.sku,
+    this.specifiedAt,
+    this.status,
+    this.updatedAt,
+  });
+
+  MenuModel copyWith({
+    String? id,
+    String? barcode,
+    DateTime? createdAt,
+    String? description,
+    String? menuAt,
+    String? name,
+    String? sku,
+    List<String>? specifiedAt,
+    StatusEnum? status,
+    DateTime? updatedAt,
+  }) {
+    return MenuModel(
+      id: id ?? this.id,
+      barcode: barcode ?? this.barcode,
+      createdAt: createdAt ?? this.createdAt,
+      description: description ?? this.description,
+      menuAt: menuAt ?? this.menuAt,
+      name: name ?? this.name,
+      sku: sku ?? this.sku,
+      specifiedAt: specifiedAt ?? this.specifiedAt,
+      status: status ?? this.status,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  Map<String, dynamic> toJson() => _$MenuModelToJson(this);
+
+  factory MenuModel.fromJson(Map<String, dynamic> json) => _$MenuModelFromJson(json);
+
+  @override
+  String toString() {
+    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, specifiedAt: $specifiedAt, status: $status, updatedAt: $updatedAt)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is MenuModel &&
+        other.id == id &&
+        other.barcode == barcode &&
+        other.createdAt == createdAt &&
+        other.description == description &&
+        other.menuAt == menuAt &&
+        other.name == name &&
+        other.sku == sku &&
+        listEquals(other.specifiedAt, specifiedAt) &&
+        other.status == status &&
+        other.updatedAt == updatedAt;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        barcode.hashCode ^
+        createdAt.hashCode ^
+        description.hashCode ^
+        menuAt.hashCode ^
+        name.hashCode ^
+        sku.hashCode ^
+        specifiedAt.hashCode ^
+        status.hashCode ^
+        updatedAt.hashCode;
+  }
+}
+
+DateTime _parseTimestamp(_) {
+  return DateTime.parse(_.toDate().toString());
+}
+
+Timestamp _parseDateTime(_) {
+  return Timestamp.fromMicrosecondsSinceEpoch(_.microsecondsSinceEpoch);
+}
