@@ -1,6 +1,7 @@
 import 'package:cashier_app/configs/language_config.dart';
 import 'package:cashier_app/themes/color_pallete.dart';
 import 'package:cashier_app/views/components/bordered_input_text.dart';
+import 'package:cashier_app/views/pages/dashboard/menu/main_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:cashier_app/views/components/button_main.dart';
 import 'package:get/get.dart';
@@ -31,9 +32,10 @@ class _PaymentState extends State<Payment> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                    child:
-                        Text(lang().payment.capitalizeFirst!, style: Get.textTheme.headlineSmall),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                    child: Text(lang().payment.capitalizeFirst!,
+                        style: Get.textTheme.headlineSmall),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15),
@@ -49,12 +51,14 @@ class _PaymentState extends State<Payment> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                    child: Text(lang().paymentMethod, style: Get.textTheme.titleLarge),
+                    child: Text(lang().paymentMethod,
+                        style: Get.textTheme.titleLarge),
                   ),
                   SizedBox(
                     height: 95,
                     child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 8),
                       itemCount: 2,
                       itemBuilder: (context, index) => AspectRatio(
                         aspectRatio: 1.5 / 1,
@@ -64,8 +68,9 @@ class _PaymentState extends State<Payment> {
                             height: 50,
                             decoration: BoxDecoration(
                                 border: Border.all(
-                                    color:
-                                        index == 0 ? Get.theme.primaryColor : Pallete.transparent),
+                                    color: index == 0
+                                        ? Get.theme.primaryColor
+                                        : Pallete.transparent),
                                 borderRadius: BorderRadius.circular(10),
                                 color: index == 0
                                     ? Get.theme.unselectedWidgetColor
@@ -86,8 +91,8 @@ class _PaymentState extends State<Payment> {
                                 ),
                                 Text(lang().paymentType("CASH").capitalize!,
                                     style: index == 0
-                                        ? Get.textTheme.bodyMedium!
-                                            .copyWith(color: Get.theme.primaryColor)
+                                        ? Get.textTheme.bodyMedium!.copyWith(
+                                            color: Get.theme.primaryColor)
                                         : Get.textTheme.bodyMedium),
                               ],
                             ),
@@ -106,7 +111,10 @@ class _PaymentState extends State<Payment> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _payForm(title: lang().subTotal, formText: "\$ 6.69", readOnly: true),
+                          _payForm(
+                              title: lang().subTotal,
+                              formText: "\$ 6.69",
+                              readOnly: true),
                           _payForm(title: lang().cash, formText: "\$ 7.00"),
                           _payForm(title: lang().change, formText: "\$ 0.31")
                         ],
@@ -115,14 +123,16 @@ class _PaymentState extends State<Payment> {
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    child:
-                        Divider(height: 1, color: Get.theme.colorScheme.outline.withOpacity(0.7)),
+                    child: Divider(
+                        height: 1,
+                        color: Get.theme.colorScheme.outline.withOpacity(0.7)),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
                     child: Text(
                       lang().orderType,
-                      style: Get.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w700),
+                      style: Get.textTheme.bodyLarge!
+                          .copyWith(fontWeight: FontWeight.w700),
                     ),
                   ),
                   Padding(
@@ -141,13 +151,17 @@ class _PaymentState extends State<Payment> {
                         )
                       ],
                       decoration: InputDecoration(
-                          enabledBorder: Get.theme.inputDecorationTheme.enabledBorder,
-                          focusedBorder: Get.theme.inputDecorationTheme.focusedBorder),
+                          enabledBorder:
+                              Get.theme.inputDecorationTheme.enabledBorder,
+                          focusedBorder:
+                              Get.theme.inputDecorationTheme.focusedBorder),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: _payForm(title: lang().custEmail, formText: "yuliacan@gmail.com"),
+                    child: _payForm(
+                        title: lang().custEmail,
+                        formText: "yuliacan@gmail.com"),
                   )
                 ],
               ),
@@ -168,7 +182,10 @@ class _PaymentState extends State<Payment> {
                     child: ButtonMain(
                       height: Get.height,
                       width: Get.width,
-                      onTap: () {},
+                      onTap: () {
+                        Get.back();
+                        Get.to(MainMenu());
+                      },
                       color: Get.theme.primaryColor,
                       background: Get.theme.colorScheme.background,
                       style: Get.textTheme.labelLarge,
@@ -215,7 +232,8 @@ class _PaymentState extends State<Payment> {
             padding: const EdgeInsets.only(bottom: 4),
             child: Text(
               title,
-              style: Get.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w700),
+              style: Get.textTheme.bodyLarge!
+                  .copyWith(fontWeight: FontWeight.w700),
             ),
           ),
           FormField(
