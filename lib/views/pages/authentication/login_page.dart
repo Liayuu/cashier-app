@@ -1,4 +1,5 @@
 import 'package:cashier_app/configs/language_config.dart';
+import 'package:cashier_app/controllers/user_controller.dart';
 import 'package:cashier_app/views/pages/dashboard/dasboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,6 +21,8 @@ class _LoginPageState extends State<LoginPage> {
   // final authC = Get.find<AuthController>();
   final emailC = TextEditingController();
   final passwordC = TextEditingController();
+
+  final UserController _userCon = Get.find<UserController>();
 
   @override
   void initState() {
@@ -111,7 +114,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Get.to(() => const MainDashboard());
+                      _userCon.loginUser(emailC.text, passwordC.text);
+                      // Get.to(() => const MainDashboard());
                     },
                     child: Text(
                       lang().login,
