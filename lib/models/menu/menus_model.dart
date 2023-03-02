@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:cashier_app/controllers/enums/status_enum.dart';
+import 'package:cashier_app/models/menu/price_model.dart';
 
 part 'menus_model.g.dart';
 
@@ -19,12 +22,14 @@ class MenuModel {
   @JsonKey(includeIfNull: false)
   int? qty;
   @JsonKey(includeIfNull: false)
-  double? price;
+  double? buyingPrice;
   String? image;
   List<String>? specifiedAt;
   StatusEnum? status;
   @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime)
   DateTime? updatedAt;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  PriceModel? price;
   MenuModel({
     this.id,
     this.barcode,
@@ -34,11 +39,12 @@ class MenuModel {
     this.name,
     this.sku,
     this.qty,
-    this.price,
+    this.buyingPrice,
     this.image,
     this.specifiedAt,
     this.status,
     this.updatedAt,
+    this.price,
   });
 
   MenuModel copyWith({
@@ -50,11 +56,12 @@ class MenuModel {
     String? name,
     String? sku,
     int? qty,
-    double? price,
+    double? buyingPrice,
     String? image,
     List<String>? specifiedAt,
     StatusEnum? status,
     DateTime? updatedAt,
+    PriceModel? price,
   }) {
     return MenuModel(
       id: id ?? this.id,
@@ -65,11 +72,12 @@ class MenuModel {
       name: name ?? this.name,
       sku: sku ?? this.sku,
       qty: qty ?? this.qty,
-      price: price ?? this.price,
+      buyingPrice: buyingPrice ?? this.buyingPrice,
       image: image ?? this.image,
       specifiedAt: specifiedAt ?? this.specifiedAt,
       status: status ?? this.status,
       updatedAt: updatedAt ?? this.updatedAt,
+      price: price ?? this.price,
     );
   }
 
@@ -80,7 +88,7 @@ class MenuModel {
 
   @override
   String toString() {
-    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, qty: $qty, price: $price, image: $image, specifiedAt: $specifiedAt, status: $status, updatedAt: $updatedAt)';
+    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, qty: $qty, buyingPrice: $buyingPrice, image: $image, specifiedAt: $specifiedAt, status: $status, updatedAt: $updatedAt, price: $price)';
   }
 
   @override
@@ -96,11 +104,12 @@ class MenuModel {
         other.name == name &&
         other.sku == sku &&
         other.qty == qty &&
-        other.price == price &&
+        other.buyingPrice == buyingPrice &&
         other.image == image &&
         listEquals(other.specifiedAt, specifiedAt) &&
         other.status == status &&
-        other.updatedAt == updatedAt;
+        other.updatedAt == updatedAt &&
+        other.price == price;
   }
 
   @override
@@ -113,11 +122,12 @@ class MenuModel {
         name.hashCode ^
         sku.hashCode ^
         qty.hashCode ^
-        price.hashCode ^
+        buyingPrice.hashCode ^
         image.hashCode ^
         specifiedAt.hashCode ^
         status.hashCode ^
-        updatedAt.hashCode;
+        updatedAt.hashCode ^
+        price.hashCode;
   }
 }
 

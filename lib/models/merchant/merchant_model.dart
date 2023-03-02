@@ -56,7 +56,7 @@ class MerchantModel {
   Map<String, dynamic> toJson() => _$MerchantModelToJson(this);
 
   factory MerchantModel.fromJson(String id, Map<String, dynamic> json) =>
-      _$MerchantModelFromJson(json);
+      _$MerchantModelFromJson(json)..id = id;
 
   @override
   String toString() {

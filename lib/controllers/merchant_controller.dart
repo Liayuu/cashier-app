@@ -14,7 +14,6 @@ class MerchantController extends GetxController {
   BranchModel branch = BranchModel();
 
   Future<void> fetchMerchantModel(String merchantId) async {
-    log(merchantId);
     await _merchantCollection
         .doc(merchantId)
         .withConverter<MerchantModel>(

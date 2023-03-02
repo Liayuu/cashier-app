@@ -12,6 +12,7 @@ PriceModel _$PriceModelFromJson(Map<String, dynamic> json) => PriceModel(
       updatedAt: _parseTimestamp(json['updatedAt']),
       currency: json['currency'] as String?,
       merchantId: json['appliedAt'] as String?,
+      price: (json['price'] as num?)?.toDouble(),
       locationId: (json['singleAppliedAt'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -25,6 +26,7 @@ Map<String, dynamic> _$PriceModelToJson(PriceModel instance) =>
       'updatedAt': _parseDateTime(instance.updatedAt),
       'currency': instance.currency,
       'appliedAt': instance.merchantId,
+      'price': instance.price,
       'singleAppliedAt': instance.locationId,
       'status': _$StatusEnumEnumMap[instance.status],
     };

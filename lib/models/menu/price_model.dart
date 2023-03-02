@@ -18,6 +18,7 @@ class PriceModel {
   String? currency;
   @JsonKey(name: 'appliedAt')
   String? merchantId;
+  double? price;
   @JsonKey(name: 'singleAppliedAt')
   List<String>? locationId;
   StatusEnum? status;
@@ -27,6 +28,7 @@ class PriceModel {
     this.updatedAt,
     this.currency,
     this.merchantId,
+    this.price,
     this.locationId,
     this.status,
   });
@@ -37,6 +39,7 @@ class PriceModel {
     DateTime? updatedAt,
     String? currency,
     String? merchantId,
+    double? price,
     List<String>? locationId,
     StatusEnum? status,
   }) {
@@ -46,6 +49,7 @@ class PriceModel {
       updatedAt: updatedAt ?? this.updatedAt,
       currency: currency ?? this.currency,
       merchantId: merchantId ?? this.merchantId,
+      price: price ?? this.price,
       locationId: locationId ?? this.locationId,
       status: status ?? this.status,
     );
@@ -53,11 +57,12 @@ class PriceModel {
 
   Map<String, dynamic> toJson() => _$PriceModelToJson(this);
 
-  factory PriceModel.fromJson(Map<String, dynamic> json) => _$PriceModelFromJson(json);
+  factory PriceModel.fromJson(String id, Map<String, dynamic> json) =>
+      _$PriceModelFromJson(json)..id = id;
 
   @override
   String toString() {
-    return 'PriceModel(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, currency: $currency, merchantId: $merchantId, locationId: $locationId, status: $status)';
+    return 'PriceModel(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, currency: $currency, merchantId: $merchantId, price: $price, locationId: $locationId, status: $status)';
   }
 
   @override
@@ -70,6 +75,7 @@ class PriceModel {
         other.updatedAt == updatedAt &&
         other.currency == currency &&
         other.merchantId == merchantId &&
+        other.price == price &&
         listEquals(other.locationId, locationId) &&
         other.status == status;
   }
@@ -81,6 +87,7 @@ class PriceModel {
         updatedAt.hashCode ^
         currency.hashCode ^
         merchantId.hashCode ^
+        price.hashCode ^
         locationId.hashCode ^
         status.hashCode;
   }

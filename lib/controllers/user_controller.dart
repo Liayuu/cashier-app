@@ -25,7 +25,7 @@ class UserController extends GetxController {
 
   @override
   void onReady() {
-    Future.delayed(const Duration(seconds: 2)).then((value) {
+    Future.delayed(const Duration(milliseconds: 200)).then((value) {
       firebaseUser = Rx<User?>(_auth.currentUser);
       firebaseUser.bindStream(_auth.userChanges());
       ever(firebaseUser, _setInitialScreen);

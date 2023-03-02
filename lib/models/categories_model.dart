@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import 'package:cashier_app/controllers/enums/status_enum.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:cashier_app/models/menu/menus_model.dart';
 
 part 'categories_model.g.dart';
 
@@ -21,6 +22,10 @@ class CategoriesModel {
   String? merchantId;
   String? name;
   StatusEnum? status;
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  List<MenuModel>? menus;
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  bool isChoosed;
   CategoriesModel({
     this.id,
     this.appliedAt,
@@ -31,6 +36,8 @@ class CategoriesModel {
     this.merchantId,
     this.name,
     this.status,
+    this.menus,
+    this.isChoosed = false,
   });
 
   CategoriesModel copyWith({
@@ -43,6 +50,8 @@ class CategoriesModel {
     String? merchantId,
     String? name,
     StatusEnum? status,
+    List<MenuModel>? menus,
+    bool? isChoosed,
   }) {
     return CategoriesModel(
       id: id ?? this.id,
@@ -54,16 +63,19 @@ class CategoriesModel {
       merchantId: merchantId ?? this.merchantId,
       name: name ?? this.name,
       status: status ?? this.status,
+      menus: menus ?? this.menus,
+      isChoosed: isChoosed ?? this.isChoosed,
     );
   }
 
   Map<String, dynamic> toJson() => _$CategoriesModelToJson(this);
 
-  factory CategoriesModel.fromJson(Map<String, dynamic> json) => _$CategoriesModelFromJson(json);
+  factory CategoriesModel.fromJson(String id, Map<String, dynamic> json) =>
+      _$CategoriesModelFromJson(json)..id = id;
 
   @override
   String toString() {
-    return 'CategoriesModel(id: $id, appliedAt: $appliedAt, createdAt: $createdAt, updatedAt: $updatedAt, items: $items, logo: $logo, merchantId: $merchantId, name: $name, status: $status)';
+    return 'CategoriesModel(id: $id, appliedAt: $appliedAt, createdAt: $createdAt, updatedAt: $updatedAt, items: $items, logo: $logo, merchantId: $merchantId, name: $name, status: $status, menus: $menus, isChoosed: $isChoosed)';
   }
 
   @override
@@ -79,7 +91,9 @@ class CategoriesModel {
         other.logo == logo &&
         other.merchantId == merchantId &&
         other.name == name &&
-        other.status == status;
+        other.status == status &&
+        listEquals(other.menus, menus) &&
+        other.isChoosed == isChoosed;
   }
 
   @override
@@ -92,7 +106,9 @@ class CategoriesModel {
         logo.hashCode ^
         merchantId.hashCode ^
         name.hashCode ^
-        status.hashCode;
+        status.hashCode ^
+        menus.hashCode ^
+        isChoosed.hashCode;
   }
 }
 

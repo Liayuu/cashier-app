@@ -21,7 +21,6 @@ class TransactionController extends GetxController {
         .where('locationId', isEqualTo: locationId)
         .where('createdAt', isGreaterThan: Timestamp.fromDate(DateTime(2023)))
         .withConverter<TransactionModel>(fromFirestore: (snapshot, options) {
-      log(snapshot.data().toString());
       return TransactionModel.fromJson(snapshot.id, snapshot.data()!);
     }, toFirestore: (value, options) {
       return {};

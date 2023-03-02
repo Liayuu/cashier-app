@@ -9,6 +9,7 @@ part 'branch_model.g.dart';
 
 @JsonSerializable()
 class BranchModel {
+  String? id;
   String? address;
   BranchType? branchType;
   String? country;
@@ -22,6 +23,7 @@ class BranchModel {
   String? regency;
   StatusEnum? status;
   BranchModel({
+    this.id,
     this.address,
     this.branchType,
     this.country,
@@ -37,6 +39,7 @@ class BranchModel {
   });
 
   BranchModel copyWith({
+    String? id,
     String? address,
     BranchType? branchType,
     String? country,
@@ -51,6 +54,7 @@ class BranchModel {
     StatusEnum? status,
   }) {
     return BranchModel(
+      id: id ?? this.id,
       address: address ?? this.address,
       branchType: branchType ?? this.branchType,
       country: country ?? this.country,
@@ -68,11 +72,12 @@ class BranchModel {
 
   Map<String, dynamic> toJson() => _$BranchModelToJson(this);
 
-  factory BranchModel.fromJson(String id, Map<String, dynamic> json) => _$BranchModelFromJson(json);
+  factory BranchModel.fromJson(String id, Map<String, dynamic> json) =>
+      _$BranchModelFromJson(json)..id = id;
 
   @override
   String toString() {
-    return 'BranchModel(address: $address, branchType: $branchType, country: $country, disctrict: $disctrict, logo: $logo, background: $background, map: $map, posCode: $posCode, province: $province, rating: $rating, regency: $regency, status: $status)';
+    return 'BranchModel(id: $id, address: $address, branchType: $branchType, country: $country, disctrict: $disctrict, logo: $logo, background: $background, map: $map, posCode: $posCode, province: $province, rating: $rating, regency: $regency, status: $status)';
   }
 
   @override
@@ -80,6 +85,7 @@ class BranchModel {
     if (identical(this, other)) return true;
 
     return other is BranchModel &&
+        other.id == id &&
         other.address == address &&
         other.branchType == branchType &&
         other.country == country &&
@@ -96,7 +102,8 @@ class BranchModel {
 
   @override
   int get hashCode {
-    return address.hashCode ^
+    return id.hashCode ^
+        address.hashCode ^
         branchType.hashCode ^
         country.hashCode ^
         disctrict.hashCode ^

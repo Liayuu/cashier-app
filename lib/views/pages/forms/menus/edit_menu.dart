@@ -1,3 +1,5 @@
+import 'package:cashier_app/controllers/menu_controller.dart';
+import 'package:cashier_app/models/menu/menus_model.dart';
 import 'package:cashier_app/views/components/button_main.dart';
 import 'package:cashier_app/views/components/confirmation_popup.dart';
 import 'package:cashier_app/views/components/image_picker_popup.dart';
@@ -10,7 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
 
 class EditMenu extends StatefulWidget {
-  EditMenu({super.key});
+  const EditMenu({super.key});
 
   @override
   State<EditMenu> createState() => _EditMenuState();
@@ -18,6 +20,7 @@ class EditMenu extends StatefulWidget {
 
 class _EditMenuState extends State<EditMenu> {
   final _formKey = GlobalKey<FormState>();
+  final _menuController = Get.find<MenusController>();
 
   @override
   Widget build(BuildContext context) {
@@ -117,19 +120,28 @@ class _EditMenuState extends State<EditMenu> {
                     child: Center(
                       child: Stack(
                         children: [
-                          ClipOval(
-                            child: SizedBox.fromSize(
-                              size: const Size.fromRadius(70),
-                              child: Hero(
-                                tag: "Test",
-                                child: Image.network(
-                                  "https://upload.wikimedia.org/wikipedia/commons/7/7e/Borat_in_Cologne.jpg",
-                                  fit: BoxFit.cover,
-                                  alignment: Alignment.topCenter,
-                                ),
-                              ),
-                            ),
-                          ),
+                          GetBuilder<MenusController>(
+                              init: Get.find<MenusController>(),
+                              builder: (controller) {
+                                return ClipOval(
+                                  child: SizedBox.fromSize(
+                                    size: const Size.fromRadius(70),
+                                    child: controller.menu.image != null
+                                        ? Hero(
+                                            tag: "Test",
+                                            child: Image.network(
+                                              controller.menu.image!,
+                                              fit: BoxFit.cover,
+                                              alignment: Alignment.topCenter,
+                                            ),
+                                          )
+                                        : Icon(
+                                            Icons.fastfood_rounded,
+                                            size: 24,
+                                          ),
+                                  ),
+                                );
+                              }),
                           Positioned(
                             right: 0,
                             child: GestureDetector(
@@ -153,7 +165,7 @@ class _EditMenuState extends State<EditMenu> {
                                     border: Border.all(
                                         color: Get.theme.unselectedWidgetColor, width: 4),
                                     shape: BoxShape.circle,
-                                    color: Colors.blue,
+                                    color: Get.theme.primaryColor,
                                     boxShadow: [
                                       BoxShadow(
                                           color: Get.theme.shadowColor,
@@ -184,145 +196,159 @@ class _EditMenuState extends State<EditMenu> {
                     key: _formKey,
                     child: Padding(
                       padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          Text(
-                            "Menu",
-                            style: Get.textTheme.titleLarge,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: Divider(
-                              thickness: 2,
-                              color: Get.theme.unselectedWidgetColor,
-                            ),
-                          ),
-                          ProfileTextfield(
-                            hintText: "Nama Menu",
-                            title: Padding(
-                              padding: const EdgeInsets.only(top: 8, bottom: 4),
-                              child: Text(
-                                "Nama Menu",
-                                style: Get.textTheme.titleMedium!
-                                    .copyWith(fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ),
-                          ProfileTextfield(
-                            hintText: "Deskripsi Produk",
-                            title: Padding(
-                              padding: const EdgeInsets.only(top: 8, bottom: 4),
-                              child: Text(
-                                "Deskripsi Produk",
-                                style: Get.textTheme.titleMedium!
-                                    .copyWith(fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ),
-                          ProfileTextfield(
-                            hintText: "Barcode",
-                            keyboardType: TextInputType.number,
-                            title: Padding(
-                              padding: const EdgeInsets.only(top: 8, bottom: 4),
-                              child: Text(
-                                "Barcode",
-                                style: Get.textTheme.titleMedium!
-                                    .copyWith(fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ),
-                          ProfileTextfield(
-                            hintText: "SKU",
-                            title: Padding(
-                              padding: const EdgeInsets.only(top: 8, bottom: 4),
-                              child: Text(
-                                "SKU",
-                                style: Get.textTheme.titleMedium!
-                                    .copyWith(fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Container(
-                                width: Get.width,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Get.theme.primaryColor),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                                  child: _sectionMenu(
-                                      title: "Kategori Produk",
-                                      onTap: () {
-                                        Get.to(() => const AddCategory());
-                                      }),
-                                )),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                            "Harga Produk",
-                            style: Get.textTheme.titleLarge,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: Divider(
-                              thickness: 2,
-                              color: Get.theme.unselectedWidgetColor,
-                            ),
-                          ),
-                          ProfileTextfield(
-                            hintText: "Harga",
-                            keyboardType: TextInputType.number,
-                            title: Padding(
-                              padding: const EdgeInsets.only(top: 8, bottom: 4),
-                              child: Text(
-                                "Harga",
-                                style: Get.textTheme.titleMedium!
-                                    .copyWith(fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Container(
-                                width: Get.width,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Get.theme.primaryColor),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                                  child: _sectionMenu(
-                                      title: "Buat variasi produk",
-                                      onTap: () {
-                                        Get.to(() => const AddVariant());
-                                      }),
-                                )),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Container(
-                                width: Get.width,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Get.theme.primaryColor),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                                    child: _sectionMenu(
-                                        title: "Tambahkan Topping Produk",
-                                        onTap: () {
-                                          Get.to(() => const AddTopping());
-                                        }))),
-                          ),
-                        ],
-                      ),
+                      child: GetBuilder<MenusController>(
+                          init: Get.find<MenusController>(),
+                          builder: (controller) {
+                            return Column(
+                              children: [
+                                Text(
+                                  "Menu",
+                                  style: Get.textTheme.titleLarge,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 4),
+                                  child: Divider(
+                                    thickness: 2,
+                                    color: Get.theme.unselectedWidgetColor,
+                                  ),
+                                ),
+                                ProfileTextfield(
+                                  hintText: "Nama Menu",
+                                  initialValue: controller.menu.name,
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    child: Text(
+                                      "Nama Menu",
+                                      style: Get.textTheme.titleMedium!
+                                          .copyWith(fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                                ProfileTextfield(
+                                  hintText: "Deskripsi Produk",
+                                  initialValue: controller.menu.description,
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    child: Text(
+                                      "Deskripsi Produk",
+                                      style: Get.textTheme.titleMedium!
+                                          .copyWith(fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                                ProfileTextfield(
+                                  hintText: "Barcode",
+                                  initialValue: controller.menu.barcode,
+                                  keyboardType: TextInputType.number,
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    child: Text(
+                                      "Barcode",
+                                      style: Get.textTheme.titleMedium!
+                                          .copyWith(fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                                ProfileTextfield(
+                                  hintText: "SKU",
+                                  initialValue: controller.menu.sku,
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    child: Text(
+                                      "SKU",
+                                      style: Get.textTheme.titleMedium!
+                                          .copyWith(fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16),
+                                  child: Container(
+                                      width: Get.width,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(color: Get.theme.primaryColor),
+                                          borderRadius: BorderRadius.circular(10)),
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                                        child: _sectionMenu(
+                                            title: "Kategori Produk",
+                                            onTap: () {
+                                              Get.to(() => const AddCategory());
+                                            }),
+                                      )),
+                                ),
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                Text(
+                                  "Harga Produk",
+                                  style: Get.textTheme.titleLarge,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 4),
+                                  child: Divider(
+                                    thickness: 2,
+                                    color: Get.theme.unselectedWidgetColor,
+                                  ),
+                                ),
+                                ProfileTextfield(
+                                  hintText: "Harga",
+                                  initialValue: controller.menu.price?.price != null
+                                      ? controller.menu.price!.price!.toString()
+                                      : null,
+                                  keyboardType: TextInputType.number,
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    child: Text(
+                                      "Harga",
+                                      style: Get.textTheme.titleMedium!
+                                          .copyWith(fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16),
+                                  child: Container(
+                                      width: Get.width,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(color: Get.theme.primaryColor),
+                                          borderRadius: BorderRadius.circular(10)),
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                                        child: _sectionMenu(
+                                            title: "Buat variasi produk",
+                                            onTap: () {
+                                              Get.to(() => const AddVariant());
+                                            }),
+                                      )),
+                                ),
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16),
+                                  child: Container(
+                                      width: Get.width,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(color: Get.theme.primaryColor),
+                                          borderRadius: BorderRadius.circular(10)),
+                                      child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8, horizontal: 4),
+                                          child: _sectionMenu(
+                                              title: "Tambahkan Topping Produk",
+                                              onTap: () {
+                                                Get.to(() => const AddTopping());
+                                              }))),
+                                ),
+                              ],
+                            );
+                          }),
                     ),
                   )
                 ],

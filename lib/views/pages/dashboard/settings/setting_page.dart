@@ -1,3 +1,8 @@
+import 'dart:developer';
+
+import 'package:cashier_app/controllers/merchant_controller.dart';
+import 'package:cashier_app/controllers/user_controller.dart';
+import 'package:cashier_app/models/merchant/merchant_model.dart';
 import 'package:cashier_app/themes/asset_dir.dart';
 import 'package:cashier_app/views/components/image_viewer.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/main_menu.dart';
@@ -7,10 +12,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class SettingPage extends StatelessWidget {
-  const SettingPage({super.key});
+  SettingPage({super.key});
+  final _userController = Get.find<UserController>();
+  final _merchantController = Get.find<MerchantController>();
 
   @override
   Widget build(BuildContext context) {
+    if (_merchantController.merchant == MerchantModel()) {
+      _merchantController.fetchMerchantModel(_userController.userModel.employeeAt!);
+    }
+
     return SafeArea(
       child: Scaffold(
         body: SizedBox(
@@ -22,51 +33,53 @@ class SettingPage extends StatelessWidget {
                   clipBehavior: Clip.none,
                   alignment: Alignment.topCenter,
                   children: [
-                    Container(
-                      width: Get.width,
-                      height: Get.height / 4,
-                      // color: Get.theme.primaryColor,
-                      margin: const EdgeInsets.only(bottom: 75),
-                      child: Image.network(
-                          "https://akcdn.detik.net.id/visual/2020/11/04/borat-1_169.png?w=650",
-                          fit: BoxFit.cover),
-                    ),
+                    GetBuilder<MerchantController>(builder: (controller) {
+                      return Container(
+                        width: Get.width,
+                        height: Get.height / 4,
+                        // color: Get.theme.primaryColor,
+                        margin: const EdgeInsets.only(bottom: 75),
+                        child: Image.network(_merchantController.branch.background!,
+                            fit: BoxFit.cover),
+                      );
+                    }),
                     Positioned(
                       top: (Get.height / 4) - 75,
-                      child: Container(
-                          width: 150,
-                          height: 150,
-                          decoration: BoxDecoration(
-                              border:
-                                  Border.all(color: Get.theme.colorScheme.onBackground, width: 8),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Get.theme.shadowColor,
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 3),
-                                    spreadRadius: 4)
-                              ]),
-                          child: GestureDetector(
-                            onTap: () => Get.to(() => ImageViewer(
-                                tag: "Test",
-                                image: const NetworkImage(
-                                    "https://upload.wikimedia.org/wikipedia/commons/7/7e/Borat_in_Cologne.jpg"),
-                                newsTitle: "Test")),
-                            child: ClipOval(
-                              child: SizedBox.fromSize(
-                                size: const Size.fromRadius(48),
-                                child: Hero(
+                      child: GetBuilder<MerchantController>(builder: (controller) {
+                        return Container(
+                            width: 150,
+                            height: 150,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Get.theme.colorScheme.onBackground, width: 8),
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Get.theme.shadowColor,
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 3),
+                                      spreadRadius: 4)
+                                ]),
+                            child: GestureDetector(
+                              onTap: () => Get.to(() => ImageViewer(
                                   tag: "Test",
-                                  child: Image.network(
-                                    "https://upload.wikimedia.org/wikipedia/commons/7/7e/Borat_in_Cologne.jpg",
-                                    fit: BoxFit.cover,
-                                    alignment: Alignment.topCenter,
+                                  image: NetworkImage(_merchantController.branch.logo!),
+                                  newsTitle: "Test")),
+                              child: ClipOval(
+                                child: SizedBox.fromSize(
+                                  size: const Size.fromRadius(48),
+                                  child: Hero(
+                                    tag: "Test",
+                                    child: Image.network(
+                                      _merchantController.branch.logo!,
+                                      fit: BoxFit.cover,
+                                      alignment: Alignment.topCenter,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          )),
+                            ));
+                      }),
                     )
                   ],
                 ),
@@ -77,12 +90,14 @@ class SettingPage extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: Get.width,
-                        child: Text(
-                          "Toko Lorem",
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          style: Get.textTheme.titleLarge,
-                        ),
+                        child: GetBuilder<MerchantController>(builder: (controller) {
+                          return Text(
+                            _merchantController.merchant.name!,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            style: Get.textTheme.titleLarge,
+                          );
+                        }),
                       ),
                       const SizedBox(
                         height: 16,

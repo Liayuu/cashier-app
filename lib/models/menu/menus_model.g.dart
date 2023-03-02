@@ -15,7 +15,7 @@ MenuModel _$MenuModelFromJson(Map<String, dynamic> json) => MenuModel(
       name: json['name'] as String?,
       sku: json['sku'] as String?,
       qty: json['qty'] as int?,
-      price: (json['price'] as num?)?.toDouble(),
+      buyingPrice: (json['buyingPrice'] as num?)?.toDouble(),
       image: json['image'] as String?,
       specifiedAt: (json['specifiedAt'] as List<dynamic>?)
           ?.map((e) => e as String)
@@ -42,7 +42,7 @@ Map<String, dynamic> _$MenuModelToJson(MenuModel instance) {
   }
 
   writeNotNull('qty', instance.qty);
-  writeNotNull('price', instance.price);
+  writeNotNull('buyingPrice', instance.buyingPrice);
   val['image'] = instance.image;
   val['specifiedAt'] = instance.specifiedAt;
   val['status'] = _$StatusEnumEnumMap[instance.status];
