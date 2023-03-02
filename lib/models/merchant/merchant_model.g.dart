@@ -12,6 +12,8 @@ MerchantModel _$MerchantModelFromJson(Map<String, dynamic> json) =>
       createdAt: _parseTimestamp(json['createdAt']),
       updatedAt: _parseTimestamp(json['updatedAt']),
       name: json['name'] as String?,
+      logo: json['logo'] as String?,
+      background: json['background'] as String?,
       status: $enumDecodeNullable(_$StatusEnumEnumMap, json['status']),
       type: $enumDecodeNullable(_$MerchantTypeEnumMap, json['type']),
     );
@@ -19,9 +21,10 @@ MerchantModel _$MerchantModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$MerchantModelToJson(MerchantModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'createdAt': _parseDateTime(instance.createdAt),
       'updatedAt': _parseDateTime(instance.updatedAt),
       'name': instance.name,
+      'logo': instance.logo,
+      'background': instance.background,
       'status': _$StatusEnumEnumMap[instance.status],
       'type': _$MerchantTypeEnumMap[instance.type],
     };

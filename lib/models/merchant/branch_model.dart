@@ -1,8 +1,9 @@
 import 'dart:convert';
 
+import 'package:json_annotation/json_annotation.dart';
+
 import 'package:cashier_app/controllers/enums/branch_type_enum.dart';
 import 'package:cashier_app/controllers/enums/status_enum.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'branch_model.g.dart';
 
@@ -13,6 +14,7 @@ class BranchModel {
   String? country;
   String? disctrict;
   String? logo;
+  String? background;
   dynamic map;
   String? posCode;
   String? province;
@@ -25,7 +27,8 @@ class BranchModel {
     this.country,
     this.disctrict,
     this.logo,
-    required this.map,
+    this.background,
+    this.map,
     this.posCode,
     this.province,
     this.rating,
@@ -39,6 +42,7 @@ class BranchModel {
     String? country,
     String? disctrict,
     String? logo,
+    String? background,
     dynamic? map,
     String? posCode,
     String? province,
@@ -52,6 +56,7 @@ class BranchModel {
       country: country ?? this.country,
       disctrict: disctrict ?? this.disctrict,
       logo: logo ?? this.logo,
+      background: background ?? this.background,
       map: map ?? this.map,
       posCode: posCode ?? this.posCode,
       province: province ?? this.province,
@@ -63,11 +68,11 @@ class BranchModel {
 
   Map<String, dynamic> toJson() => _$BranchModelToJson(this);
 
-  factory BranchModel.fromJson(Map<String, dynamic> json) => _$BranchModelFromJson(json);
+  factory BranchModel.fromJson(String id, Map<String, dynamic> json) => _$BranchModelFromJson(json);
 
   @override
   String toString() {
-    return 'BranchModel(address: $address, branchType: $branchType, country: $country, disctrict: $disctrict, logo: $logo, map: $map, posCode: $posCode, province: $province, rating: $rating, regency: $regency, status: $status)';
+    return 'BranchModel(address: $address, branchType: $branchType, country: $country, disctrict: $disctrict, logo: $logo, background: $background, map: $map, posCode: $posCode, province: $province, rating: $rating, regency: $regency, status: $status)';
   }
 
   @override
@@ -80,6 +85,7 @@ class BranchModel {
         other.country == country &&
         other.disctrict == disctrict &&
         other.logo == logo &&
+        other.background == background &&
         other.map == map &&
         other.posCode == posCode &&
         other.province == province &&
@@ -95,6 +101,7 @@ class BranchModel {
         country.hashCode ^
         disctrict.hashCode ^
         logo.hashCode ^
+        background.hashCode ^
         map.hashCode ^
         posCode.hashCode ^
         province.hashCode ^

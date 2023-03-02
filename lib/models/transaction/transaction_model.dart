@@ -6,11 +6,14 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'package:cashier_app/controllers/enums/payment_type_enum.dart';
 import 'package:cashier_app/controllers/enums/transaction_status_enum.dart';
+import 'package:cashier_app/models/menu/menus_model.dart';
+import 'package:cashier_app/models/transaction/sold_model.dart';
 
 part 'transaction_model.g.dart';
 
 @JsonSerializable()
 class TransactionModel {
+  String? id;
   double? cash;
   double? change;
   @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime)
@@ -26,8 +29,11 @@ class TransactionModel {
   List<String>? promotionUsed;
   TransactionStatus? status;
   double? subTotal;
+  @JsonKey(includeFromJson: false)
+  List<MenuModel>? menus;
   //TODO: PAJAK BELUM DIBUAT
   TransactionModel({
+    this.id,
     this.cash,
     this.change,
     this.createdAt,
@@ -41,9 +47,11 @@ class TransactionModel {
     this.promotionUsed,
     this.status,
     this.subTotal,
+    this.menus,
   });
 
   TransactionModel copyWith({
+    String? id,
     double? cash,
     double? change,
     DateTime? createdAt,
@@ -57,8 +65,10 @@ class TransactionModel {
     List<String>? promotionUsed,
     TransactionStatus? status,
     double? subTotal,
+    List<MenuModel>? menus,
   }) {
     return TransactionModel(
+      id: id ?? this.id,
       cash: cash ?? this.cash,
       change: change ?? this.change,
       createdAt: createdAt ?? this.createdAt,
@@ -72,16 +82,18 @@ class TransactionModel {
       promotionUsed: promotionUsed ?? this.promotionUsed,
       status: status ?? this.status,
       subTotal: subTotal ?? this.subTotal,
+      menus: menus ?? this.menus,
     );
   }
 
   Map<String, dynamic> toJson() => _$TransactionModelToJson(this);
 
-  factory TransactionModel.fromJson(Map<String, dynamic> json) => _$TransactionModelFromJson(json);
+  factory TransactionModel.fromJson(String id, Map<String, dynamic> json) =>
+      _$TransactionModelFromJson(json)..id = id;
 
   @override
   String toString() {
-    return 'TransactionModel(cash: $cash, change: $change, createdAt: $createdAt, currency: $currency, discNominal: $discNominal, grandTotal: $grandTotal, handledBy: $handledBy, locationId: $locationId, merchantId: $merchantId, paymentType: $paymentType, promotionUsed: $promotionUsed, status: $status, subTotal: $subTotal)';
+    return 'TransactionModel(id: $id, cash: $cash, change: $change, createdAt: $createdAt, currency: $currency, discNominal: $discNominal, grandTotal: $grandTotal, handledBy: $handledBy, locationId: $locationId, merchantId: $merchantId, paymentType: $paymentType, promotionUsed: $promotionUsed, status: $status, subTotal: $subTotal, menus: $menus)';
   }
 
   @override
@@ -89,6 +101,7 @@ class TransactionModel {
     if (identical(this, other)) return true;
 
     return other is TransactionModel &&
+        other.id == id &&
         other.cash == cash &&
         other.change == change &&
         other.createdAt == createdAt &&
@@ -101,12 +114,14 @@ class TransactionModel {
         other.paymentType == paymentType &&
         listEquals(other.promotionUsed, promotionUsed) &&
         other.status == status &&
-        other.subTotal == subTotal;
+        other.subTotal == subTotal &&
+        listEquals(other.menus, menus);
   }
 
   @override
   int get hashCode {
-    return cash.hashCode ^
+    return id.hashCode ^
+        cash.hashCode ^
         change.hashCode ^
         createdAt.hashCode ^
         currency.hashCode ^
@@ -118,7 +133,8 @@ class TransactionModel {
         paymentType.hashCode ^
         promotionUsed.hashCode ^
         status.hashCode ^
-        subTotal.hashCode;
+        subTotal.hashCode ^
+        menus.hashCode;
   }
 }
 

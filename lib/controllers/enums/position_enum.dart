@@ -1,1 +1,1 @@
-enum Position { UNKNOWN, OWNER }
+enum PositionEnum { UNKNOWN, OWNER }

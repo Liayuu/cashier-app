@@ -8,6 +8,7 @@ part of 'transaction_model.dart';
 
 TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
     TransactionModel(
+      id: json['id'] as String?,
       cash: (json['cash'] as num?)?.toDouble(),
       change: (json['change'] as num?)?.toDouble(),
       createdAt: _parseTimestamp(json['createdAt']),
@@ -28,6 +29,7 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'cash': instance.cash,
       'change': instance.change,
       'createdAt': _parseDateTime(instance.createdAt),

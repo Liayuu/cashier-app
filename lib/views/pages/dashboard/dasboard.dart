@@ -1,4 +1,5 @@
 import 'package:cashier_app/configs/language_config.dart';
+import 'package:cashier_app/controllers/transaction_controller.dart';
 import 'package:cashier_app/themes/asset_dir.dart';
 import 'package:cashier_app/views/components/bottom_bar.dart';
 import 'package:cashier_app/views/pages/dashboard/home/home.dart';
@@ -36,7 +37,7 @@ class _MainDashboardState extends State<MainDashboard> {
             _currentIndex = value;
           });
         },
-        children: const [Home(), MainMenu(), MainReport(), SettingPage()],
+        children: [Home(), MainMenu(), MainReport(), SettingPage()],
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
         backgroundColor: Get.theme.colorScheme.background,

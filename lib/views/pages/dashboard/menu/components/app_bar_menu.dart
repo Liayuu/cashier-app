@@ -1,3 +1,4 @@
+import 'package:cashier_app/views/components/image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,17 +22,45 @@ class AppBarMenu extends StatelessWidget {
             AspectRatio(
               aspectRatio: 1,
               child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Get.theme.primaryColor.withOpacity(0.55)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.network(
-                    companyLogo,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Get.theme.colorScheme.onBackground, width: 8),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Get.theme.shadowColor,
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
+                            spreadRadius: 4)
+                      ]),
+                  child: GestureDetector(
+                    onTap: () => Get.to(() => ImageViewer(
+                        tag: "Test", image: NetworkImage(companyLogo), newsTitle: "Test")),
+                    child: ClipOval(
+                      child: SizedBox.fromSize(
+                        size: const Size.fromRadius(48),
+                        child: Hero(
+                          tag: "Test",
+                          child: Image.network(
+                            companyLogo,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )),
+              // child: Container(
+              //   decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(20),
+              //       color: Get.theme.primaryColor.withOpacity(0.55)),
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(8.0),
+              //     child: Image.network(
+              //       companyLogo,
+              //       fit: BoxFit.contain,
+              //     ),
+              //   ),
+              // ),
             ),
             Flexible(
               fit: FlexFit.loose,

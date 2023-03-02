@@ -14,6 +14,9 @@ MenuModel _$MenuModelFromJson(Map<String, dynamic> json) => MenuModel(
       menuAt: json['menuAt'] as String?,
       name: json['name'] as String?,
       sku: json['sku'] as String?,
+      qty: json['qty'] as int?,
+      price: (json['price'] as num?)?.toDouble(),
+      image: json['image'] as String?,
       specifiedAt: (json['specifiedAt'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -21,18 +24,31 @@ MenuModel _$MenuModelFromJson(Map<String, dynamic> json) => MenuModel(
       updatedAt: _parseTimestamp(json['updatedAt']),
     );
 
-Map<String, dynamic> _$MenuModelToJson(MenuModel instance) => <String, dynamic>{
-      'id': instance.id,
-      'barcode': instance.barcode,
-      'createdAt': _parseDateTime(instance.createdAt),
-      'description': instance.description,
-      'menuAt': instance.menuAt,
-      'name': instance.name,
-      'sku': instance.sku,
-      'specifiedAt': instance.specifiedAt,
-      'status': _$StatusEnumEnumMap[instance.status],
-      'updatedAt': _parseDateTime(instance.updatedAt),
-    };
+Map<String, dynamic> _$MenuModelToJson(MenuModel instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+    'barcode': instance.barcode,
+    'createdAt': _parseDateTime(instance.createdAt),
+    'description': instance.description,
+    'menuAt': instance.menuAt,
+    'name': instance.name,
+    'sku': instance.sku,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('qty', instance.qty);
+  writeNotNull('price', instance.price);
+  val['image'] = instance.image;
+  val['specifiedAt'] = instance.specifiedAt;
+  val['status'] = _$StatusEnumEnumMap[instance.status];
+  val['updatedAt'] = _parseDateTime(instance.updatedAt);
+  return val;
+}
 
 const _$StatusEnumEnumMap = {
   StatusEnum.DEACTIVATED: 'DEACTIVATED',

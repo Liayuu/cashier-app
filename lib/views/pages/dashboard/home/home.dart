@@ -1,13 +1,30 @@
+import 'dart:math';
+
+import 'package:cashier_app/controllers/merchant_controller.dart';
+import 'package:cashier_app/controllers/transaction_controller.dart';
+import 'package:cashier_app/controllers/user_controller.dart';
+import 'package:cashier_app/models/transaction/transaction_model.dart';
 import 'package:cashier_app/views/pages/dashboard/home/components/line_chart.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/app_bar_menu.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class Home extends StatefulWidget {
+  Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final _transactionController = Get.find<TransactionController>();
+  final _userController = Get.find<UserController>();
+  final _merchantController = Get.find<MerchantController>();
 
   @override
   Widget build(BuildContext context) {
+    _merchantController.fetchMerchantModel(_userController.userModel.employeeAt!);
     return Scaffold(
       body: SafeArea(
           child: SizedBox(
@@ -24,10 +41,13 @@ class Home extends StatelessWidget {
                 SizedBox(
                   height: 100,
                   width: Get.width,
-                  child: const AppBarMenu(
-                      companyLogo:
-                          "https://w7.pngwing.com/pngs/236/376/png-transparent-pepsi-logo-fizzy-drinks-company-pepsi.png",
-                      companyName: "Toko Lorem"),
+                  child: GetBuilder<MerchantController>(
+                      init: Get.find<MerchantController>(),
+                      builder: (controller) {
+                        return AppBarMenu(
+                            companyLogo: controller.branch.logo!,
+                            companyName: controller.merchant.name!);
+                      }),
                 ),
                 const SizedBox(
                   height: 16,
@@ -42,57 +62,104 @@ class Home extends StatelessWidget {
                 const SizedBox(
                   height: 16,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _miniCard(
-                            height: 100,
-                            child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                child: _cardChild(title: "Transaksi", info: "39"))),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _miniCard(
-                            height: 100,
-                            child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                child: _cardChild(title: "Pemasukan", info: "200K"))),
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _miniCard(
-                            height: 100,
-                            child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                child: _cardChild(title: "Menu Terjual", info: "50"))),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _miniCard(
-                            height: 100,
-                            child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                child: _cardChild(title: "Transaksi Terbesar", info: "75K"))),
-                      ),
-                    )
-                  ],
+                StreamBuilder<QuerySnapshot<TransactionModel>>(
+                  stream: _transactionController.streamDashboardReport(
+                      merchantId: "ZalXUuERlVTxJ5jRKwHg", locationId: "hUvnzFxMu7D5pOL2M1CQ"),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: _miniCard(
+                                      height: 100,
+                                      child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 8),
+                                          child: _cardChild(
+                                              title: "Transaksi",
+                                              info: snapshot.data?.docs.length.toString() ?? "0"))),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: _miniCard(
+                                      height: 100,
+                                      child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 8),
+                                          child: _cardChild(
+                                              title: "Pemasukan",
+                                              info: snapshot.data?.docs
+                                                      .map((e) => e.data().grandTotal)
+                                                      .toList()
+                                                      .fold<double>(
+                                                          0,
+                                                          (previousValue, element) =>
+                                                              previousValue + element!)
+                                                      .toString() ??
+                                                  "0"))),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: _miniCard(
+                                      height: 100,
+                                      child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 8),
+                                          child: _cardChild(
+                                              title: "Transaksi Terkecil",
+                                              info: snapshot.data?.docs
+                                                      .map((e) => e.data().grandTotal)
+                                                      .reduce((value, element) =>
+                                                          value! < element! ? value : element)
+                                                      .toString() ??
+                                                  "0"))),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: _miniCard(
+                                      height: 100,
+                                      child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 8),
+                                          child: _cardChild(
+                                              title: "Transaksi Terbesar",
+                                              info: snapshot.data?.docs
+                                                      .map((e) => e.data().grandTotal)
+                                                      .reduce((value, element) =>
+                                                          value! > element! ? value : element)
+                                                      .toString() ??
+                                                  "0"))),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      print(snapshot.error.toString());
+                      return SizedBox();
+                    } else {
+                      return SizedBox();
+                    }
+                  },
                 ),
                 _dashboardChart()
               ],

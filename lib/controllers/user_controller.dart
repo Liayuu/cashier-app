@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cashier_app/controllers/enums/document_name.dart';
 import 'package:cashier_app/models/employee_model.dart';
 import 'package:cashier_app/views/pages/authentication/login_page.dart';
@@ -31,8 +33,14 @@ class UserController extends GetxController {
     super.onReady();
   }
 
-  _setInitialScreen(User? user) {
-    user == null ? Get.offAll(() => const LoginPage()) : Get.offAll(() => const MainDashboard());
+  _setInitialScreen(User? user) async {
+    // user == null ? Get.offAll(() => const LoginPage()) : Get.offAll(() => const MainDashboard());
+    if (user == null) {
+      Get.offAll(() => const LoginPage());
+    } else {
+      await fetchUserData(user.uid);
+      Get.offAll(() => const MainDashboard());
+    }
   }
 
   Future<void> createUserWithEmailAndPassword(String email, String password) async {
@@ -61,5 +69,19 @@ class UserController extends GetxController {
 
   void loginUser(String email, String password) {
     loginUserWithEmailAndPassword(email, password);
+  }
+
+  Future<void> fetchUserData(String uid) async {
+    await _userControllerRef
+        .where('firebaseUID', isEqualTo: uid)
+        .withConverter<EmployeeModel>(
+          fromFirestore: (snapshot, options) =>
+              EmployeeModel.fromJson(snapshot.id, snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        )
+        .get()
+        .then((value) {
+      userModel = value.docs.first.data();
+    });
   }
 }

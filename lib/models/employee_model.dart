@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import 'package:cashier_app/controllers/enums/position_enum.dart';
 import 'package:cashier_app/controllers/enums/status_enum.dart';
 
 part 'employee_model.g.dart';
@@ -21,12 +22,12 @@ class EmployeeModel {
   List<String>? manageAt;
   String? name;
   String? phone;
-  Position? position;
+  PositionEnum? position;
   String? positionName;
   String? profilePict;
   StatusEnum? status;
   @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime)
-  DateTime? updateAt;
+  DateTime? updatedAt;
   EmployeeModel({
     this.id,
     this.email,
@@ -40,7 +41,7 @@ class EmployeeModel {
     this.positionName,
     this.profilePict,
     this.status,
-    this.updateAt,
+    this.updatedAt,
   });
 
   EmployeeModel copyWith({
@@ -52,11 +53,11 @@ class EmployeeModel {
     List<String>? manageAt,
     String? name,
     String? phone,
-    Position? position,
+    PositionEnum? position,
     String? positionName,
     String? profilePict,
     StatusEnum? status,
-    DateTime? updateAt,
+    DateTime? updatedAt,
   }) {
     return EmployeeModel(
       id: id ?? this.id,
@@ -71,17 +72,18 @@ class EmployeeModel {
       positionName: positionName ?? this.positionName,
       profilePict: profilePict ?? this.profilePict,
       status: status ?? this.status,
-      updateAt: updateAt ?? this.updateAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   Map<String, dynamic> toJson() => _$EmployeeModelToJson(this);
 
-  factory EmployeeModel.fromJson(Map<String, dynamic> json) => _$EmployeeModelFromJson(json);
+  factory EmployeeModel.fromJson(String id, Map<String, dynamic> json) =>
+      _$EmployeeModelFromJson(json)..id = id;
 
   @override
   String toString() {
-    return 'EmployeeModel(id: $id, email: $email, employeeAt: $employeeAt, uuid: $uuid, lastSignIn: $lastSignIn, manageAt: $manageAt, name: $name, phone: $phone, position: $position, positionName: $positionName, profilePict: $profilePict, status: $status, updateAt: $updateAt)';
+    return 'EmployeeModel(id: $id, email: $email, employeeAt: $employeeAt, uuid: $uuid, lastSignIn: $lastSignIn, manageAt: $manageAt, name: $name, phone: $phone, position: $position, positionName: $positionName, profilePict: $profilePict, status: $status, updatedAt: $updatedAt)';
   }
 
   @override
@@ -101,7 +103,7 @@ class EmployeeModel {
         other.positionName == positionName &&
         other.profilePict == profilePict &&
         other.status == status &&
-        other.updateAt == updateAt;
+        other.updatedAt == updatedAt;
   }
 
   @override
@@ -118,7 +120,7 @@ class EmployeeModel {
         positionName.hashCode ^
         profilePict.hashCode ^
         status.hashCode ^
-        updateAt.hashCode;
+        updatedAt.hashCode;
   }
 }
 

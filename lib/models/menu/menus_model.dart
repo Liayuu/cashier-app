@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -18,6 +16,11 @@ class MenuModel {
   String? menuAt;
   String? name;
   String? sku;
+  @JsonKey(includeIfNull: false)
+  int? qty;
+  @JsonKey(includeIfNull: false)
+  double? price;
+  String? image;
   List<String>? specifiedAt;
   StatusEnum? status;
   @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime)
@@ -30,6 +33,9 @@ class MenuModel {
     this.menuAt,
     this.name,
     this.sku,
+    this.qty,
+    this.price,
+    this.image,
     this.specifiedAt,
     this.status,
     this.updatedAt,
@@ -43,6 +49,9 @@ class MenuModel {
     String? menuAt,
     String? name,
     String? sku,
+    int? qty,
+    double? price,
+    String? image,
     List<String>? specifiedAt,
     StatusEnum? status,
     DateTime? updatedAt,
@@ -55,6 +64,9 @@ class MenuModel {
       menuAt: menuAt ?? this.menuAt,
       name: name ?? this.name,
       sku: sku ?? this.sku,
+      qty: qty ?? this.qty,
+      price: price ?? this.price,
+      image: image ?? this.image,
       specifiedAt: specifiedAt ?? this.specifiedAt,
       status: status ?? this.status,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -63,11 +75,12 @@ class MenuModel {
 
   Map<String, dynamic> toJson() => _$MenuModelToJson(this);
 
-  factory MenuModel.fromJson(Map<String, dynamic> json) => _$MenuModelFromJson(json);
+  factory MenuModel.fromJson(String id, Map<String, dynamic> json) =>
+      _$MenuModelFromJson(json)..id = id;
 
   @override
   String toString() {
-    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, specifiedAt: $specifiedAt, status: $status, updatedAt: $updatedAt)';
+    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, qty: $qty, price: $price, image: $image, specifiedAt: $specifiedAt, status: $status, updatedAt: $updatedAt)';
   }
 
   @override
@@ -82,6 +95,9 @@ class MenuModel {
         other.menuAt == menuAt &&
         other.name == name &&
         other.sku == sku &&
+        other.qty == qty &&
+        other.price == price &&
+        other.image == image &&
         listEquals(other.specifiedAt, specifiedAt) &&
         other.status == status &&
         other.updatedAt == updatedAt;
@@ -96,6 +112,9 @@ class MenuModel {
         menuAt.hashCode ^
         name.hashCode ^
         sku.hashCode ^
+        qty.hashCode ^
+        price.hashCode ^
+        image.hashCode ^
         specifiedAt.hashCode ^
         status.hashCode ^
         updatedAt.hashCode;

@@ -11,11 +11,13 @@ part 'merchant_model.g.dart';
 @JsonSerializable()
 class MerchantModel {
   String? id;
-  @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime)
+  @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime, includeToJson: false)
   DateTime? createdAt;
   @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime)
   DateTime? updatedAt;
   String? name;
+  String? logo;
+  String? background;
   StatusEnum? status;
   MerchantType? type;
   MerchantModel({
@@ -23,6 +25,8 @@ class MerchantModel {
     this.createdAt,
     this.updatedAt,
     this.name,
+    this.logo,
+    this.background,
     this.status,
     this.type,
   });
@@ -32,6 +36,8 @@ class MerchantModel {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? name,
+    String? logo,
+    String? background,
     StatusEnum? status,
     MerchantType? type,
   }) {
@@ -40,6 +46,8 @@ class MerchantModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       name: name ?? this.name,
+      logo: logo ?? this.logo,
+      background: background ?? this.background,
       status: status ?? this.status,
       type: type ?? this.type,
     );
@@ -47,11 +55,12 @@ class MerchantModel {
 
   Map<String, dynamic> toJson() => _$MerchantModelToJson(this);
 
-  factory MerchantModel.fromJson(Map<String, dynamic> json) => _$MerchantModelFromJson(json);
+  factory MerchantModel.fromJson(String id, Map<String, dynamic> json) =>
+      _$MerchantModelFromJson(json);
 
   @override
   String toString() {
-    return 'MerchantModel(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, name: $name, status: $status, type: $type)';
+    return 'MerchantModel(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, name: $name, logo: $logo, background: $background, status: $status, type: $type)';
   }
 
   @override
@@ -63,6 +72,8 @@ class MerchantModel {
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt &&
         other.name == name &&
+        other.logo == logo &&
+        other.background == background &&
         other.status == status &&
         other.type == type;
   }
@@ -73,6 +84,8 @@ class MerchantModel {
         createdAt.hashCode ^
         updatedAt.hashCode ^
         name.hashCode ^
+        logo.hashCode ^
+        background.hashCode ^
         status.hashCode ^
         type.hashCode;
   }

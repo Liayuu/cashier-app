@@ -18,11 +18,11 @@ EmployeeModel _$EmployeeModelFromJson(Map<String, dynamic> json) =>
           .toList(),
       name: json['name'] as String?,
       phone: json['phone'] as String?,
-      position: $enumDecodeNullable(_$PositionEnumMap, json['position']),
+      position: $enumDecodeNullable(_$PositionEnumEnumMap, json['position']),
       positionName: json['positionName'] as String?,
       profilePict: json['profilePict'] as String?,
       status: $enumDecodeNullable(_$StatusEnumEnumMap, json['status']),
-      updateAt: _parseTimestamp(json['updateAt']),
+      updatedAt: _parseTimestamp(json['updatedAt']),
     );
 
 Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
@@ -35,16 +35,16 @@ Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
       'manageAt': instance.manageAt,
       'name': instance.name,
       'phone': instance.phone,
-      'position': _$PositionEnumMap[instance.position],
+      'position': _$PositionEnumEnumMap[instance.position],
       'positionName': instance.positionName,
       'profilePict': instance.profilePict,
       'status': _$StatusEnumEnumMap[instance.status],
-      'updateAt': _parseDateTime(instance.updateAt),
+      'updatedAt': _parseDateTime(instance.updatedAt),
     };
 
-const _$PositionEnumMap = {
-  Position.left: 'left',
-  Position.right: 'right',
+const _$PositionEnumEnumMap = {
+  PositionEnum.UNKNOWN: 'UNKNOWN',
+  PositionEnum.OWNER: 'OWNER',
 };
 
 const _$StatusEnumEnumMap = {
