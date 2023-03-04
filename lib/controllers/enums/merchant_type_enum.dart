@@ -1,0 +1,1 @@
+enum MerchantType { UNKNOWN, RESTAURANT }

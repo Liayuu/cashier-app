@@ -1,0 +1,1 @@
+enum TransactionStatus { UNKNOWN, IN_PROGRESS, DONE, CANCELED, FAILED }

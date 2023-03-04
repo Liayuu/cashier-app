@@ -1,0 +1,1 @@
+enum PositionEnum { UNKNOWN, OWNER }
