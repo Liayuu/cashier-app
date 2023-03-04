@@ -1,0 +1,37 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "transaction",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "grandTotal",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "transaction",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "merchantId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "locationId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
