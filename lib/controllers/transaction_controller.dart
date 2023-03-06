@@ -11,6 +11,8 @@ class TransactionController extends GetxController {
   final _transactionCollection =
       FirebaseFirestore.instance.collection(DocumentName.TRANSACTION.name.toLowerCase());
   DashboardReportModel dashboardReportModel = DashboardReportModel();
+  int menuQty = 1;
+  TransactionModel transaction = TransactionModel();
 
   Stream<QuerySnapshot<TransactionModel>> streamDashboardReport(
       {required String merchantId, required String locationId}) {

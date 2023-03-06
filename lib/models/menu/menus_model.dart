@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -11,6 +12,7 @@ part 'menus_model.g.dart';
 
 @JsonSerializable()
 class MenuModel {
+  @JsonKey(includeIfNull: false)
   String? id;
   String? barcode;
   @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime)
@@ -30,6 +32,10 @@ class MenuModel {
   DateTime? updatedAt;
   @JsonKey(includeFromJson: false, includeToJson: false)
   PriceModel? price;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? newImage;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? downloadLink;
   MenuModel({
     this.id,
     this.barcode,
@@ -45,6 +51,8 @@ class MenuModel {
     this.status,
     this.updatedAt,
     this.price,
+    this.newImage,
+    this.downloadLink,
   });
 
   MenuModel copyWith({
@@ -62,6 +70,8 @@ class MenuModel {
     StatusEnum? status,
     DateTime? updatedAt,
     PriceModel? price,
+    String? newImage,
+    String? downloadLink,
   }) {
     return MenuModel(
       id: id ?? this.id,
@@ -78,6 +88,8 @@ class MenuModel {
       status: status ?? this.status,
       updatedAt: updatedAt ?? this.updatedAt,
       price: price ?? this.price,
+      newImage: newImage ?? this.newImage,
+      downloadLink: downloadLink ?? this.downloadLink,
     );
   }
 
@@ -88,7 +100,7 @@ class MenuModel {
 
   @override
   String toString() {
-    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, qty: $qty, buyingPrice: $buyingPrice, image: $image, specifiedAt: $specifiedAt, status: $status, updatedAt: $updatedAt, price: $price)';
+    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, qty: $qty, buyingPrice: $buyingPrice, image: $image, specifiedAt: $specifiedAt, status: $status, updatedAt: $updatedAt, price: $price, newImage: $newImage, downloadLink: $downloadLink)';
   }
 
   @override
@@ -109,7 +121,9 @@ class MenuModel {
         listEquals(other.specifiedAt, specifiedAt) &&
         other.status == status &&
         other.updatedAt == updatedAt &&
-        other.price == price;
+        other.price == price &&
+        other.newImage == newImage &&
+        other.downloadLink == downloadLink;
   }
 
   @override
@@ -127,7 +141,9 @@ class MenuModel {
         specifiedAt.hashCode ^
         status.hashCode ^
         updatedAt.hashCode ^
-        price.hashCode;
+        price.hashCode ^
+        newImage.hashCode ^
+        downloadLink.hashCode;
   }
 }
 

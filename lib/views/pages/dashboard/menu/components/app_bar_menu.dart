@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cashier_app/views/components/image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +11,7 @@ class AppBarMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log(companyLogo);
     return SizedBox(
       width: Get.width,
       height: 80,

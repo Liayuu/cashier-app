@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    _merchantController.fetchMerchantModel(_userController.userModel.employeeAt!);
+    _merchantController.initializeMerchant(_userController.userModel.employeeAt!);
     return Scaffold(
       body: SafeArea(
           child: SizedBox(

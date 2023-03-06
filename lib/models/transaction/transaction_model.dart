@@ -13,6 +13,7 @@ part 'transaction_model.g.dart';
 
 @JsonSerializable()
 class TransactionModel {
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? id;
   double? cash;
   double? change;

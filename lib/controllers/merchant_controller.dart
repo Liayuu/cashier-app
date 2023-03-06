@@ -13,6 +13,12 @@ class MerchantController extends GetxController {
   MerchantModel merchant = MerchantModel();
   BranchModel branch = BranchModel();
 
+  void initializeMerchant(String? employeeAt) {
+    if (merchant == MerchantModel()) {
+      fetchMerchantModel(employeeAt!);
+    }
+  }
+
   Future<void> fetchMerchantModel(String merchantId) async {
     await _merchantCollection
         .doc(merchantId)
@@ -47,6 +53,7 @@ class MerchantController extends GetxController {
       await FirebaseStorage.instance.ref(branch.background).getDownloadURL().then((value) {
         branch.background = value;
       });
+      update();
     });
   }
 }

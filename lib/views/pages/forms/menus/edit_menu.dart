@@ -1,4 +1,8 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:cashier_app/controllers/menu_controller.dart';
+import 'package:cashier_app/models/categories_model.dart';
 import 'package:cashier_app/models/menu/menus_model.dart';
 import 'package:cashier_app/views/components/button_main.dart';
 import 'package:cashier_app/views/components/confirmation_popup.dart';
@@ -12,7 +16,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
 
 class EditMenu extends StatefulWidget {
-  const EditMenu({super.key});
+  final String merchantId;
+  final String locationId;
+  const EditMenu({super.key, required this.merchantId, required this.locationId});
 
   @override
   State<EditMenu> createState() => _EditMenuState();
@@ -24,69 +30,73 @@ class _EditMenuState extends State<EditMenu> {
 
   @override
   Widget build(BuildContext context) {
+    log(widget.merchantId, name: "Merchant ID");
+    log(widget.locationId, name: "Location ID");
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
         backgroundColor: Get.theme.colorScheme.background,
         elevation: 1,
-        actions: [
-          IconButton(
-              onPressed: () {
-                Get.dialog(ConfirmationPopup(
-                  title: Text(
-                    "Hapus Menu",
-                    style: Get.textTheme.titleMedium,
-                  ),
-                  content: Center(
-                    child: Text(
-                      "Apakah anda yakin ingin menghapus menu ini?",
-                      style: Get.textTheme.bodyMedium,
-                    ),
-                  ),
-                  width: Get.width * 0.8,
-                  action: Flexible(
-                    fit: FlexFit.loose,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                                borderRadius: BorderRadius.circular(12),
-                                splashColor: Colors.white.withOpacity(0.8),
-                                onTap: () {},
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(
-                                    "Ya",
-                                    style: Get.textTheme.labelMedium,
-                                  ),
-                                ))),
-                        Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                                borderRadius: BorderRadius.circular(12),
-                                splashColor: Colors.white.withOpacity(0.8),
-                                onTap: () {},
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(
-                                    "Tidak",
-                                    style: Get.textTheme.labelMedium,
-                                  ),
-                                ))),
-                      ],
-                    ),
-                  ),
-                ));
-              },
-              icon: Icon(
-                Icons.delete_rounded,
-                color: Colors.red,
-                size: 24,
-              )),
-        ],
+        actions: _menuController.menu.id == null
+            ? null
+            : [
+                IconButton(
+                    onPressed: () {
+                      Get.dialog(ConfirmationPopup(
+                        title: Text(
+                          "Hapus Menu",
+                          style: Get.textTheme.titleMedium,
+                        ),
+                        content: Center(
+                          child: Text(
+                            "Apakah anda yakin ingin menghapus menu ini?",
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ),
+                        width: Get.width * 0.8,
+                        action: Flexible(
+                          fit: FlexFit.loose,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                      borderRadius: BorderRadius.circular(12),
+                                      splashColor: Colors.white.withOpacity(0.8),
+                                      onTap: () {},
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Text(
+                                          "Ya",
+                                          style: Get.textTheme.labelMedium,
+                                        ),
+                                      ))),
+                              Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                      borderRadius: BorderRadius.circular(12),
+                                      splashColor: Colors.white.withOpacity(0.8),
+                                      onTap: () {},
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Text(
+                                          "Tidak",
+                                          style: Get.textTheme.labelMedium,
+                                        ),
+                                      ))),
+                            ],
+                          ),
+                        ),
+                      ));
+                    },
+                    icon: Icon(
+                      Icons.delete_rounded,
+                      color: Colors.red,
+                      size: 24,
+                    )),
+              ],
         leading: IconButton(
             onPressed: () => Get.back(),
             icon: Icon(
@@ -123,6 +133,20 @@ class _EditMenuState extends State<EditMenu> {
                           GetBuilder<MenusController>(
                               init: Get.find<MenusController>(),
                               builder: (controller) {
+                                if (controller.newImage != null) {
+                                  return ClipOval(
+                                    child: SizedBox.fromSize(
+                                        size: const Size.fromRadius(70),
+                                        child: Hero(
+                                          tag: "Test",
+                                          child: Image.file(
+                                            File(controller.newImage!.path),
+                                            fit: BoxFit.cover,
+                                            alignment: Alignment.topCenter,
+                                          ),
+                                        )),
+                                  );
+                                }
                                 return ClipOval(
                                   child: SizedBox.fromSize(
                                     size: const Size.fromRadius(70),
@@ -133,9 +157,8 @@ class _EditMenuState extends State<EditMenu> {
                                               controller.menu.image!,
                                               fit: BoxFit.cover,
                                               alignment: Alignment.topCenter,
-                                            ),
-                                          )
-                                        : Icon(
+                                            ))
+                                        : const Icon(
                                             Icons.fastfood_rounded,
                                             size: 24,
                                           ),
@@ -215,6 +238,9 @@ class _EditMenuState extends State<EditMenu> {
                                 ProfileTextfield(
                                   hintText: "Nama Menu",
                                   initialValue: controller.menu.name,
+                                  onSaved: (value) {
+                                    _menuController.menu.name = value;
+                                  },
                                   title: Padding(
                                     padding: const EdgeInsets.only(top: 8, bottom: 4),
                                     child: Text(
@@ -227,6 +253,9 @@ class _EditMenuState extends State<EditMenu> {
                                 ProfileTextfield(
                                   hintText: "Deskripsi Produk",
                                   initialValue: controller.menu.description,
+                                  onSaved: (value) {
+                                    _menuController.menu.description = value;
+                                  },
                                   title: Padding(
                                     padding: const EdgeInsets.only(top: 8, bottom: 4),
                                     child: Text(
@@ -239,6 +268,9 @@ class _EditMenuState extends State<EditMenu> {
                                 ProfileTextfield(
                                   hintText: "Barcode",
                                   initialValue: controller.menu.barcode,
+                                  onSaved: (value) {
+                                    _menuController.menu.barcode = value;
+                                  },
                                   keyboardType: TextInputType.number,
                                   title: Padding(
                                     padding: const EdgeInsets.only(top: 8, bottom: 4),
@@ -252,6 +284,9 @@ class _EditMenuState extends State<EditMenu> {
                                 ProfileTextfield(
                                   hintText: "SKU",
                                   initialValue: controller.menu.sku,
+                                  onSaved: (value) {
+                                    _menuController.menu.sku = value;
+                                  },
                                   title: Padding(
                                     padding: const EdgeInsets.only(top: 8, bottom: 4),
                                     child: Text(
@@ -273,8 +308,25 @@ class _EditMenuState extends State<EditMenu> {
                                             const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                                         child: _sectionMenu(
                                             title: "Kategori Produk",
-                                            onTap: () {
-                                              Get.to(() => const AddCategory());
+                                            subtitleText: controller.listCategory
+                                                .firstWhere(
+                                                  (element) => element.isChoosed,
+                                                  orElse: () => CategoriesModel(),
+                                                )
+                                                .name,
+                                            onTap: () async {
+                                              if (_menuController.listCategory.isEmpty) {
+                                                await _menuController.fetchCategories(
+                                                    widget.merchantId, widget.locationId);
+                                              }
+                                              await Get.to(() => AddCategory(
+                                                    locationId: widget.locationId,
+                                                    merchantId: widget.merchantId,
+                                                  ))?.then((value) {
+                                                if (value != null) {
+                                                  _menuController.currentCategory = value;
+                                                }
+                                              });
                                             }),
                                       )),
                                 ),
@@ -298,6 +350,9 @@ class _EditMenuState extends State<EditMenu> {
                                       ? controller.menu.price!.price!.toString()
                                       : null,
                                   keyboardType: TextInputType.number,
+                                  onSaved: (value) {
+                                    _menuController.newPrice = double.parse(value);
+                                  },
                                   title: Padding(
                                     padding: const EdgeInsets.only(top: 8, bottom: 4),
                                     child: Text(
@@ -363,7 +418,35 @@ class _EditMenuState extends State<EditMenu> {
                   child: ButtonMain(
                     height: Get.height,
                     width: Get.width,
-                    onTap: () {},
+                    onTap: () async {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        Get.dialog(
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Mohon tunggu",
+                                  style: Get.textTheme.labelMedium,
+                                ),
+                                const CircularProgressIndicator()
+                              ],
+                            ),
+                            barrierDismissible: false);
+                        await _menuController
+                            .addOrUpdateMenu(
+                                locationId: widget.locationId, merchantId: widget.merchantId)
+                            .then((value) {
+                          _menuController.menu = MenuModel();
+                          _menuController.newImage = null;
+                          _menuController.newPrice = null;
+                          _menuController.currentCategory = CategoriesModel();
+                          Get.back();
+                        }).then((value) {
+                          Get.back();
+                        });
+                      }
+                    },
                     color: Get.theme.primaryColor,
                     background: Get.theme.colorScheme.primary,
                     style: Get.textTheme.labelLarge,
@@ -434,13 +517,19 @@ class _EditMenuState extends State<EditMenu> {
       await ImagePicker()
           .pickImage(source: ImageSource.camera, maxHeight: 600, maxWidth: 600, imageQuality: 75)
           .then((value) {
-        setState(() {});
+        setState(() {
+          _menuController.newImage = value;
+          _menuController.update();
+        });
       });
     } else {
       await ImagePicker()
           .pickImage(source: ImageSource.gallery, maxHeight: 600, maxWidth: 600, imageQuality: 75)
           .then((value) {
-        setState(() {});
+        setState(() {
+          _menuController.newImage = value;
+          _menuController.update();
+        });
       });
     }
   }

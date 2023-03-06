@@ -18,9 +18,11 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (_merchantController.merchant == MerchantModel()) {
-      _merchantController.fetchMerchantModel(_userController.userModel.employeeAt!);
-    }
+    // if (_merchantController.merchant == MerchantModel()) {
+    //   _merchantController.fetchMerchantModel(_userController.userModel.employeeAt!);
+    // }
+
+    _merchantController.initializeMerchant(_userController.userModel.employeeAt!);
 
     return SafeArea(
       child: Scaffold(

@@ -25,15 +25,7 @@ MenuModel _$MenuModelFromJson(Map<String, dynamic> json) => MenuModel(
     );
 
 Map<String, dynamic> _$MenuModelToJson(MenuModel instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'barcode': instance.barcode,
-    'createdAt': _parseDateTime(instance.createdAt),
-    'description': instance.description,
-    'menuAt': instance.menuAt,
-    'name': instance.name,
-    'sku': instance.sku,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -41,6 +33,13 @@ Map<String, dynamic> _$MenuModelToJson(MenuModel instance) {
     }
   }
 
+  writeNotNull('id', instance.id);
+  val['barcode'] = instance.barcode;
+  val['createdAt'] = _parseDateTime(instance.createdAt);
+  val['description'] = instance.description;
+  val['menuAt'] = instance.menuAt;
+  val['name'] = instance.name;
+  val['sku'] = instance.sku;
   writeNotNull('qty', instance.qty);
   writeNotNull('buyingPrice', instance.buyingPrice);
   val['image'] = instance.image;
