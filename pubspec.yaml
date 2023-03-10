@@ -32,6 +32,7 @@ dependencies:
   cloud_firestore: ^4.4.3
   cupertino_icons: ^1.0.2
   firebase_auth: ^4.2.9
+  firebase_auth_web: ^5.2.9
   firebase_core: ^2.7.0
   firebase_storage: ^11.0.14
   fl_chart: ^0.60.0
@@ -42,6 +43,7 @@ dependencies:
   flutter_svg: ^1.1.6
   get: ^4.6.5
   image_picker: ^0.8.6+4
+  image_picker_for_web: ^2.1.12
   intl: ^0.17.0
   json_annotation: ^4.8.0
   json_serializable: ^6.6.1

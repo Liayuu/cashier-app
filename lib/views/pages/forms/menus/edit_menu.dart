@@ -14,6 +14,7 @@ import 'package:cashier_app/views/pages/forms/menus/add_variant.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class EditMenu extends StatefulWidget {
   final String merchantId;
@@ -139,22 +140,28 @@ class _EditMenuState extends State<EditMenu> {
                                         size: const Size.fromRadius(70),
                                         child: Hero(
                                           tag: "Test",
-                                          child: Image.file(
-                                            File(controller.newImage!.path),
-                                            fit: BoxFit.cover,
-                                            alignment: Alignment.topCenter,
-                                          ),
+                                          child: kIsWeb
+                                              ? Image.network(
+                                                  controller.newImage!.path,
+                                                  fit: BoxFit.cover,
+                                                  alignment: Alignment.topCenter,
+                                                )
+                                              : Image.file(
+                                                  File(controller.newImage!.path),
+                                                  fit: BoxFit.cover,
+                                                  alignment: Alignment.topCenter,
+                                                ),
                                         )),
                                   );
                                 }
                                 return ClipOval(
                                   child: SizedBox.fromSize(
                                     size: const Size.fromRadius(70),
-                                    child: controller.menu.image != null
+                                    child: controller.menu.downloadLink != null
                                         ? Hero(
                                             tag: "Test",
                                             child: Image.network(
-                                              controller.menu.image!,
+                                              controller.menu.downloadLink!,
                                               fit: BoxFit.cover,
                                               alignment: Alignment.topCenter,
                                             ))
@@ -169,17 +176,21 @@ class _EditMenuState extends State<EditMenu> {
                             right: 0,
                             child: GestureDetector(
                               onTap: () async {
-                                await Get.dialog(
-                                        ImagePickerPopUp(
-                                            width: Get.width * 0.8,
-                                            title: Text("Ambil gambar menggunakan",
-                                                style: Get.textTheme.titleLarge!)),
-                                        useSafeArea: true)
-                                    .then((value) async {
-                                  if (value != null) {
-                                    _imagePickerCommand(value);
-                                  }
-                                });
+                                if (kIsWeb) {
+                                  _imagePickerCommand(1);
+                                } else {
+                                  await Get.dialog(
+                                          ImagePickerPopUp(
+                                              width: Get.width * 0.8,
+                                              title: Text("Ambil gambar menggunakan",
+                                                  style: Get.textTheme.titleLarge!)),
+                                          useSafeArea: true)
+                                      .then((value) async {
+                                    if (value != null) {
+                                      _imagePickerCommand(value);
+                                    }
+                                  });
+                                }
                               },
                               child: Container(
                                 width: 40,
@@ -527,6 +538,7 @@ class _EditMenuState extends State<EditMenu> {
           .pickImage(source: ImageSource.gallery, maxHeight: 600, maxWidth: 600, imageQuality: 75)
           .then((value) {
         setState(() {
+          log(value!.path.toString(), name: "gambar");
           _menuController.newImage = value;
           _menuController.update();
         });

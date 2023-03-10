@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class MenusController extends GetxController {
   final _menuCollection =
@@ -92,9 +93,9 @@ class MenusController extends GetxController {
           .get()
           .then((value) {
         return value.docs.map((e) => e.data()).toList();
-        // return param.copyWith(menus: value.docs.map((e) => e.data()).toList());
       }).then((value) async {
         return Future.wait(value.map((e) async {
+          log(e.image ?? "null", name: "Image");
           var dlLink = await FirebaseStorage.instance.ref(e.image).getDownloadURL();
           return e.copyWith(downloadLink: dlLink);
         }));
@@ -196,8 +197,14 @@ class MenusController extends GetxController {
   Future<String> uploadFile(XFile file, String destination) async {
     var directory = "$destination/${DateTime.now().millisecondsSinceEpoch}-${file.name}";
     var ref = FirebaseStorage.instance.ref(directory);
-    var data = File(file.path);
-    await ref.putFile(data);
+    if (kIsWeb) {
+      await file.readAsBytes().then((value) async {
+        await ref.putData(value);
+      });
+    } else {
+      await ref.putFile(File(file.path));
+    }
+
     return directory;
   }
 }
