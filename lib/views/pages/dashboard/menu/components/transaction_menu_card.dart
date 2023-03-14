@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:cashier_app/views/components/profile_textfield.dart';
 
 class TransactionMenuCard extends StatelessWidget {
   final double? width;
@@ -20,52 +23,111 @@ class TransactionMenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      height: height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                flex: 4,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: ClipOval(
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: Image.network(
-                            images,
-                            fit: BoxFit.cover,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: width,
+        height: height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  flex: 7,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: ClipOval(
+                          child: AspectRatio(
+                            aspectRatio: 1,
+                            child: Image.network(
+                              images,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Expanded(
-                        flex: 4,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              name,
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                          flex: 5,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                name,
+                                style:
+                                    Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "@ Rp.$price",
+                                style: Get.textTheme.bodySmall,
+                              ),
+                            ],
+                          )),
+                    ],
+                  ),
+                ),
+                Expanded(
+                    flex: 2,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Get.theme.unselectedWidgetColor),
+                          child: Center(
+                            child: Text(
+                              qty.toString(),
                               style:
                                   Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
                             ),
-                          ],
-                        )),
-                  ],
+                          ),
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text(
+                          "Rp. ${(qty * price)}",
+                          style: Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.normal),
+                        ),
+                      ),
+                    )),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: AspectRatio(
+                    aspectRatio: 6 / 1,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Container(
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                        child: ProfileTextfield(
+                          hintText: "Note",
+                          onChanged: (value) {
+                            log(value.toString(), name: "Value note");
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              Expanded(
+                Expanded(
                   flex: 1,
                   child: AspectRatio(
                     aspectRatio: 1,
@@ -74,46 +136,22 @@ class TransactionMenuCard extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Get.theme.unselectedWidgetColor),
+                            border: Border.all(color: Colors.red)),
+                        child: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.delete_rounded,
+                              size: 24,
+                              color: Colors.red,
+                            )),
                       ),
                     ),
-                  )),
-              Expanded(
-                  flex: 1,
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Get.theme.unselectedWidgetColor),
-                      ),
-                    ),
-                  )),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                flex: 5,
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Get.theme.unselectedWidgetColor),
-                ),
-              ),
-              // Expanded(
-              //   flex: 1,
-              //   child: Container(
-              //     decoration: BoxDecoration(
-              //         borderRadius: BorderRadius.circular(10),
-              //         color: Get.theme.unselectedWidgetColor),
-              //   ),
-              // )
-            ],
-          )
-        ],
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

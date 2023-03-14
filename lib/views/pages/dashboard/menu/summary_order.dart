@@ -1,6 +1,8 @@
 import 'package:cashier_app/controllers/transaction_controller.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/transaction_menu_card.dart';
+import 'package:cashier_app/views/pages/payment/payment.dart';
 import 'package:flutter/material.dart';
+import 'package:cashier_app/views/components/button_main.dart';
 import 'package:get/get.dart';
 
 class SummaryOrder extends StatefulWidget {
@@ -29,20 +31,20 @@ class _SummaryOrderState extends State<SummaryOrder> {
           ),
           SizedBox(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Expanded(flex: 4, child: Text("Item", style: Get.textTheme.bodyMedium)),
+                  Expanded(flex: 7, child: Text("Item", style: Get.textTheme.bodyMedium)),
                   Expanded(
-                      flex: 1,
+                      flex: 2,
                       child: Text(
                         "Qty",
                         style: Get.textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       )),
                   Expanded(
-                      flex: 1,
+                      flex: 3,
                       child: Text(
                         "Price",
                         style: Get.textTheme.bodyMedium,
@@ -52,14 +54,21 @@ class _SummaryOrderState extends State<SummaryOrder> {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Divider(
+              color: Get.theme.primaryColor,
+              thickness: 1,
+            ),
+          ),
           Expanded(
-            flex: 8,
+            flex: 9,
             child: GetBuilder<TransactionController>(
               init: Get.find<TransactionController>(),
               builder: (controller) {
                 return ListView.builder(
                   itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: TransactionMenuCard(
                         width: Get.width,
                         images: controller.transaction.menus![index].downloadLink!,
@@ -68,12 +77,78 @@ class _SummaryOrderState extends State<SummaryOrder> {
                         name: controller.transaction.menus![index].name!),
                   ),
                   itemCount: controller.transaction.menus?.length,
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
                 );
               },
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Divider(
+              thickness: 1,
+              color: Get.theme.primaryColor,
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: GetBuilder<TransactionController>(
+              init: Get.find<TransactionController>(),
+              builder: (controller) => Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Discount",
+                                style: Get.textTheme.bodyLarge,
+                              ),
+                              Text("Rp. 0", style: Get.textTheme.bodyLarge)
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Total Pemesanan", style: Get.textTheme.bodyLarge),
+                              Text("Rp. ${controller.getSubTotal()}",
+                                  style: Get.textTheme.bodyLarge)
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                      height: Get.height * 0.085,
+                      width: Get.width,
+                      color: Get.theme.colorScheme.background,
+                      child: Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ButtonMain(
+                            height: Get.height,
+                            width: Get.width,
+                            onTap: () {
+                              Get.to(() => Payment());
+                            },
+                            color: Get.theme.primaryColor,
+                            background: Get.theme.colorScheme.primary,
+                            style: Get.textTheme.labelLarge,
+                            label: "Konfirmasi Pembayaran",
+                          ),
+                        ),
+                      ))
+                ],
+              ),
+            ),
+          )
         ],
       )),
     );

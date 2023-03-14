@@ -47,11 +47,15 @@ class _MainMenuState extends State<MainMenu> {
       floatingActionButton: widget.isForMainMenu
           ? null
           : FloatingActionButton(
-              onPressed: () {
-                Get.to(() => EditMenu(
+              onPressed: () async {
+                await Get.to(() => EditMenu(
                       locationId: _merchantController.branch.id!,
                       merchantId: _merchantController.merchant.id!,
-                    ));
+                    ))?.then((value) {
+                  _menuController.menu = MenuModel();
+                  _menuController.newImage = null;
+                  _menuController.listCategory.clear();
+                });
               },
               backgroundColor: Get.theme.primaryColor,
               child: const Icon(Icons.add),

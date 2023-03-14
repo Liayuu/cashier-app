@@ -13,6 +13,7 @@ class TransactionController extends GetxController {
   DashboardReportModel dashboardReportModel = DashboardReportModel();
   int menuQty = 1;
   TransactionModel transaction = TransactionModel();
+  double? subTotal;
 
   Stream<QuerySnapshot<TransactionModel>> streamDashboardReport(
       {required String merchantId, required String locationId}) {
@@ -41,5 +42,10 @@ class TransactionController extends GetxController {
         )
         .get()
         .then((value) => value.docs.map((e) => e.data()).toList());
+  }
+
+  double getSubTotal() {
+    return transaction.menus!
+        .fold(0.0, (previousValue, element) => previousValue + element.price!.price!);
   }
 }
