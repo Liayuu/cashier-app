@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:cashier_app/configs/language_config.dart';
 import 'package:cashier_app/controllers/merchant_controller.dart';
 import 'package:cashier_app/controllers/transaction_controller.dart';
-import 'package:cashier_app/controllers/user_controller.dart';
 import 'package:cashier_app/controllers/menu_controller.dart';
 import 'package:cashier_app/models/categories_model.dart';
 import 'package:cashier_app/models/menu/menus_model.dart';
@@ -15,6 +14,7 @@ import 'package:cashier_app/views/components/snackbar_order.dart';
 import 'package:cashier_app/views/components/underline_input_text.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/menu_card.dart';
 import 'package:cashier_app/views/components/menu_popup.dart';
+import 'package:cashier_app/views/pages/dashboard/menu/summary_order.dart';
 import 'package:cashier_app/views/pages/forms/menus/edit_menu.dart';
 import 'package:cashier_app/views/pages/payment/payment.dart';
 import 'package:flutter/material.dart';
@@ -330,10 +330,9 @@ class _MainMenuState extends State<MainMenu> {
                 if (!_transactionController.transaction.menus!
                     .any((e) => e.id == selectedMenu.id)) {
                   _transactionController.transaction.menus!.add(selectedMenu.copyWith(
-                      qty: _transactionController.menuQty,
-                      buyingPrice: selectedMenu.price!.price,
-                      createdAt: DateTime.now(),
-                      updatedAt: DateTime.now()));
+                    qty: _transactionController.menuQty,
+                    buyingPrice: selectedMenu.price!.price,
+                  ));
                 } else {
                   var idx = _transactionController.transaction.menus!
                       .indexWhere((e) => e.id == selectedMenu.id);
@@ -368,7 +367,7 @@ class _MainMenuState extends State<MainMenu> {
       hyperlinkText: lang().payment,
       primaryMessage: "${_transactionController.transaction.menus?.length ?? 0} Pesanan",
       onTap: () {
-        Get.to(() => const Payment());
+        Get.to(() => const SummaryOrder());
       },
       secondaryMessage:
           _transactionController.transaction.menus?.map((e) => "${e.name},").toString(),

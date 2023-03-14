@@ -10,7 +10,12 @@ class SnackbarTemplate extends StatelessWidget {
   Function()? onTap;
 
   SnackbarTemplate(
-      {this.icon, required this.primaryMsg, this.secondaryMsg, this.hyperlinkText, this.onTap});
+      {super.key,
+      this.icon,
+      required this.primaryMsg,
+      this.secondaryMsg,
+      this.hyperlinkText,
+      this.onTap});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,7 +24,7 @@ class SnackbarTemplate extends StatelessWidget {
       decoration: BoxDecoration(
         color: Get.theme.primaryColor,
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.grey,
             offset: Offset(0.0, 0.0),
@@ -35,7 +40,7 @@ class SnackbarTemplate extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               icon == null
-                  ? SizedBox()
+                  ? const SizedBox()
                   : Expanded(
                       flex: 1,
                       child: Align(

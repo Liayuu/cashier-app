@@ -36,6 +36,8 @@ class MenuModel {
   String? newImage;
   @JsonKey(includeFromJson: false, includeToJson: false)
   String? downloadLink;
+  @JsonKey(includeIfNull: false)
+  String? note;
   MenuModel({
     this.id,
     this.barcode,
@@ -53,6 +55,7 @@ class MenuModel {
     this.price,
     this.newImage,
     this.downloadLink,
+    this.note,
   });
 
   MenuModel copyWith({
@@ -72,6 +75,7 @@ class MenuModel {
     PriceModel? price,
     String? newImage,
     String? downloadLink,
+    String? note,
   }) {
     return MenuModel(
       id: id ?? this.id,
@@ -90,6 +94,7 @@ class MenuModel {
       price: price ?? this.price,
       newImage: newImage ?? this.newImage,
       downloadLink: downloadLink ?? this.downloadLink,
+      note: note ?? this.note,
     );
   }
 
@@ -100,7 +105,7 @@ class MenuModel {
 
   @override
   String toString() {
-    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, qty: $qty, buyingPrice: $buyingPrice, image: $image, specifiedAt: $specifiedAt, status: $status, updatedAt: $updatedAt, price: $price, newImage: $newImage, downloadLink: $downloadLink)';
+    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, qty: $qty, buyingPrice: $buyingPrice, image: $image, specifiedAt: $specifiedAt, status: $status, updatedAt: $updatedAt, price: $price, newImage: $newImage, downloadLink: $downloadLink, note: $note)';
   }
 
   @override
@@ -123,7 +128,8 @@ class MenuModel {
         other.updatedAt == updatedAt &&
         other.price == price &&
         other.newImage == newImage &&
-        other.downloadLink == downloadLink;
+        other.downloadLink == downloadLink &&
+        other.note == note;
   }
 
   @override
@@ -143,7 +149,8 @@ class MenuModel {
         updatedAt.hashCode ^
         price.hashCode ^
         newImage.hashCode ^
-        downloadLink.hashCode;
+        downloadLink.hashCode ^
+        note.hashCode;
   }
 }
 

@@ -32,7 +32,7 @@ class MenuCard extends StatelessWidget {
             Container(
               width: Get.width,
               height: Get.height,
-              margin: EdgeInsets.only(top: width != null ? width! * 0.12 : Get.width * 0.12),
+              margin: EdgeInsets.only(top: height != null ? height! * 0.12 : Get.height * 0.12),
               decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.circular(20),
