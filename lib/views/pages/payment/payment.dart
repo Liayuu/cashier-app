@@ -117,7 +117,7 @@ class _PaymentState extends State<Payment> {
                                     title: lang().subTotal,
                                     formText: "Rp. ${controller.transaction.grandTotal}",
                                     readOnly: true),
-                                _payForm(title: lang().cash, formText: "\$ 7.00"),
+                                _payForm(title: lang().cash, formText: "\$ "),
                                 _payForm(title: lang().change, formText: "\$ 0.31", readOnly: true)
                               ],
                             ),

@@ -13,9 +13,9 @@ class MerchantController extends GetxController {
   MerchantModel merchant = MerchantModel();
   BranchModel branch = BranchModel();
 
-  void initializeMerchant(String? employeeAt) {
+  Future<void> initializeMerchant(String? employeeAt) async {
     if (merchant == MerchantModel()) {
-      fetchMerchantModel(employeeAt!);
+      await fetchMerchantModel(employeeAt!);
     }
   }
 

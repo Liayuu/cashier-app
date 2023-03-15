@@ -37,7 +37,7 @@ class _MainDashboardState extends State<MainDashboard> {
             _currentIndex = value;
           });
         },
-        children: [Home(), MainMenu(), MainReport(), SettingPage()],
+        children: [MainMenu(), Home(), MainReport(), SettingPage()],
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
         backgroundColor: Get.theme.colorScheme.background,
@@ -49,13 +49,11 @@ class _MainDashboardState extends State<MainDashboard> {
         },
         children: [
           CustomBottomNavigationItem(
+              assetIcon: AssetsDirectory.menuIcon, color: Get.theme.primaryColor, label: "Menu"),
+          CustomBottomNavigationItem(
               assetIcon: AssetsDirectory.homeIcon,
               color: Get.theme.primaryColor,
-              label: lang().promotion),
-          CustomBottomNavigationItem(
-              assetIcon: AssetsDirectory.menuIcon,
-              color: Get.theme.primaryColor,
-              label: lang().home),
+              label: "Main Report"),
           CustomBottomNavigationItem(
               assetIcon: AssetsDirectory.reportIcon,
               color: Get.theme.primaryColor,

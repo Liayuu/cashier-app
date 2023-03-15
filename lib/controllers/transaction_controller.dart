@@ -48,4 +48,9 @@ class TransactionController extends GetxController {
     return transaction.menus!
         .fold(0.0, (previousValue, element) => previousValue + element.price!.price!);
   }
+
+  void insertGrandTotal() {
+    transaction.grandTotal = transaction.menus!
+        .fold(0.0, (previousValue, element) => previousValue! + element.price!.price!);
+  }
 }
