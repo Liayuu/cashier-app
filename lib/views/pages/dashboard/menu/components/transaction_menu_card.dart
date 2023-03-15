@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:cashier_app/views/components/profile_textfield.dart';
 
 class TransactionMenuCard extends StatelessWidget {
@@ -11,15 +12,20 @@ class TransactionMenuCard extends StatelessWidget {
   final double price;
   final int qty;
   final String name;
+  final ValueChanged<dynamic>? onChanged;
+  final Function()? onDeleted;
 
-  const TransactionMenuCard(
-      {super.key,
-      this.width,
-      this.height,
-      required this.images,
-      required this.price,
-      required this.qty,
-      required this.name});
+  const TransactionMenuCard({
+    Key? key,
+    this.width,
+    this.height,
+    required this.images,
+    required this.price,
+    required this.qty,
+    required this.name,
+    this.onChanged,
+    this.onDeleted,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +126,7 @@ class TransactionMenuCard extends StatelessWidget {
                         child: ProfileTextfield(
                           hintText: "Note",
                           onChanged: (value) {
-                            log(value.toString(), name: "Value note");
+                            if (onChanged != null) onChanged;
                           },
                         ),
                       ),
@@ -138,7 +144,7 @@ class TransactionMenuCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: Colors.red)),
                         child: IconButton(
-                            onPressed: () {},
+                            onPressed: onDeleted ?? () {},
                             icon: const Icon(
                               Icons.delete_rounded,
                               size: 24,

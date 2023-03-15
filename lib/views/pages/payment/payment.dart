@@ -1,10 +1,17 @@
+import 'dart:developer';
+
 import 'package:cashier_app/configs/language_config.dart';
+import 'package:cashier_app/controllers/enums/order_type_enum.dart';
+import 'package:cashier_app/controllers/merchant_controller.dart';
 import 'package:cashier_app/controllers/transaction_controller.dart';
+import 'package:cashier_app/controllers/user_controller.dart';
 import 'package:cashier_app/themes/color_pallete.dart';
 import 'package:cashier_app/views/components/bordered_input_text.dart';
-import 'package:cashier_app/views/pages/dashboard/menu/main_menu.dart';
+import 'package:cashier_app/views/components/confirmation_popup.dart';
+import 'package:cashier_app/views/pages/payment/complete_payment.dart';
 import 'package:flutter/material.dart';
 import 'package:cashier_app/views/components/button_main.dart';
+import 'package:cashier_app/views/components/profile_textfield.dart';
 import 'package:get/get.dart';
 
 class Payment extends StatefulWidget {
@@ -15,8 +22,9 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
-  double _change = 0;
   final _formKey = GlobalKey<FormState>();
+  final _merchantController = Get.find<MerchantController>();
+  final _userController = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +50,7 @@ class _PaymentState extends State<Payment> {
                               style: Get.textTheme.headlineSmall),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Text(
                             lang().paymentMethodAvailability(1),
                             style: Get.textTheme.bodyLarge,
@@ -54,7 +62,7 @@ class _PaymentState extends State<Payment> {
                           endIndent: 15,
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                           child: Text(lang().paymentMethod, style: Get.textTheme.titleLarge),
                         ),
                         SizedBox(
@@ -113,12 +121,56 @@ class _PaymentState extends State<Payment> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _payForm(
-                                    title: lang().subTotal,
-                                    formText: "Rp. ${controller.transaction.grandTotal}",
-                                    readOnly: true),
-                                _payForm(title: lang().cash, formText: "\$ "),
-                                _payForm(title: lang().change, formText: "\$ 0.31", readOnly: true)
+                                ProfileTextfield(
+                                  hintText: "Total Harga",
+                                  initialValue: "Rp. ${controller.transaction.grandTotal}",
+                                  enabled: false,
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    child: Text(
+                                      lang().subTotal,
+                                      style: Get.textTheme.titleMedium!
+                                          .copyWith(fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                                ProfileTextfield(
+                                  hintText: lang().cash,
+                                  onChanged: (value) {
+                                    if (value != null && value != "") {
+                                      controller.transaction.cash = double.parse(value);
+                                      controller.transaction.change =
+                                          double.parse(value) - controller.transaction.grandTotal!;
+                                    } else {
+                                      controller.transaction.cash = 0;
+                                      controller.transaction.change = null;
+                                    }
+
+                                    controller.update();
+                                  },
+                                  keyboardType: TextInputType.number,
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    child: Text(
+                                      lang().cash,
+                                      style: Get.textTheme.titleMedium!
+                                          .copyWith(fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                                ProfileTextfield(
+                                  hintText: lang().change,
+                                  controller: TextEditingController(
+                                      text: controller.transaction.change?.toString()),
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    child: Text(
+                                      lang().change,
+                                      style: Get.textTheme.titleMedium!
+                                          .copyWith(fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -137,17 +189,23 @@ class _PaymentState extends State<Payment> {
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                          child: DropdownButtonFormField(
-                            value: 2,
-                            onChanged: (value) {},
+                          child: DropdownButtonFormField<OrderType>(
+                            value: controller.transaction.orderType ?? OrderType.DINE_IN,
+                            onChanged: (value) {
+                              controller.transaction.orderType = value;
+                              controller.update();
+                            },
                             items: [
                               DropdownMenuItem(
-                                child: Text("Test1"),
-                                value: 1,
+                                value: OrderType.DINE_IN,
+                                child: Text(
+                                  "Dine In",
+                                  style: Get.textTheme.bodyMedium,
+                                ),
                               ),
                               DropdownMenuItem(
-                                child: Text("Test2"),
-                                value: 2,
+                                value: OrderType.TAKE_AWAY,
+                                child: Text("Take Away", style: Get.textTheme.bodyMedium),
                               )
                             ],
                             decoration: InputDecoration(
@@ -180,8 +238,7 @@ class _PaymentState extends State<Payment> {
                       height: Get.height,
                       width: Get.width,
                       onTap: () {
-                        Get.back();
-                        Get.to(MainMenu());
+                        Get.back(result: false);
                       },
                       color: Get.theme.primaryColor,
                       background: Get.theme.colorScheme.background,
@@ -193,15 +250,37 @@ class _PaymentState extends State<Payment> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: ButtonMain(
-                      height: Get.height,
-                      width: Get.width,
-                      onTap: () {},
-                      color: Get.theme.primaryColor,
-                      background: Get.theme.colorScheme.primary,
-                      style: Get.textTheme.labelLarge,
-                      label: "Konfirmasi Pembayaran",
-                    ),
+                    child: GetBuilder<TransactionController>(builder: (controller) {
+                      return ButtonMain(
+                        height: Get.height,
+                        width: Get.width,
+                        onTap: () async {
+                          Get.dialog(ConfirmationPopup(
+                            title: Text(
+                              "Membuat Pesanan",
+                              style: Get.textTheme.titleMedium,
+                            ),
+                            content: const Center(child: CircularProgressIndicator()),
+                            width: Get.width * 0.8,
+                          ));
+                          await controller
+                              .uploadTransaction(
+                                  userId: _userController.userModel.id!,
+                                  locationId: _merchantController.branch.id!,
+                                  merchantId: _merchantController.merchant.id!)
+                              .then((value) {
+                            Get.back();
+                            return value;
+                          }).then((value) => Get.to(() => const CompletePayment())?.then((value) {
+                                    Get.back(result: true);
+                                  }));
+                        },
+                        color: Get.theme.primaryColor,
+                        background: Get.theme.colorScheme.primary,
+                        style: Get.textTheme.labelLarge,
+                        label: "Konfirmasi Pembayaran",
+                      );
+                    }),
                   ),
                 )
               ],
@@ -214,7 +293,7 @@ class _PaymentState extends State<Payment> {
 
   Widget _payForm(
       {required String title,
-      required String formText,
+      String? formText,
       String? hintText,
       bool readOnly = false,
       String? Function(String?)? validator,

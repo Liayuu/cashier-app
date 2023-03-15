@@ -14,6 +14,7 @@ class ProfileTextfield extends StatelessWidget {
   String? initialValue;
   bool enabled;
   bool obsecure;
+  TextEditingController? controller;
   TextInputAction? textInputAction;
   String? Function(String?)? validator;
   ValueChanged<dynamic>? onSaved;
@@ -31,6 +32,7 @@ class ProfileTextfield extends StatelessWidget {
       this.initialValue,
       this.enabled = true,
       this.obsecure = false,
+      this.controller,
       this.textInputAction,
       this.validator,
       this.onSaved,
@@ -62,6 +64,7 @@ class ProfileTextfield extends StatelessWidget {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           style: Get.textTheme.bodyText1,
           cursorWidth: 2.0,
+          controller: controller,
           cursorColor: Get.theme.primaryColor,
           obscureText: obsecure,
           keyboardType: keyboardType,

@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:cashier_app/controllers/enums/document_name.dart';
+import 'package:cashier_app/controllers/enums/payment_type_enum.dart';
+import 'package:cashier_app/controllers/enums/transaction_status_enum.dart';
 import 'package:cashier_app/models/menu/menus_model.dart';
 import 'package:cashier_app/models/report/dashboard_report_model.dart';
 import 'package:cashier_app/models/transaction/transaction_model.dart';
@@ -30,6 +32,33 @@ class TransactionController extends GetxController {
     }).snapshots();
   }
 
+  Future<void> uploadTransaction(
+      {required String userId, required String locationId, required String merchantId}) async {
+    await _transactionCollection
+        .add(transaction
+            .copyWith(
+              createdAt: DateTime.now(),
+              currency: "Rupiah",
+              discNominal: 0,
+              handledBy: userId,
+              locationId: locationId,
+              merchantId: merchantId,
+              paymentType: PaymentType.CASH,
+              status: TransactionStatus.DONE,
+            )
+            .toJson())
+        .then((value) async {
+      await _createMenusTransaction(value.id).then((value) {
+        transaction = TransactionModel();
+      });
+    });
+  }
+
+  Future<void> _createMenusTransaction(String transactionId) async {
+    Future.wait(transaction.menus!
+        .map((e) => _transactionCollection.doc(transactionId).collection("menus").add(e.toJson())));
+  }
+
   Future<List<MenuModel>> getTransactionMenu(String transactionId) async {
     return await _transactionCollection
         .doc(transactionId)
@@ -45,12 +74,14 @@ class TransactionController extends GetxController {
   }
 
   double getSubTotal() {
-    return transaction.menus!
-        .fold(0.0, (previousValue, element) => previousValue + element.price!.price!);
+    return transaction.menus!.fold(
+        0.0, (previousValue, element) => previousValue + (element.price!.price! * element.qty!));
   }
 
   void insertGrandTotal() {
-    transaction.grandTotal = transaction.menus!
-        .fold(0.0, (previousValue, element) => previousValue! + element.price!.price!);
+    transaction.grandTotal = transaction.menus!.fold(
+        0.0, (previousValue, element) => previousValue! + (element.price!.price! * element.qty!));
+    transaction.subTotal = transaction.menus!.fold(
+        0.0, (previousValue, element) => previousValue! + (element.price!.price! * element.qty!));
   }
 }

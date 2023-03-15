@@ -24,6 +24,8 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
           .toList(),
       status: $enumDecodeNullable(_$TransactionStatusEnumMap, json['status']),
       subTotal: (json['subTotal'] as num?)?.toDouble(),
+      orderType: $enumDecodeNullable(_$OrderTypeEnumMap, json['orderType']) ??
+          OrderType.DINE_IN,
     );
 
 Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
@@ -41,6 +43,7 @@ Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
       'promotionUsed': instance.promotionUsed,
       'status': _$TransactionStatusEnumMap[instance.status],
       'subTotal': instance.subTotal,
+      'orderType': _$OrderTypeEnumMap[instance.orderType],
     };
 
 const _$PaymentTypeEnumMap = {
@@ -55,4 +58,9 @@ const _$TransactionStatusEnumMap = {
   TransactionStatus.DONE: 'DONE',
   TransactionStatus.CANCELED: 'CANCELED',
   TransactionStatus.FAILED: 'FAILED',
+};
+
+const _$OrderTypeEnumMap = {
+  OrderType.DINE_IN: 'DINE_IN',
+  OrderType.TAKE_AWAY: 'TAKE_AWAY',
 };

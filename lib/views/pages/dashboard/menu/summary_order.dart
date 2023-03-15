@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:cashier_app/controllers/transaction_controller.dart';
+import 'package:cashier_app/views/components/confirmation_popup.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/transaction_menu_card.dart';
 import 'package:cashier_app/views/pages/payment/payment.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +74,70 @@ class _SummaryOrderState extends State<SummaryOrder> {
                     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: TransactionMenuCard(
                         width: Get.width,
+                        onChanged: (value) {
+                          controller.transaction.menus![index].note = value.toString();
+                          controller.update();
+                        },
+                        onDeleted: () {
+                          Get.dialog(ConfirmationPopup(
+                            title: Text(
+                              "Hapus Menu",
+                              style: Get.textTheme.titleMedium,
+                            ),
+                            content: Center(
+                              child: Text(
+                                "Apakah anda yakin ingin menghapus pesanan ini?",
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ),
+                            width: Get.width * 0.8,
+                            action: Flexible(
+                              fit: FlexFit.loose,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                          borderRadius: BorderRadius.circular(12),
+                                          splashColor: Colors.white.withOpacity(0.8),
+                                          onTap: () {
+                                            controller.transaction.menus!.removeAt(index);
+                                            controller.insertGrandTotal();
+                                            controller.update();
+                                            Get.back();
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: Text(
+                                              "Ya",
+                                              style: Get.textTheme.labelMedium,
+                                            ),
+                                          ))),
+                                  const SizedBox(
+                                    width: 16,
+                                  ),
+                                  Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                          borderRadius: BorderRadius.circular(12),
+                                          splashColor: Colors.white.withOpacity(0.8),
+                                          onTap: () {
+                                            Get.back();
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: Text(
+                                              "Tidak",
+                                              style: Get.textTheme.labelMedium,
+                                            ),
+                                          ))),
+                                ],
+                              ),
+                            ),
+                          ));
+                        },
                         images: controller.transaction.menus![index].downloadLink!,
                         price: controller.transaction.menus![index].price!.price!,
                         qty: controller.transaction.menus![index].qty!,
@@ -135,8 +202,15 @@ class _SummaryOrderState extends State<SummaryOrder> {
                           child: ButtonMain(
                             height: Get.height,
                             width: Get.width,
-                            onTap: () {
-                              Get.to(() => Payment());
+                            onTap: () async {
+                              log(controller.transaction.toString());
+                              await Get.to(() => Payment())?.then((value) {
+                                if (value != null) {
+                                  if (value) {
+                                    Get.back();
+                                  }
+                                }
+                              });
                             },
                             color: Get.theme.primaryColor,
                             background: Get.theme.colorScheme.primary,

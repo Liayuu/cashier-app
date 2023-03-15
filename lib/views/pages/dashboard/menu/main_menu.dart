@@ -102,6 +102,10 @@ class _MainMenuState extends State<MainMenu> {
                                                   ? GetBuilder<MerchantController>(
                                                       init: Get.find<MerchantController>(),
                                                       builder: (controller) {
+                                                        log(
+                                                            controller.branch.logo?.toString() ??
+                                                                "null",
+                                                            name: "logo");
                                                         return AppBarMenu(
                                                             companyLogo: controller.branch.logo!,
                                                             companyName: controller.merchant.name!);
@@ -223,6 +227,7 @@ class _MainMenuState extends State<MainMenu> {
                           }),
                     ),
                     GetBuilder<TransactionController>(builder: (controller) {
+                      streamController.add(false);
                       if (controller.transaction.menus != null) {
                         if (controller.transaction.menus!.isNotEmpty) {
                           return _orderTrackingSnackbar();

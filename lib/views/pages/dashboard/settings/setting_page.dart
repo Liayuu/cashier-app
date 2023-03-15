@@ -5,6 +5,7 @@ import 'package:cashier_app/controllers/user_controller.dart';
 import 'package:cashier_app/models/merchant/merchant_model.dart';
 import 'package:cashier_app/themes/asset_dir.dart';
 import 'package:cashier_app/views/components/image_viewer.dart';
+import 'package:cashier_app/views/pages/authentication/login_page.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/main_menu.dart';
 import 'package:cashier_app/views/pages/forms/merchants/edit_merchant.dart';
 import 'package:flutter/material.dart';
@@ -158,7 +159,11 @@ class SettingPage extends StatelessWidget {
                                 title: "Logout",
                                 icon: SvgPicture.asset(AssetsDirectory.logoutIcon,
                                     color: Get.theme.primaryColor),
-                                onTap: () async {},
+                                onTap: () async {
+                                  await _userController.logout().then((value) {
+                                    Get.offAll(() => LoginPage());
+                                  });
+                                },
                               )
                             ],
                           ),

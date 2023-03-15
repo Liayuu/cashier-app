@@ -22,6 +22,7 @@ MenuModel _$MenuModelFromJson(Map<String, dynamic> json) => MenuModel(
           .toList(),
       status: $enumDecodeNullable(_$StatusEnumEnumMap, json['status']),
       updatedAt: _parseTimestamp(json['updatedAt']),
+      note: json['note'] as String?,
     );
 
 Map<String, dynamic> _$MenuModelToJson(MenuModel instance) {
@@ -46,6 +47,7 @@ Map<String, dynamic> _$MenuModelToJson(MenuModel instance) {
   val['specifiedAt'] = instance.specifiedAt;
   val['status'] = _$StatusEnumEnumMap[instance.status];
   val['updatedAt'] = _parseDateTime(instance.updatedAt);
+  writeNotNull('note', instance.note);
   return val;
 }
 
