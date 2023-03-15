@@ -17,7 +17,6 @@ import 'package:cashier_app/views/pages/dashboard/menu/components/menu_card.dart
 import 'package:cashier_app/views/components/menu_popup.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/summary_order.dart';
 import 'package:cashier_app/views/pages/forms/menus/edit_menu.dart';
-import 'package:cashier_app/views/pages/payment/payment.dart';
 import 'package:flutter/material.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/app_bar_menu.dart';
 import 'package:get/get.dart';
