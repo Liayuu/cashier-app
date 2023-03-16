@@ -213,10 +213,10 @@ class _PaymentState extends State<Payment> {
                                 focusedBorder: Get.theme.inputDecorationTheme.focusedBorder),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: _payForm(title: lang().custEmail, formText: "yuliacan@gmail.com"),
-                        )
+                        // Padding(
+                        //   padding: const EdgeInsets.all(16),
+                        //   child: _payForm(title: lang().custEmail, formText: "yuliacan@gmail.com"),
+                        // )
                       ],
                     );
                   }),
