@@ -52,10 +52,10 @@ class ProfileTextfield extends StatelessWidget {
               labelText: labelText,
               hintText: hintText,
               isDense: true,
-              contentPadding: EdgeInsets.all(9),
+              contentPadding: const EdgeInsets.all(9),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Get.theme.primaryColor),
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
+                  borderRadius: const BorderRadius.all(Radius.circular(10))),
               fillColor: !enabled
                   ? Get.theme.unselectedWidgetColor
                   : Get.theme.inputDecorationTheme.fillColor,

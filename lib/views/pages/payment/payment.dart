@@ -8,11 +8,12 @@ import 'package:cashier_app/controllers/user_controller.dart';
 import 'package:cashier_app/themes/color_pallete.dart';
 import 'package:cashier_app/views/components/bordered_input_text.dart';
 import 'package:cashier_app/views/components/confirmation_popup.dart';
+import 'package:cashier_app/views/components/price_textfield.dart';
 import 'package:cashier_app/views/pages/payment/complete_payment.dart';
 import 'package:flutter/material.dart';
 import 'package:cashier_app/views/components/button_main.dart';
-import 'package:cashier_app/views/components/profile_textfield.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class Payment extends StatefulWidget {
   const Payment({super.key});
@@ -25,6 +26,10 @@ class _PaymentState extends State<Payment> {
   final _formKey = GlobalKey<FormState>();
   final _merchantController = Get.find<MerchantController>();
   final _userController = Get.find<UserController>();
+  final _cashTextCon = TextEditingController();
+  final _totalTextCon = TextEditingController();
+  final _changeTextCon = TextEditingController();
+  String _formatNumber(String s) => NumberFormat.decimalPattern('id').format(double.parse(s));
 
   @override
   Widget build(BuildContext context) {
@@ -121,9 +126,11 @@ class _PaymentState extends State<Payment> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ProfileTextfield(
+                                PriceTextfield(
+                                  currency: NumberFormat.currency(locale: 'id', symbol: 'Rp. '),
                                   hintText: "Total Harga",
-                                  initialValue: "Rp. ${controller.transaction.grandTotal}",
+                                  initialValue:
+                                      _formatNumber(controller.transaction.grandTotal.toString()),
                                   enabled: false,
                                   title: Padding(
                                     padding: const EdgeInsets.only(top: 8, bottom: 4),
@@ -134,20 +141,29 @@ class _PaymentState extends State<Payment> {
                                     ),
                                   ),
                                 ),
-                                ProfileTextfield(
+                                PriceTextfield(
+                                  currency: NumberFormat.currency(locale: 'id', symbol: 'Rp. '),
                                   hintText: lang().cash,
-                                  onChanged: (value) {
+                                  onChanged: (value) async {
+                                    var val = '${_formatNumber(value.replaceAll('.', ''))}';
                                     if (value != null && value != "") {
-                                      controller.transaction.cash = double.parse(value);
+                                      controller.transaction.cash =
+                                          double.parse(value.replaceAll('.', ''));
                                       controller.transaction.change =
-                                          double.parse(value) - controller.transaction.grandTotal!;
+                                          double.parse(value.replaceAll('.', '')) -
+                                              controller.transaction.grandTotal!;
                                     } else {
                                       controller.transaction.cash = 0;
                                       controller.transaction.change = null;
                                     }
+                                    log(value);
+                                    _cashTextCon.value = TextEditingValue(
+                                        selection: TextSelection.collapsed(offset: val.length),
+                                        text: val);
 
                                     controller.update();
                                   },
+                                  controller: _cashTextCon,
                                   keyboardType: TextInputType.number,
                                   title: Padding(
                                     padding: const EdgeInsets.only(top: 8, bottom: 4),
@@ -158,10 +174,13 @@ class _PaymentState extends State<Payment> {
                                     ),
                                   ),
                                 ),
-                                ProfileTextfield(
+                                PriceTextfield(
+                                  currency: NumberFormat.currency(locale: 'id', symbol: 'Rp. '),
                                   hintText: lang().change,
                                   controller: TextEditingController(
-                                      text: controller.transaction.change?.toString()),
+                                      text: controller.transaction.change != null
+                                          ? _formatNumber(controller.transaction.change!.toString())
+                                          : null),
                                   title: Padding(
                                     padding: const EdgeInsets.only(top: 8, bottom: 4),
                                     child: Text(

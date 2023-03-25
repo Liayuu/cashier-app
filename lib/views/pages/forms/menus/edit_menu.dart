@@ -12,9 +12,11 @@ import 'package:cashier_app/views/pages/forms/menus/add_category.dart';
 import 'package:cashier_app/views/pages/forms/menus/add_topping.dart';
 import 'package:cashier_app/views/pages/forms/menus/add_variant.dart';
 import 'package:flutter/material.dart';
+import 'package:cashier_app/views/components/price_textfield.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:intl/intl.dart';
 
 class EditMenu extends StatefulWidget {
   final String merchantId;
@@ -28,6 +30,9 @@ class EditMenu extends StatefulWidget {
 class _EditMenuState extends State<EditMenu> {
   final _formKey = GlobalKey<FormState>();
   final _menuController = Get.find<MenusController>();
+
+  String _formatNumber(String s) => NumberFormat.decimalPattern('id').format(double.parse(s));
+  var _priceEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -355,15 +360,23 @@ class _EditMenuState extends State<EditMenu> {
                                     color: Get.theme.unselectedWidgetColor,
                                   ),
                                 ),
-                                ProfileTextfield(
-                                  hintText: "Harga",
-                                  initialValue: controller.menu.price?.price != null
-                                      ? controller.menu.price!.price!.toString()
-                                      : null,
-                                  keyboardType: TextInputType.number,
-                                  onSaved: (value) {
-                                    _menuController.newPrice = double.parse(value);
+                                PriceTextfield(
+                                  currency: NumberFormat.currency(locale: 'id', symbol: 'Rp.'),
+                                  hintText: "Harga Produk",
+                                  onChanged: (value) {
+                                    var val = _formatNumber(value.replaceAll('.', ''));
+                                    if (value != null && value != "") {
+                                      _menuController.newPrice = double.parse(value);
+                                    } else {
+                                      _menuController.newPrice = 0;
+                                    }
+                                    _priceEditingController.value = TextEditingValue(
+                                        selection: TextSelection.collapsed(offset: val.length),
+                                        text: val);
+                                    _menuController.update();
                                   },
+                                  controller: _priceEditingController,
+                                  keyboardType: TextInputType.number,
                                   title: Padding(
                                     padding: const EdgeInsets.only(top: 8, bottom: 4),
                                     child: Text(
@@ -372,7 +385,32 @@ class _EditMenuState extends State<EditMenu> {
                                           .copyWith(fontWeight: FontWeight.w700),
                                     ),
                                   ),
+                                  onSaved: (value) {
+                                    if (double.parse(value) < 0) {
+                                      _menuController.newPrice = 0;
+                                    } else {
+                                      _menuController.newPrice = value;
+                                    }
+                                  },
                                 ),
+                                // ProfileTextfield(
+                                //   hintText: "Harga",
+                                //   initialValue: controller.menu.price?.price != null
+                                //       ? controller.menu.price!.price!.toString()
+                                //       : null,
+                                //   keyboardType: TextInputType.number,
+                                //   onSaved: (value) {
+                                //     _menuController.newPrice = double.parse(value);
+                                //   },
+                                //   title: Padding(
+                                //     padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                //     child: Text(
+                                //       "Harga",
+                                //       style: Get.textTheme.titleMedium!
+                                //           .copyWith(fontWeight: FontWeight.w700),
+                                //     ),
+                                //   ),
+                                // ),
                                 const SizedBox(
                                   height: 16,
                                 ),

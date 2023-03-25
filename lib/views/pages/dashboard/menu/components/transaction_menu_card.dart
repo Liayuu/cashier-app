@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:cashier_app/views/components/profile_textfield.dart';
+import 'package:intl/intl.dart';
 
 class TransactionMenuCard extends StatelessWidget {
   final double? width;
@@ -14,6 +15,8 @@ class TransactionMenuCard extends StatelessWidget {
   final String name;
   final ValueChanged<dynamic>? onChanged;
   final Function()? onDeleted;
+  String _formatCurrency(double p) =>
+      NumberFormat.currency(locale: 'id', decimalDigits: 2, symbol: "Rp. ").format(p);
 
   const TransactionMenuCard({
     Key? key,
@@ -72,7 +75,7 @@ class TransactionMenuCard extends StatelessWidget {
                                     Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                "@ Rp.$price",
+                                "@ ${_formatCurrency(price)}",
                                 style: Get.textTheme.bodySmall,
                               ),
                             ],
@@ -106,7 +109,7 @@ class TransactionMenuCard extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
-                          "Rp. ${(qty * price)}",
+                          _formatCurrency((qty * price)),
                           style: Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.normal),
                         ),
                       ),

@@ -22,6 +22,8 @@ import 'package:cashier_app/views/pages/dashboard/menu/components/app_bar_menu.d
 import 'package:get/get.dart';
 import 'dart:math' as math;
 
+import 'package:intl/intl.dart';
+
 class MainMenu extends StatefulWidget {
   final bool isForMainMenu;
   const MainMenu({super.key, this.isForMainMenu = true});
@@ -41,6 +43,8 @@ class _MainMenuState extends State<MainMenu> {
   final _merchantController = Get.find<MerchantController>();
   final _menuController = Get.find<MenusController>();
   final _userController = Get.find<UserController>();
+  String _formatCurrency(double p) =>
+      NumberFormat.currency(locale: 'id', decimalDigits: 2, symbol: "Rp. ").format(p);
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +291,8 @@ class _MainMenuState extends State<MainMenu> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Text(
-              selectedMenu.price?.price.toString() ?? "0",
+              _formatCurrency(selectedMenu.price?.price ?? 0),
+              // selectedMenu.price?.price.toString() ?? "0",
               style: Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w700),
             ),
           ),

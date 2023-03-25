@@ -7,6 +7,7 @@ import 'package:cashier_app/views/pages/payment/payment.dart';
 import 'package:flutter/material.dart';
 import 'package:cashier_app/views/components/button_main.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class SummaryOrder extends StatefulWidget {
   const SummaryOrder({super.key});
@@ -16,6 +17,8 @@ class SummaryOrder extends StatefulWidget {
 }
 
 class _SummaryOrderState extends State<SummaryOrder> {
+  String _formatCurrency(double p) =>
+      NumberFormat.currency(locale: 'id', decimalDigits: 2, symbol: "Rp. ").format(p);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,14 +180,14 @@ class _SummaryOrderState extends State<SummaryOrder> {
                                 "Discount",
                                 style: Get.textTheme.bodyLarge,
                               ),
-                              Text("Rp. 0", style: Get.textTheme.bodyLarge)
+                              Text(_formatCurrency(0), style: Get.textTheme.bodyLarge)
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("Total Pemesanan", style: Get.textTheme.bodyLarge),
-                              Text("Rp. ${controller.getSubTotal()}",
+                              Text(_formatCurrency(controller.getSubTotal()),
                                   style: Get.textTheme.bodyLarge)
                             ],
                           ),

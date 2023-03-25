@@ -34,7 +34,6 @@ class UserController extends GetxController {
   }
 
   _setInitialScreen(User? user) async {
-    // user == null ? Get.offAll(() => const LoginPage()) : Get.offAll(() => const MainDashboard());
     if (user == null) {
       Get.offAll(() => const LoginPage());
     } else {
@@ -47,7 +46,8 @@ class UserController extends GetxController {
     try {
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      print(e.code);
+      // print(e.code);
+      log(e.code, error: "$runtimeType");
     }
   }
 
@@ -57,7 +57,8 @@ class UserController extends GetxController {
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) => _setInitialScreen(value.user));
     } on FirebaseAuthException catch (e) {
-      print(e.code);
+      // print(e.code);
+      log(e.code, error: "$runtimeType");
     }
   }
 

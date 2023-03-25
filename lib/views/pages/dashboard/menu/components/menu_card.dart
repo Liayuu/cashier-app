@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class MenuCard extends StatelessWidget {
   final double? width;
@@ -9,6 +10,8 @@ class MenuCard extends StatelessWidget {
   final String name;
   final double availability;
   final String unit;
+  String _formatCurrency(double p) =>
+      NumberFormat.currency(locale: 'id', decimalDigits: 2, symbol: "Rp. ").format(p);
 
   const MenuCard(
       {super.key,
@@ -80,7 +83,7 @@ class MenuCard extends StatelessWidget {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              child: Text(price.toString(),
+                              child: Text(_formatCurrency(price),
                                   style: Get.textTheme.bodyMedium!
                                       .copyWith(fontWeight: FontWeight.w700)),
                             ),
