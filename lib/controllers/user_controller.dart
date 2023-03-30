@@ -85,4 +85,14 @@ class UserController extends GetxController {
       userModel = value.docs.first.data();
     });
   }
+
+  Future<void> addOrUpdateUser() async {
+    if (userModel.id != null) {
+      _userControllerRef
+          .doc(userModel.id)
+          .update(userModel.copyWith(updatedAt: DateTime.now()).toJson());
+    } else {
+      _userControllerRef.add(userModel.toJson());
+    }
+  }
 }

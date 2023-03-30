@@ -10,6 +10,7 @@ part 'merchant_model.g.dart';
 
 @JsonSerializable()
 class MerchantModel {
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? id;
   @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime, includeToJson: false)
   DateTime? createdAt;

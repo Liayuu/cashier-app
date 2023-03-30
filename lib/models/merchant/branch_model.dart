@@ -9,6 +9,7 @@ part 'branch_model.g.dart';
 
 @JsonSerializable()
 class BranchModel {
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? id;
   String? address;
   BranchType? branchType;
@@ -16,6 +17,7 @@ class BranchModel {
   String? disctrict;
   String? logo;
   String? background;
+  @JsonKey(includeIfNull: false)
   dynamic map;
   String? posCode;
   String? province;
@@ -46,7 +48,7 @@ class BranchModel {
     String? disctrict,
     String? logo,
     String? background,
-    dynamic? map,
+    dynamic map,
     String? posCode,
     String? province,
     double? rating,
