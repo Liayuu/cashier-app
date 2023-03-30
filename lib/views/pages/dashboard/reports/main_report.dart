@@ -1,13 +1,17 @@
 import 'package:cashier_app/configs/language_config.dart';
+import 'package:cashier_app/controllers/merchant_controller.dart';
+import 'package:cashier_app/controllers/transaction_controller.dart';
+import 'package:cashier_app/models/transaction/transaction_model.dart';
 import 'package:cashier_app/views/pages/dashboard/home/components/line_chart.dart';
 import 'package:cashier_app/views/pages/dashboard/reports/components/report_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:collection/collection.dart';
 import 'package:get/get.dart';
 
 class MainReport extends StatelessWidget {
-  const MainReport({super.key});
+  final TransactionController _transactionController = Get.find<TransactionController>();
+  final MerchantController _merchantController = Get.find<MerchantController>();
+  MainReport({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,12 +72,27 @@ class MainReport extends StatelessWidget {
                     style: Get.textTheme.titleLarge,
                   ),
                 ),
-                ListView.builder(
-                  itemBuilder: (context, index) => ReportCard(),
-                  itemCount: 10,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                )
+                FutureBuilder<List<TransactionModel>>(
+                    future: _transactionController.transactionList(
+                        merchantId: _merchantController.merchant.id!,
+                        locationId: _merchantController.branch.id!),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                            itemBuilder: (context, index) => ReportCard(
+                              idTransaction: snapshot.data?[index].id ?? "Unknown",
+                              transactionDate: snapshot.data?[index].createdAt ?? DateTime.now(),
+                              totalTransaction: snapshot.data?[index].subTotal ?? 0,
+                            ),
+                            itemCount: snapshot.data?.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                          );
+                        }
+                      }
+                      return SizedBox();
+                    })
               ],
             ),
           ),

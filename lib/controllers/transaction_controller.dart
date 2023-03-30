@@ -8,6 +8,8 @@ import 'package:cashier_app/models/report/dashboard_report_model.dart';
 import 'package:cashier_app/models/transaction/transaction_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
 
 class TransactionController extends GetxController {
   final _transactionCollection =
@@ -16,6 +18,7 @@ class TransactionController extends GetxController {
   int menuQty = 1;
   TransactionModel transaction = TransactionModel();
   double? subTotal;
+  double maxGraphIncome = 0;
 
   Stream<QuerySnapshot<TransactionModel>> streamDashboardReport(
       {required String merchantId, required String locationId}) {
@@ -30,6 +33,46 @@ class TransactionController extends GetxController {
     }, toFirestore: (value, options) {
       return {};
     }).snapshots();
+  }
+
+  Future<List<TransactionModel>> transactionList(
+      {required String merchantId, required String locationId}) async {
+    return await _transactionCollection
+        .where('merchantId', isEqualTo: merchantId)
+        .where('locationId', isEqualTo: locationId)
+        .withConverter<TransactionModel>(fromFirestore: (snapshot, options) {
+          return TransactionModel.fromJson(snapshot.id, snapshot.data()!);
+        }, toFirestore: (value, options) {
+          return {};
+        })
+        .get()
+        .then((value) => value.docs.map((e) => e.data()).toList());
+  }
+
+  Future<Map<String, List<TransactionModel>>> groupedTransaction(
+      {required String merchantId, required String locationId}) async {
+    var targetDate = DateTime.now().subtract(Duration(days: 7));
+    return await _transactionCollection
+        .where('merchantId', isEqualTo: merchantId)
+        .where('locationId', isEqualTo: locationId)
+        // .where('createdAt', isGreaterThan: Timestamp.fromDate(DateTime(2023)))
+        .where('createdAt',
+            isGreaterThan: Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 6))))
+        .withConverter<TransactionModel>(fromFirestore: (snapshot, options) {
+          return TransactionModel.fromJson(snapshot.id, snapshot.data()!);
+        }, toFirestore: (value, options) {
+          return {};
+        })
+        .get()
+        .then((value) {
+          var data = value.docs.map((e) => e.data()).toList();
+          maxGraphIncome =
+              data.map((e) => e.grandTotal ?? 0).reduce((curr, next) => curr > next ? curr : next);
+          var aa = groupBy<TransactionModel, String>(
+              data, (key) => DateFormat("d", 'id_ID').format(key.createdAt!));
+          log(aa.toString());
+          return aa;
+        });
   }
 
   Future<void> uploadTransaction(

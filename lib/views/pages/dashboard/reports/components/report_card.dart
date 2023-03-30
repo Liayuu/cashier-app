@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class ReportCard extends StatefulWidget {
-  const ReportCard({super.key});
+  String idTransaction;
+  DateTime transactionDate;
+  double totalTransaction;
+  ReportCard({
+    Key? key,
+    required this.idTransaction,
+    required this.transactionDate,
+    required this.totalTransaction,
+  }) : super(key: key);
 
   @override
   State<ReportCard> createState() => _ReportCardState();
@@ -73,11 +80,11 @@ class _ReportCardState extends State<ReportCard> with TickerProviderStateMixin {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "NDZ8829081375R",
+                            widget.idTransaction,
                             style: Get.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
                           ),
                           Text(
-                            "2 Jul 22 16:32",
+                            DateFormat("dd MMM yyyy hh:mm").format(widget.transactionDate),
                             style: Get.textTheme.labelMedium,
                           )
                         ],
@@ -95,7 +102,8 @@ class _ReportCardState extends State<ReportCard> with TickerProviderStateMixin {
                                 fontWeight: FontWeight.w700, color: Get.theme.primaryColor),
                           ),
                           Text(
-                            "\$ 15.99",
+                            NumberFormat.currency(locale: 'id_ID', decimalDigits: 0, symbol: 'Rp.')
+                                .format(widget.totalTransaction),
                             style: Get.textTheme.titleLarge!.copyWith(
                                 fontWeight: FontWeight.w700, color: Get.theme.primaryColor),
                           ),

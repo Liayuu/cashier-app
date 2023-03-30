@@ -1,8 +1,11 @@
+import 'package:cashier_app/controllers/merchant_controller.dart';
+import 'package:cashier_app/controllers/transaction_controller.dart';
+import 'package:cashier_app/models/transaction/transaction_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'dart:math';
 
 class LineChartDashboard extends StatefulWidget {
   const LineChartDashboard({super.key});
@@ -12,6 +15,8 @@ class LineChartDashboard extends StatefulWidget {
 }
 
 class _LineChartDashboardState extends State<LineChartDashboard> {
+  final _transactionController = Get.find<TransactionController>();
+  final _merchantController = Get.find<MerchantController>();
   List<Color> gradientColors = [
     Get.theme.primaryColor.withOpacity(0.7),
     Get.theme.primaryColor,
@@ -27,28 +32,15 @@ class _LineChartDashboardState extends State<LineChartDashboard> {
           aspectRatio: 1.70,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(12, 24, 18, 12),
-            child: LineChart(showAvg ? avgData() : mainData()),
+            child: FutureBuilder<Map<String, List<TransactionModel>>>(
+                future: _transactionController.groupedTransaction(
+                    merchantId: _merchantController.merchant.id!,
+                    locationId: _merchantController.branch.id!),
+                builder: (context, snapshot) {
+                  return LineChart(showAvg ? avgData() : mainData(snapshot.data));
+                }),
           ),
         ),
-        SizedBox(
-          width: 60,
-          height: 34,
-          child: TextButton(
-            onPressed: () {
-              setState(() {
-                showAvg = !showAvg;
-              });
-            },
-            child: Text(
-              "Avg",
-              style: TextStyle(
-                  fontSize: 12,
-                  color: showAvg
-                      ? Get.theme.colorScheme.background.withOpacity(0.5)
-                      : Get.theme.colorScheme.background),
-            ),
-          ),
-        )
       ],
     );
   }
@@ -58,43 +50,43 @@ class _LineChartDashboardState extends State<LineChartDashboard> {
       fontWeight: FontWeight.bold,
       fontSize: 16,
     );
-    Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = const Text('MAR', style: style);
-        break;
-      case 5:
-        text = const Text('JUN', style: style);
-        break;
-      case 8:
-        text = const Text('SEP', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      child: text,
+      child: Text(
+        DateFormat('d', 'id_ID').format(DateTime.now().subtract(Duration(days: 6 - value.toInt()))),
+        style: style,
+      ),
     );
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 15,
+      fontSize: 12,
     );
+    double maxRange;
+    if (_transactionController.maxGraphIncome > 1000000) {
+      maxRange = (_transactionController.maxGraphIncome / 100000).roundToDouble() * 100000;
+    } else {
+      maxRange = 1000000;
+    }
     String text;
     switch (value.toInt()) {
-      case 1:
-        text = '10K';
+      case 2:
+        text = NumberFormat.compact(locale: 'id_ID').format(maxRange / 10 * 2);
         break;
-      case 3:
-        text = '30k';
+      case 4:
+        text = NumberFormat.compact(locale: 'id_ID').format(maxRange / 10 * 4);
         break;
-      case 5:
-        text = '50k';
+      case 6:
+        text = NumberFormat.compact(locale: 'id_ID').format(maxRange / 10 * 6);
+        break;
+      case 8:
+        text = NumberFormat.compact(locale: 'id_ID').format(maxRange / 10 * 8);
+        break;
+      case 10:
+        text = NumberFormat.compact(locale: 'id_ID').format(maxRange / 10 * 10);
         break;
       default:
         return Container();
@@ -103,7 +95,7 @@ class _LineChartDashboardState extends State<LineChartDashboard> {
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 
-  LineChartData mainData() {
+  LineChartData mainData(Map<String, List<TransactionModel>>? data) {
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -153,21 +145,21 @@ class _LineChartDashboardState extends State<LineChartDashboard> {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       minX: 0,
-      maxX: 11,
+      maxX: 6,
       minY: 0,
-      maxY: 6,
+      maxY: 10,
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
+          spots: [
+            FlSpot(0, _graphNumber(0, data)),
+            FlSpot(1, _graphNumber(1, data)),
+            FlSpot(2, _graphNumber(2, data)),
+            FlSpot(3, _graphNumber(3, data)),
+            FlSpot(4, _graphNumber(4, data)),
+            FlSpot(5, _graphNumber(5, data)),
+            FlSpot(6, _graphNumber(6, data)),
           ],
-          isCurved: true,
+          isCurved: false,
           gradient: LinearGradient(
             colors: gradientColors,
           ),
@@ -280,5 +272,26 @@ class _LineChartDashboardState extends State<LineChartDashboard> {
         ),
       ],
     );
+  }
+
+  double _graphNumber(int index, Map<String, List<TransactionModel>>? data) {
+    if (data != null) {
+      if (data[DateFormat('d', 'id_ID')
+              .format(DateTime.now().subtract(Duration(days: 6 - index)))] !=
+          null) {
+        var raw = data[DateFormat('d', 'id_ID')
+                .format(DateTime.now().subtract(Duration(days: 6 - index)))]!
+            .fold(0.0, (previousValue, element) => previousValue + element.grandTotal!);
+        if (_transactionController.maxGraphIncome > 1000000) {
+          return raw / ((_transactionController.maxGraphIncome / 100000).roundToDouble() * 100000);
+        } else {
+          return raw / 100000;
+        }
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
   }
 }

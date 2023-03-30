@@ -9,6 +9,7 @@ import 'package:cashier_app/views/pages/dashboard/menu/components/app_bar_menu.d
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -64,7 +65,8 @@ class _HomeState extends State<Home> {
                 ),
                 StreamBuilder<QuerySnapshot<TransactionModel>>(
                   stream: _transactionController.streamDashboardReport(
-                      merchantId: "ZalXUuERlVTxJ5jRKwHg", locationId: "hUvnzFxMu7D5pOL2M1CQ"),
+                      merchantId: _merchantController.merchant.id!,
+                      locationId: _merchantController.branch.id!),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return Column(
@@ -83,7 +85,8 @@ class _HomeState extends State<Home> {
                                               horizontal: 16, vertical: 8),
                                           child: _cardChild(
                                               title: "Transaksi",
-                                              info: snapshot.data?.docs.length.toString() ?? "0"))),
+                                              info: NumberFormat.compact()
+                                                  .format(snapshot.data?.docs.length)))),
                                 ),
                               ),
                               Expanded(
@@ -96,15 +99,14 @@ class _HomeState extends State<Home> {
                                               horizontal: 16, vertical: 8),
                                           child: _cardChild(
                                               title: "Pemasukan",
-                                              info: snapshot.data?.docs
-                                                      .map((e) => e.data().grandTotal)
-                                                      .toList()
-                                                      .fold<double>(
-                                                          0,
-                                                          (previousValue, element) =>
-                                                              previousValue + element!)
-                                                      .toString() ??
-                                                  "0"))),
+                                              info: NumberFormat.compact().format(snapshot
+                                                  .data?.docs
+                                                  .map((e) => e.data().grandTotal)
+                                                  .toList()
+                                                  .fold<double>(
+                                                      0,
+                                                      (previousValue, element) =>
+                                                          previousValue + element!))))),
                                 ),
                               )
                             ],
@@ -123,12 +125,11 @@ class _HomeState extends State<Home> {
                                               horizontal: 16, vertical: 8),
                                           child: _cardChild(
                                               title: "Transaksi Terkecil",
-                                              info: snapshot.data?.docs
-                                                      .map((e) => e.data().grandTotal)
-                                                      .reduce((value, element) =>
-                                                          value! < element! ? value : element)
-                                                      .toString() ??
-                                                  "0"))),
+                                              info: NumberFormat.compact().format(snapshot
+                                                  .data?.docs
+                                                  .map((e) => e.data().grandTotal)
+                                                  .reduce((value, element) =>
+                                                      value! < element! ? value : element))))),
                                 ),
                               ),
                               Expanded(
@@ -141,12 +142,11 @@ class _HomeState extends State<Home> {
                                               horizontal: 16, vertical: 8),
                                           child: _cardChild(
                                               title: "Transaksi Terbesar",
-                                              info: snapshot.data?.docs
-                                                      .map((e) => e.data().grandTotal)
-                                                      .reduce((value, element) =>
-                                                          value! > element! ? value : element)
-                                                      .toString() ??
-                                                  "0"))),
+                                              info: NumberFormat.compact().format(snapshot
+                                                  .data?.docs
+                                                  .map((e) => e.data().grandTotal)
+                                                  .reduce((value, element) =>
+                                                      value! > element! ? value : element))))),
                                 ),
                               )
                             ],
