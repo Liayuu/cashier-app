@@ -20,7 +20,7 @@ class PriceTextfield extends StatelessWidget {
   String? Function(String?)? validator;
   ValueChanged<dynamic>? onSaved;
   ValueChanged<dynamic>? onChanged;
-  NumberFormat currency;
+  NumberFormat? currency;
 
   PriceTextfield(
       {Key? key,
@@ -38,12 +38,16 @@ class PriceTextfield extends StatelessWidget {
       this.textInputAction,
       this.validator,
       this.onSaved,
-      required this.currency,
+      this.currency,
       this.onChanged})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String formatNumber(String s) => NumberFormat.decimalPattern('id').format(double.parse(s));
+    if (initialValue != null && controller != null) {
+      controller!.text = formatNumber(initialValue!.replaceAll('.', ''));
+    }
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,10 +55,12 @@ class PriceTextfield extends StatelessWidget {
         title ?? const SizedBox(),
         Row(
           children: [
-            Text(
-              currency.currencySymbol,
-              style: Get.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
-            ),
+            currency != null
+                ? Text(
+                    currency!.currencySymbol,
+                    style: Get.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
+                  )
+                : const SizedBox(),
             const SizedBox(
               width: 8,
             ),
@@ -84,7 +90,7 @@ class PriceTextfield extends StatelessWidget {
                 keyboardType: keyboardType,
                 maxLines: 1,
                 enabled: enabled,
-                initialValue: initialValue,
+                initialValue: controller != null ? null : initialValue,
                 textInputAction: textInputAction,
                 validator: validator,
                 onChanged: (value) {

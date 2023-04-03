@@ -7,7 +7,6 @@ part of 'branch_model.dart';
 // **************************************************************************
 
 BranchModel _$BranchModelFromJson(Map<String, dynamic> json) => BranchModel(
-      id: json['id'] as String?,
       address: json['address'] as String?,
       branchType: $enumDecodeNullable(_$BranchTypeEnumMap, json['branchType']),
       country: json['country'] as String?,
@@ -22,22 +21,30 @@ BranchModel _$BranchModelFromJson(Map<String, dynamic> json) => BranchModel(
       status: $enumDecodeNullable(_$StatusEnumEnumMap, json['status']),
     );
 
-Map<String, dynamic> _$BranchModelToJson(BranchModel instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'address': instance.address,
-      'branchType': _$BranchTypeEnumMap[instance.branchType],
-      'country': instance.country,
-      'disctrict': instance.disctrict,
-      'logo': instance.logo,
-      'background': instance.background,
-      'map': instance.map,
-      'posCode': instance.posCode,
-      'province': instance.province,
-      'rating': instance.rating,
-      'regency': instance.regency,
-      'status': _$StatusEnumEnumMap[instance.status],
-    };
+Map<String, dynamic> _$BranchModelToJson(BranchModel instance) {
+  final val = <String, dynamic>{
+    'address': instance.address,
+    'branchType': _$BranchTypeEnumMap[instance.branchType],
+    'country': instance.country,
+    'disctrict': instance.disctrict,
+    'logo': instance.logo,
+    'background': instance.background,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('map', instance.map);
+  val['posCode'] = instance.posCode;
+  val['province'] = instance.province;
+  val['rating'] = instance.rating;
+  val['regency'] = instance.regency;
+  val['status'] = _$StatusEnumEnumMap[instance.status];
+  return val;
+}
 
 const _$BranchTypeEnumMap = {
   BranchType.UNKNOWN: 'UNKNOWN',

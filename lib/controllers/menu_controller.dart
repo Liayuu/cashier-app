@@ -207,4 +207,8 @@ class MenusController extends GetxController {
 
     return directory;
   }
+
+  Future<void> deleteMenu() async {
+    await _menuCollection.doc(menu.id).delete();
+  }
 }

@@ -36,8 +36,6 @@ class _EditMenuState extends State<EditMenu> {
 
   @override
   Widget build(BuildContext context) {
-    log(widget.merchantId, name: "Merchant ID");
-    log(widget.locationId, name: "Location ID");
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -71,7 +69,30 @@ class _EditMenuState extends State<EditMenu> {
                                   child: InkWell(
                                       borderRadius: BorderRadius.circular(12),
                                       splashColor: Colors.white.withOpacity(0.8),
-                                      onTap: () {},
+                                      onTap: () async {
+                                        Get.dialog(
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Mohon tunggu",
+                                                  style: Get.textTheme.labelMedium,
+                                                ),
+                                                const CircularProgressIndicator()
+                                              ],
+                                            ),
+                                            barrierDismissible: false);
+                                        await _menuController.deleteMenu().then((value) {
+                                          _menuController.menu = MenuModel();
+                                          _menuController.newImage = null;
+                                          _menuController.newPrice = null;
+                                          _menuController.currentCategory = CategoriesModel();
+                                          Get.back();
+                                        }).then((value) {
+                                          Get.back();
+                                          Get.back();
+                                        });
+                                      },
                                       child: Padding(
                                         padding: const EdgeInsets.all(8),
                                         child: Text(
@@ -84,7 +105,9 @@ class _EditMenuState extends State<EditMenu> {
                                   child: InkWell(
                                       borderRadius: BorderRadius.circular(12),
                                       splashColor: Colors.white.withOpacity(0.8),
-                                      onTap: () {},
+                                      onTap: () {
+                                        Get.back();
+                                      },
                                       child: Padding(
                                         padding: const EdgeInsets.all(8),
                                         child: Text(
@@ -97,7 +120,7 @@ class _EditMenuState extends State<EditMenu> {
                         ),
                       ));
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.delete_rounded,
                       color: Colors.red,
                       size: 24,

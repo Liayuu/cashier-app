@@ -8,7 +8,6 @@ part of 'merchant_model.dart';
 
 MerchantModel _$MerchantModelFromJson(Map<String, dynamic> json) =>
     MerchantModel(
-      id: json['id'] as String?,
       createdAt: _parseTimestamp(json['createdAt']),
       updatedAt: _parseTimestamp(json['updatedAt']),
       name: json['name'] as String?,
@@ -20,7 +19,6 @@ MerchantModel _$MerchantModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$MerchantModelToJson(MerchantModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'updatedAt': _parseDateTime(instance.updatedAt),
       'name': instance.name,
       'logo': instance.logo,

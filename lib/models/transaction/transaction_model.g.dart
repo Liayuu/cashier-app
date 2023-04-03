@@ -12,8 +12,8 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
       change: (json['change'] as num?)?.toDouble(),
       createdAt: _parseTimestamp(json['createdAt']),
       currency: json['currency'] as String?,
-      discNominal: (json['discountNominal'] as num?)?.toDouble(),
-      grandTotal: (json['grandTotal'] as num?)?.toDouble(),
+      discNominal: (json['discountNominal'] as num?)?.toDouble() ?? 0,
+      grandTotal: (json['grandTotal'] as num?)?.toDouble() ?? 0,
       handledBy: json['handledBy'] as String?,
       locationId: json['locationId'] as String?,
       merchantId: json['merchantId'] as String?,
@@ -23,7 +23,7 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
           ?.map((e) => e as String)
           .toList(),
       status: $enumDecodeNullable(_$TransactionStatusEnumMap, json['status']),
-      subTotal: (json['subTotal'] as num?)?.toDouble(),
+      subTotal: (json['subTotal'] as num?)?.toDouble() ?? 0,
       orderType: $enumDecodeNullable(_$OrderTypeEnumMap, json['orderType']) ??
           OrderType.DINE_IN,
     );
