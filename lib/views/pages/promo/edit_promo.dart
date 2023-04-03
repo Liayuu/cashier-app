@@ -487,7 +487,7 @@ class _EditPromoState extends State<EditPromo> {
             context: context,
             initialDate: initialDate,
             firstDate: DateTime(1900, 1),
-            lastDate: DateTime.now())
+            lastDate: DateTime(9999))
         .then((value) {
       if (value != null) onDatePicked!(value);
     });
