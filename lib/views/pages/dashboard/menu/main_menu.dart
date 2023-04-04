@@ -40,11 +40,13 @@ class _MainMenuState extends State<MainMenu> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   final _transactionController = Get.find<TransactionController>();
   // final _userController = Get.find<UserController>();
+  Timer? _debouncer;
   final _merchantController = Get.find<MerchantController>();
   final _menuController = Get.find<MenusController>();
   final _userController = Get.find<UserController>();
   String _formatCurrency(double p) =>
       NumberFormat.currency(locale: 'id', decimalDigits: 2, symbol: "Rp. ").format(p);
+  String? searchMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +80,8 @@ class _MainMenuState extends State<MainMenu> {
                     Expanded(
                       child: StreamBuilder<List<CategoriesModel>>(
                           stream: _menuController.streamEditCategory(
-                              _merchantController.merchant.id!, _merchantController.branch.id!),
+                              _merchantController.merchant.id!, _merchantController.branch.id!,
+                              searchMenu: searchMenu),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return CustomScrollView(
@@ -115,9 +118,24 @@ class _MainMenuState extends State<MainMenu> {
                                                             companyName: controller.merchant.name!);
                                                       })
                                                   : const SizedBox(),
-                                              const Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: InPageSearchBar(),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: InPageSearchBar(
+                                                  hint: "Cari menu disini",
+                                                  searchQuery: (query) {
+                                                    if (_debouncer?.isActive ?? false)
+                                                      _debouncer!.cancel();
+                                                    _debouncer = Timer(
+                                                        const Duration(milliseconds: 800), () {
+                                                      if (searchMenu != query) {
+                                                        setState(() {
+                                                          searchMenu = query;
+                                                        });
+                                                      }
+                                                      _debouncer?.cancel();
+                                                    });
+                                                  },
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -362,9 +380,6 @@ class _MainMenuState extends State<MainMenu> {
                           _transactionController.menuQty;
                 }
                 _transactionController.insertGrandTotal();
-                // _transactionController.transaction.grandTotal =
-                //     _transactionController.transaction.grandTotal ??
-                //         0 + selectedMenu.price!.price! * _transactionController.menuQty;
                 _transactionController.menuQty = 1;
                 _transactionController.update();
                 Get.back();

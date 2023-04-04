@@ -25,7 +25,8 @@ class MenusController extends GetxController {
   double? newPrice;
   String? newCategory;
 
-  Stream<List<CategoriesModel>> streamEditCategory(String merchantId, String locationId) {
+  Stream<List<CategoriesModel>> streamEditCategory(String merchantId, String locationId,
+      {String? searchMenu}) {
     return _categoryCollection
         .where('merchantId', isEqualTo: merchantId)
         .where('appliedAt', arrayContains: locationId)
@@ -35,7 +36,8 @@ class MenusController extends GetxController {
             toFirestore: (value, options) => value.toJson())
         .snapshots()
         .asyncMap((event) {
-      return Future.wait(event.docs.map((e) => fetchCategoriesWithMenu(param: e.data())));
+      return Future.wait(
+          event.docs.map((e) => fetchCategoriesWithMenu(param: e.data(), searchMenu: searchMenu)));
     });
   }
 
@@ -82,8 +84,15 @@ class MenusController extends GetxController {
     });
   }
 
-  Future<CategoriesModel> fetchCategoriesWithMenu({required CategoriesModel param}) async {
+  Future<CategoriesModel> fetchCategoriesWithMenu(
+      {required CategoriesModel param, String? searchMenu}) async {
     if (param.items?.isNotEmpty ?? false) {
+      // var menu = _menuCollection.where('__name__', whereIn: param.items);
+      // if (searchMenu != null && searchMenu != '') {
+      //   log(searchMenu.toString());
+      //   menu = menu.where('name', isGreaterThanOrEqualTo: searchMenu);
+      //   // .where('name', isLessThanOrEqualTo: '$searchMenu\uf8ff');
+      // }
       return await _menuCollection
           .where('__name__', whereIn: param.items)
           .withConverter<MenuModel>(
@@ -92,7 +101,14 @@ class MenusController extends GetxController {
               toFirestore: (value, options) => value.toJson())
           .get()
           .then((value) {
-        return value.docs.map((e) => e.data()).toList();
+        var data = value.docs.map((e) => e.data()).toList();
+        if (searchMenu != null && searchMenu != '') {
+          return data
+              .where((element) =>
+                  element.name?.toLowerCase().contains(searchMenu.toLowerCase()) ?? false)
+              .toList();
+        }
+        return data;
       }).then((value) async {
         return Future.wait(value.map((e) async {
           log(e.image ?? "null", name: "Image");
