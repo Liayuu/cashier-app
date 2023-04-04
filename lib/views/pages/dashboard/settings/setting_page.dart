@@ -66,14 +66,14 @@ class SettingPage extends StatelessWidget {
                                 ]),
                             child: GestureDetector(
                               onTap: () => Get.to(() => ImageViewer(
-                                  tag: "Test",
-                                  image: NetworkImage(_merchantController.branch.logo!),
-                                  newsTitle: "Test")),
+                                  tag: _merchantController.merchant.name ?? '',
+                                  image: NetworkImage(_merchantController.branch.logoUrl!),
+                                  newsTitle: _merchantController.merchant.name ?? '')),
                               child: ClipOval(
                                 child: SizedBox.fromSize(
                                   size: const Size.fromRadius(48),
                                   child: Hero(
-                                    tag: "Test",
+                                    tag: _merchantController.merchant.name ?? '',
                                     child: Image.network(
                                       _merchantController.branch.logoUrl!,
                                       fit: BoxFit.cover,

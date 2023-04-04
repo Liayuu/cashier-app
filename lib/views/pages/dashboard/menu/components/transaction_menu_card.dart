@@ -2,14 +2,17 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'package:cashier_app/views/components/profile_textfield.dart';
 import 'package:intl/intl.dart';
+
+import 'package:cashier_app/controllers/enums/promotion_type_enum.dart';
+import 'package:cashier_app/views/components/profile_textfield.dart';
 
 class TransactionMenuCard extends StatelessWidget {
   final double? width;
   final double? height;
   final String images;
+  final double? discount;
+  final NominalTypeEnum? discountType;
   final double price;
   final int qty;
   final String name;
@@ -17,12 +20,16 @@ class TransactionMenuCard extends StatelessWidget {
   final Function()? onDeleted;
   String _formatCurrency(double p) =>
       NumberFormat.currency(locale: 'id', decimalDigits: 2, symbol: "Rp. ").format(p);
+  String _formatPercent(double p) =>
+      NumberFormat.decimalPercentPattern(locale: 'id', decimalDigits: 0).format(p);
 
   const TransactionMenuCard({
     Key? key,
     this.width,
     this.height,
     required this.images,
+    this.discount,
+    this.discountType,
     required this.price,
     required this.qty,
     required this.name,
@@ -76,7 +83,7 @@ class TransactionMenuCard extends StatelessWidget {
                               ),
                               Text(
                                 "@ ${_formatCurrency(price)}",
-                                style: Get.textTheme.bodySmall,
+                                style: Get.textTheme.bodySmall!,
                               ),
                             ],
                           )),
@@ -110,12 +117,34 @@ class TransactionMenuCard extends StatelessWidget {
                       child: Center(
                         child: Text(
                           _formatCurrency((qty * price)),
-                          style: Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.normal),
+                          style: Get.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.normal,
+                              decoration: discount != null ? TextDecoration.lineThrough : null),
                         ),
                       ),
                     )),
               ],
             ),
+            if (discount != null) ...{
+              Row(
+                children: [
+                  Expanded(
+                      flex: 3,
+                      child: Text(
+                        "Diskon ${discountType == NominalTypeEnum.NOMINAL ? _formatCurrency(discount!) : _formatPercent(discount!)}",
+                        style: Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+                      )),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                        discountType == NominalTypeEnum.NOMINAL
+                            ? _formatCurrency((price * qty) - discount!)
+                            : _formatCurrency(price * qty - ((price * qty) * discount!)),
+                        style: Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.normal)),
+                  )
+                ],
+              ),
+            },
             Row(
               children: [
                 Expanded(
@@ -136,27 +165,29 @@ class TransactionMenuCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.red)),
-                        child: IconButton(
-                            onPressed: onDeleted ?? () {},
-                            icon: const Icon(
-                              Icons.delete_rounded,
-                              size: 24,
-                              color: Colors.red,
-                            )),
+                if (onDeleted != null) ...{
+                  Expanded(
+                    flex: 1,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.red)),
+                          child: IconButton(
+                              onPressed: onDeleted ?? () {},
+                              icon: const Icon(
+                                Icons.delete_rounded,
+                                size: 24,
+                                color: Colors.red,
+                              )),
+                        ),
                       ),
                     ),
-                  ),
-                )
+                  )
+                }
               ],
             )
           ],

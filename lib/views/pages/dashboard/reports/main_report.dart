@@ -62,7 +62,7 @@ class MainReport extends StatelessWidget {
                       color: Get.theme.cardColor),
                   child: const LineChartDashboard(),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 Padding(
@@ -91,7 +91,7 @@ class MainReport extends StatelessWidget {
                           );
                         }
                       }
-                      return SizedBox();
+                      return const SizedBox();
                     })
               ],
             ),

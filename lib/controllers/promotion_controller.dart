@@ -25,8 +25,8 @@ class PromotionController extends GetxController {
         .where('appliedAt', arrayContains: locationId);
     if (currentTime != null) {
       query = query
-          .where('startTime', isGreaterThanOrEqualTo: currentTime)
-          .where('endTime', isLessThanOrEqualTo: currentTime);
+          .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(currentTime))
+          .where('endTime', isLessThanOrEqualTo: Timestamp.fromDate(currentTime));
     }
     if (includedItems != null) {
       query = query.where('includedItems', arrayContainsAny: includedItems);

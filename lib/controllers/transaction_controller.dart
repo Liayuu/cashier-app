@@ -4,6 +4,7 @@ import 'package:cashier_app/controllers/enums/document_name.dart';
 import 'package:cashier_app/controllers/enums/payment_type_enum.dart';
 import 'package:cashier_app/controllers/enums/transaction_status_enum.dart';
 import 'package:cashier_app/models/menu/menus_model.dart';
+import 'package:cashier_app/models/menu/price_model.dart';
 import 'package:cashier_app/models/report/dashboard_report_model.dart';
 import 'package:cashier_app/models/transaction/transaction_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -49,13 +50,40 @@ class TransactionController extends GetxController {
         .then((value) => value.docs.map((e) => e.data()).toList());
   }
 
+  Future<void> getSingleTransaction(String transactionId) async {
+    await _transactionCollection
+        .doc(transactionId)
+        .withConverter<TransactionModel>(fromFirestore: (snapshot, options) {
+          return TransactionModel.fromJson(snapshot.id, snapshot.data()!);
+        }, toFirestore: (value, options) {
+          return {};
+        })
+        .get()
+        .then((value) async {
+          var menu = await _getTransactionMenu(transactionId);
+          transaction = value.data()!.copyWith(menus: menu);
+        });
+  }
+
+  Future<List<MenuModel>> _getTransactionMenu(String transactionId) async {
+    return await _transactionCollection
+        .doc(transactionId)
+        .collection('menu')
+        .withConverter<MenuModel>(fromFirestore: (snapshot, options) {
+          return MenuModel.fromJson(snapshot.id, snapshot.data()!);
+        }, toFirestore: (value, options) {
+          return {};
+        })
+        .get()
+        .then((value) => value.docs.map((e) => e.data()).toList());
+  }
+
   Future<Map<String, List<TransactionModel>>> groupedTransaction(
       {required String merchantId, required String locationId}) async {
     var targetDate = DateTime.now().subtract(Duration(days: 7));
     return await _transactionCollection
         .where('merchantId', isEqualTo: merchantId)
         .where('locationId', isEqualTo: locationId)
-        // .where('createdAt', isGreaterThan: Timestamp.fromDate(DateTime(2023)))
         .where('createdAt',
             isGreaterThan: Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 6))))
         .withConverter<TransactionModel>(fromFirestore: (snapshot, options) {

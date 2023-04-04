@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class ReportCard extends StatefulWidget {
-  String idTransaction;
+  String? idTransaction;
   DateTime transactionDate;
   double totalTransaction;
+  Function()? onTap;
   ReportCard({
     Key? key,
-    required this.idTransaction,
+    this.idTransaction,
+    this.onTap,
     required this.transactionDate,
     required this.totalTransaction,
   }) : super(key: key);
@@ -52,7 +54,7 @@ class _ReportCardState extends State<ReportCard> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: widget.onTap,
       child: SizedBox(
         child: Stack(
           children: [
@@ -80,8 +82,8 @@ class _ReportCardState extends State<ReportCard> with TickerProviderStateMixin {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            widget.idTransaction,
-                            style: Get.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
+                            'Waktu Pemesanan',
+                            style: Get.textTheme.labelMedium!,
                           ),
                           Text(
                             DateFormat("dd MMM yyyy hh:mm").format(widget.transactionDate),
@@ -97,7 +99,7 @@ class _ReportCardState extends State<ReportCard> with TickerProviderStateMixin {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "Total Bayar",
+                            "Total Transaksi",
                             style: Get.textTheme.titleLarge!.copyWith(
                                 fontWeight: FontWeight.w700, color: Get.theme.primaryColor),
                           ),

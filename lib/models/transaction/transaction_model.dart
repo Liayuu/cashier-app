@@ -8,6 +8,7 @@ import 'package:cashier_app/controllers/enums/order_type_enum.dart';
 import 'package:cashier_app/controllers/enums/payment_type_enum.dart';
 import 'package:cashier_app/controllers/enums/transaction_status_enum.dart';
 import 'package:cashier_app/models/menu/menus_model.dart';
+import 'package:cashier_app/models/promotion/promotion_model.dart';
 
 part 'transaction_model.g.dart';
 
@@ -31,9 +32,10 @@ class TransactionModel {
   TransactionStatus? status;
   double? subTotal;
   OrderType? orderType;
-  @JsonKey(includeFromJson: false)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   List<MenuModel>? menus;
-  //TODO: PAJAK BELUM DIBUAT
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  List<PromotionModel>? promos;
   TransactionModel({
     this.id,
     this.cash,
@@ -51,6 +53,7 @@ class TransactionModel {
     this.subTotal = 0,
     this.orderType = OrderType.DINE_IN,
     this.menus,
+    this.promos,
   });
 
   TransactionModel copyWith({
@@ -70,6 +73,7 @@ class TransactionModel {
     double? subTotal,
     OrderType? orderType,
     List<MenuModel>? menus,
+    List<PromotionModel>? promos,
   }) {
     return TransactionModel(
       id: id ?? this.id,
@@ -88,6 +92,7 @@ class TransactionModel {
       subTotal: subTotal ?? this.subTotal,
       orderType: orderType ?? this.orderType,
       menus: menus ?? this.menus,
+      promos: promos ?? this.promos,
     );
   }
 
@@ -98,7 +103,7 @@ class TransactionModel {
 
   @override
   String toString() {
-    return 'TransactionModel(id: $id, cash: $cash, change: $change, createdAt: $createdAt, currency: $currency, discNominal: $discNominal, grandTotal: $grandTotal, handledBy: $handledBy, locationId: $locationId, merchantId: $merchantId, paymentType: $paymentType, promotionUsed: $promotionUsed, status: $status, subTotal: $subTotal, orderType: $orderType, menus: $menus)';
+    return 'TransactionModel(id: $id, cash: $cash, change: $change, createdAt: $createdAt, currency: $currency, discNominal: $discNominal, grandTotal: $grandTotal, handledBy: $handledBy, locationId: $locationId, merchantId: $merchantId, paymentType: $paymentType, promotionUsed: $promotionUsed, status: $status, subTotal: $subTotal, orderType: $orderType, menus: $menus, promos: $promos)';
   }
 
   @override
@@ -121,7 +126,8 @@ class TransactionModel {
         other.status == status &&
         other.subTotal == subTotal &&
         other.orderType == orderType &&
-        listEquals(other.menus, menus);
+        listEquals(other.menus, menus) &&
+        listEquals(other.promos, promos);
   }
 
   @override
@@ -141,7 +147,8 @@ class TransactionModel {
         status.hashCode ^
         subTotal.hashCode ^
         orderType.hashCode ^
-        menus.hashCode;
+        menus.hashCode ^
+        promos.hashCode;
   }
 }
 

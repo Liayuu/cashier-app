@@ -21,6 +21,8 @@ class PromotionModel {
   DateTime? endTime;
   List<String>? excludedItems;
   List<String>? includedItems;
+  int? minQty;
+  int? maxQty;
   double? maximumNominal;
   String? merchantId;
   double? minimumTransaction;
@@ -46,6 +48,8 @@ class PromotionModel {
     this.endTime,
     this.excludedItems,
     this.includedItems,
+    this.minQty,
+    this.maxQty,
     this.maximumNominal,
     this.merchantId,
     this.minimumTransaction,
@@ -71,6 +75,8 @@ class PromotionModel {
     DateTime? endTime,
     List<String>? excludedItems,
     List<String>? includedItems,
+    int? minQty,
+    int? maxQty,
     double? maximumNominal,
     String? merchantId,
     double? minimumTransaction,
@@ -95,6 +101,8 @@ class PromotionModel {
       endTime: endTime ?? this.endTime,
       excludedItems: excludedItems ?? this.excludedItems,
       includedItems: includedItems ?? this.includedItems,
+      minQty: minQty ?? this.minQty,
+      maxQty: maxQty ?? this.maxQty,
       maximumNominal: maximumNominal ?? this.maximumNominal,
       merchantId: merchantId ?? this.merchantId,
       minimumTransaction: minimumTransaction ?? this.minimumTransaction,
@@ -120,7 +128,7 @@ class PromotionModel {
 
   @override
   String toString() {
-    return 'PromotionModel(id: $id, appliedAt: $appliedAt, createdAt: $createdAt, currency: $currency, endTime: $endTime, excludedItems: $excludedItems, includedItems: $includedItems, maximumNominal: $maximumNominal, merchantId: $merchantId, minimumTransaction: $minimumTransaction, multipleReward: $multipleReward, name: $name, nominal: $nominal, nominalTypeName: $nominalTypeName, nominalType: $nominalType, promoTypeName: $promoTypeName, promoType: $promoType, rewardItem: $rewardItem, startTime: $startTime, status: $status, updatedAt: $updatedAt, usingWithOtherPromo: $usingWithOtherPromo)';
+    return 'PromotionModel(id: $id, appliedAt: $appliedAt, createdAt: $createdAt, currency: $currency, endTime: $endTime, excludedItems: $excludedItems, includedItems: $includedItems, minQty: $minQty, maxQty: $maxQty, maximumNominal: $maximumNominal, merchantId: $merchantId, minimumTransaction: $minimumTransaction, multipleReward: $multipleReward, name: $name, nominal: $nominal, nominalTypeName: $nominalTypeName, nominalType: $nominalType, promoTypeName: $promoTypeName, promoType: $promoType, rewardItem: $rewardItem, startTime: $startTime, status: $status, updatedAt: $updatedAt, usingWithOtherPromo: $usingWithOtherPromo)';
   }
 
   @override
@@ -135,6 +143,8 @@ class PromotionModel {
         other.endTime == endTime &&
         listEquals(other.excludedItems, excludedItems) &&
         listEquals(other.includedItems, includedItems) &&
+        other.minQty == minQty &&
+        other.maxQty == maxQty &&
         other.maximumNominal == maximumNominal &&
         other.merchantId == merchantId &&
         other.minimumTransaction == minimumTransaction &&
@@ -161,6 +171,8 @@ class PromotionModel {
         endTime.hashCode ^
         excludedItems.hashCode ^
         includedItems.hashCode ^
+        minQty.hashCode ^
+        maxQty.hashCode ^
         maximumNominal.hashCode ^
         merchantId.hashCode ^
         minimumTransaction.hashCode ^

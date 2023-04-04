@@ -28,6 +28,8 @@ class MenuModel {
   String? image;
   List<String>? specifiedAt;
   StatusEnum? status;
+  @JsonKey(name: 'price')
+  double? singlePrice;
   @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime)
   DateTime? updatedAt;
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -51,6 +53,7 @@ class MenuModel {
     this.image,
     this.specifiedAt,
     this.status,
+    this.singlePrice,
     this.updatedAt,
     this.price,
     this.newImage,
@@ -71,6 +74,7 @@ class MenuModel {
     String? image,
     List<String>? specifiedAt,
     StatusEnum? status,
+    double? singlePrice,
     DateTime? updatedAt,
     PriceModel? price,
     String? newImage,
@@ -90,6 +94,7 @@ class MenuModel {
       image: image ?? this.image,
       specifiedAt: specifiedAt ?? this.specifiedAt,
       status: status ?? this.status,
+      singlePrice: singlePrice ?? this.singlePrice,
       updatedAt: updatedAt ?? this.updatedAt,
       price: price ?? this.price,
       newImage: newImage ?? this.newImage,
@@ -105,7 +110,7 @@ class MenuModel {
 
   @override
   String toString() {
-    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, qty: $qty, buyingPrice: $buyingPrice, image: $image, specifiedAt: $specifiedAt, status: $status, updatedAt: $updatedAt, price: $price, newImage: $newImage, downloadLink: $downloadLink, note: $note)';
+    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, qty: $qty, buyingPrice: $buyingPrice, image: $image, specifiedAt: $specifiedAt, status: $status, singlePrice: $singlePrice, updatedAt: $updatedAt, price: $price, newImage: $newImage, downloadLink: $downloadLink, note: $note)';
   }
 
   @override
@@ -125,6 +130,7 @@ class MenuModel {
         other.image == image &&
         listEquals(other.specifiedAt, specifiedAt) &&
         other.status == status &&
+        other.singlePrice == singlePrice &&
         other.updatedAt == updatedAt &&
         other.price == price &&
         other.newImage == newImage &&
@@ -146,6 +152,7 @@ class MenuModel {
         image.hashCode ^
         specifiedAt.hashCode ^
         status.hashCode ^
+        singlePrice.hashCode ^
         updatedAt.hashCode ^
         price.hashCode ^
         newImage.hashCode ^

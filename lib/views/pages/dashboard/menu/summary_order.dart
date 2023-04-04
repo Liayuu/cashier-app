@@ -10,7 +10,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class SummaryOrder extends StatefulWidget {
-  const SummaryOrder({super.key});
+  bool isFromReport;
+  SummaryOrder({super.key, this.isFromReport = false});
 
   @override
   State<SummaryOrder> createState() => _SummaryOrderState();
@@ -81,66 +82,68 @@ class _SummaryOrderState extends State<SummaryOrder> {
                           controller.transaction.menus![index].note = value.toString();
                           controller.update();
                         },
-                        onDeleted: () {
-                          Get.dialog(ConfirmationPopup(
-                            title: Text(
-                              "Hapus Menu",
-                              style: Get.textTheme.titleMedium,
-                            ),
-                            content: Center(
-                              child: Text(
-                                "Apakah anda yakin ingin menghapus pesanan ini?",
-                                style: Get.textTheme.bodyMedium,
-                              ),
-                            ),
-                            width: Get.width * 0.8,
-                            action: Flexible(
-                              fit: FlexFit.loose,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                          borderRadius: BorderRadius.circular(12),
-                                          splashColor: Colors.white.withOpacity(0.8),
-                                          onTap: () {
-                                            controller.transaction.menus!.removeAt(index);
-                                            controller.insertGrandTotal();
-                                            controller.update();
-                                            Get.back();
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8),
-                                            child: Text(
-                                              "Ya",
-                                              style: Get.textTheme.labelMedium,
-                                            ),
-                                          ))),
-                                  const SizedBox(
-                                    width: 16,
+                        onDeleted: !widget.isFromReport
+                            ? () {
+                                Get.dialog(ConfirmationPopup(
+                                  title: Text(
+                                    "Hapus Menu",
+                                    style: Get.textTheme.titleMedium,
                                   ),
-                                  Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                          borderRadius: BorderRadius.circular(12),
-                                          splashColor: Colors.white.withOpacity(0.8),
-                                          onTap: () {
-                                            Get.back();
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8),
-                                            child: Text(
-                                              "Tidak",
-                                              style: Get.textTheme.labelMedium,
-                                            ),
-                                          ))),
-                                ],
-                              ),
-                            ),
-                          ));
-                        },
+                                  content: Center(
+                                    child: Text(
+                                      "Apakah anda yakin ingin menghapus pesanan ini?",
+                                      style: Get.textTheme.bodyMedium,
+                                    ),
+                                  ),
+                                  width: Get.width * 0.8,
+                                  action: Flexible(
+                                    fit: FlexFit.loose,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                                borderRadius: BorderRadius.circular(12),
+                                                splashColor: Colors.white.withOpacity(0.8),
+                                                onTap: () {
+                                                  controller.transaction.menus!.removeAt(index);
+                                                  controller.insertGrandTotal();
+                                                  controller.update();
+                                                  Get.back();
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(8),
+                                                  child: Text(
+                                                    "Ya",
+                                                    style: Get.textTheme.labelMedium,
+                                                  ),
+                                                ))),
+                                        const SizedBox(
+                                          width: 16,
+                                        ),
+                                        Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                                borderRadius: BorderRadius.circular(12),
+                                                splashColor: Colors.white.withOpacity(0.8),
+                                                onTap: () {
+                                                  Get.back();
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(8),
+                                                  child: Text(
+                                                    "Tidak",
+                                                    style: Get.textTheme.labelMedium,
+                                                  ),
+                                                ))),
+                                      ],
+                                    ),
+                                  ),
+                                ));
+                              }
+                            : null,
                         images: controller.transaction.menus![index].downloadLink!,
                         price: controller.transaction.menus![index].price!.price!,
                         qty: controller.transaction.menus![index].qty!,

@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:cashier_app/configs/language_config.dart';
+import 'package:cashier_app/controllers/enums/promotion_type_enum.dart';
 import 'package:cashier_app/controllers/merchant_controller.dart';
 import 'package:cashier_app/controllers/transaction_controller.dart';
 import 'package:cashier_app/controllers/menu_controller.dart';
 import 'package:cashier_app/controllers/user_controller.dart';
 import 'package:cashier_app/models/categories_model.dart';
 import 'package:cashier_app/models/menu/menus_model.dart';
+import 'package:cashier_app/models/promotion/promotion_model.dart';
 import 'package:cashier_app/themes/color_pallete.dart';
 import 'package:cashier_app/views/components/button_main.dart';
 import 'package:cashier_app/views/components/in_page_search_bar.dart';
@@ -72,194 +74,209 @@ class _MainMenuState extends State<MainMenu> {
         child: FutureBuilder<void>(
             future: _merchantController.initializeMerchant(_userController.userModel.employeeAt!),
             builder: (context, snapshot) {
-              return SizedBox(
-                height: Get.height,
-                width: Get.width,
-                child: Stack(
-                  children: [
-                    Expanded(
-                      child: StreamBuilder<List<CategoriesModel>>(
-                          stream: _menuController.streamEditCategory(
-                              _merchantController.merchant.id!, _merchantController.branch.id!,
-                              searchMenu: searchMenu),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return CustomScrollView(
-                                  shrinkWrap: true,
-                                  controller: _scrollController,
-                                  physics: const BouncingScrollPhysics(),
-                                  slivers: [
-                                    SliverAppBar(
-                                      expandedHeight: widget.isForMainMenu ? 150 : 70,
-                                      pinned: false,
-                                      floating: true,
-                                      foregroundColor: Pallete.transparent,
-                                      backgroundColor: Get.theme.colorScheme.background,
-                                      snap: true,
-                                      leading: const SizedBox(),
-                                      leadingWidth: 0,
-                                      stretch: false,
-                                      flexibleSpace: FlexibleSpaceBar(
-                                        background: SizedBox(
-                                          height: widget.isForMainMenu ? 150 : 70,
-                                          width: Get.width,
-                                          child: Column(
-                                            children: [
-                                              widget.isForMainMenu
-                                                  ? GetBuilder<MerchantController>(
-                                                      init: Get.find<MerchantController>(),
-                                                      builder: (controller) {
-                                                        log(
-                                                            controller.branch.logo?.toString() ??
-                                                                "null",
-                                                            name: "logo");
+              if (snapshot.connectionState == ConnectionState.done) {
+                return SizedBox(
+                  height: Get.height,
+                  width: Get.width,
+                  child: Stack(
+                    children: [
+                      Expanded(
+                        child: StreamBuilder<List<CategoriesModel>>(
+                            stream: _menuController.streamEditCategory(
+                                _merchantController.merchant.id!, _merchantController.branch.id!,
+                                searchMenu: searchMenu),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return CustomScrollView(
+                                    shrinkWrap: true,
+                                    controller: _scrollController,
+                                    physics: const BouncingScrollPhysics(),
+                                    slivers: [
+                                      SliverAppBar(
+                                        expandedHeight: widget.isForMainMenu ? 150 : 70,
+                                        pinned: false,
+                                        floating: true,
+                                        foregroundColor: Pallete.transparent,
+                                        backgroundColor: Get.theme.colorScheme.background,
+                                        snap: true,
+                                        leading: const SizedBox(),
+                                        leadingWidth: 0,
+                                        stretch: false,
+                                        flexibleSpace: FlexibleSpaceBar(
+                                          background: SizedBox(
+                                            height: widget.isForMainMenu ? 150 : 70,
+                                            width: Get.width,
+                                            child: Column(
+                                              children: [
+                                                widget.isForMainMenu
+                                                    ? GetBuilder<MerchantController>(
+                                                        builder: (controller) {
                                                         return AppBarMenu(
                                                             companyLogo: controller.branch.logoUrl!,
                                                             companyName: controller.merchant.name!);
                                                       })
-                                                  : const SizedBox(),
-                                              Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: InPageSearchBar(
-                                                  hint: "Cari menu disini",
-                                                  searchQuery: (query) {
-                                                    if (_debouncer?.isActive ?? false)
-                                                      _debouncer!.cancel();
-                                                    _debouncer = Timer(
-                                                        const Duration(milliseconds: 800), () {
-                                                      if (searchMenu != query) {
-                                                        setState(() {
-                                                          searchMenu = query;
-                                                        });
-                                                      }
-                                                      _debouncer?.cancel();
-                                                    });
-                                                  },
+                                                    : const SizedBox(),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: InPageSearchBar(
+                                                    hint: "Cari menu disini",
+                                                    searchQuery: (query) {
+                                                      if (_debouncer?.isActive ?? false)
+                                                        _debouncer!.cancel();
+                                                      _debouncer = Timer(
+                                                          const Duration(milliseconds: 800), () {
+                                                        if (searchMenu != query) {
+                                                          setState(() {
+                                                            searchMenu = query;
+                                                          });
+                                                        }
+                                                        _debouncer?.cancel();
+                                                      });
+                                                    },
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    makeHeader(
-                                        maxHeight: 40,
-                                        minHeight: 40,
-                                        child: Container(
-                                          height: 40,
-                                          decoration: BoxDecoration(boxShadow: [
-                                            BoxShadow(
-                                                color: Get.theme.shadowColor,
-                                                blurRadius: 9,
-                                                offset: const Offset(0, -3),
-                                                spreadRadius: 1)
-                                          ], color: Get.theme.colorScheme.background),
-                                          width: Get.width,
-                                          child: ListView.builder(
-                                            itemCount: snapshot.data?.length ?? 0,
-                                            shrinkWrap: true,
-                                            padding: const EdgeInsets.only(left: 12),
-                                            scrollDirection: Axis.horizontal,
-                                            physics: const BouncingScrollPhysics(),
-                                            itemBuilder: (context, index) => Padding(
-                                              padding: const EdgeInsets.only(right: 16),
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    _selectedIndex = index;
-                                                  });
-                                                },
-                                                child: SizedBox(
-                                                  child: Column(
-                                                    children: [
-                                                      Text(
-                                                        snapshot.data![index].name!,
-                                                        style: Get.textTheme.bodyLarge!
-                                                            .copyWith(fontWeight: FontWeight.w700),
-                                                      ),
-                                                      Container(
-                                                        height: 2,
-                                                        width: 30,
-                                                        color: _selectedIndex == index
-                                                            ? Get.theme.primaryColor
-                                                            : Colors.transparent,
-                                                      )
-                                                    ],
+                                      makeHeader(
+                                          maxHeight: 40,
+                                          minHeight: 40,
+                                          child: Container(
+                                            height: 40,
+                                            decoration: BoxDecoration(boxShadow: [
+                                              BoxShadow(
+                                                  color: Get.theme.shadowColor,
+                                                  blurRadius: 9,
+                                                  offset: const Offset(0, -3),
+                                                  spreadRadius: 1)
+                                            ], color: Get.theme.colorScheme.background),
+                                            width: Get.width,
+                                            child: ListView.builder(
+                                              itemCount: snapshot.data?.length ?? 0,
+                                              shrinkWrap: true,
+                                              padding: const EdgeInsets.only(left: 12),
+                                              scrollDirection: Axis.horizontal,
+                                              physics: const BouncingScrollPhysics(),
+                                              itemBuilder: (context, index) => Padding(
+                                                padding: const EdgeInsets.only(right: 16),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _selectedIndex = index;
+                                                    });
+                                                  },
+                                                  child: SizedBox(
+                                                    child: Column(
+                                                      children: [
+                                                        Text(
+                                                          snapshot.data![index].name!,
+                                                          style: Get.textTheme.bodyLarge!.copyWith(
+                                                              fontWeight: FontWeight.w700),
+                                                        ),
+                                                        Container(
+                                                          height: 2,
+                                                          width: 30,
+                                                          color: _selectedIndex == index
+                                                              ? Get.theme.primaryColor
+                                                              : Colors.transparent,
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        )),
-                                    SliverGrid.builder(
-                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2, childAspectRatio: 2 / 3),
-                                      itemCount: snapshot.data?[_selectedIndex].menus?.length ?? 0,
-                                      itemBuilder: (context, index) {
-                                        return FutureBuilder<MenuModel>(
-                                            future: _menuController.fetchMenuWithPrice(
-                                                snapshot.data![_selectedIndex].menus![index]),
-                                            builder: (context, menu) {
-                                              return GestureDetector(
-                                                onTap: () async {
-                                                  if (widget.isForMainMenu) {
-                                                    Get.dialog(_popUpMenu(menu.data!));
-                                                  } else {
-                                                    await _menuController
-                                                        .fetchMenuForEdit(menu.data!)
-                                                        .then((value) async {
-                                                      _menuController.listCategory
-                                                          .assignAll(snapshot.data!);
-                                                      _menuController.listCategory[_selectedIndex]
-                                                          .isChoosed = true;
-                                                      await Get.to(() => EditMenu(
-                                                            locationId:
-                                                                _merchantController.branch.id!,
-                                                            merchantId:
-                                                                _merchantController.merchant.id!,
-                                                          ))?.then((value) {
-                                                        _menuController.menu = MenuModel();
-                                                        _menuController.newImage = null;
-                                                        _menuController.listCategory.clear();
-                                                      });
-                                                    });
-                                                  }
-                                                },
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: AspectRatio(
-                                                    aspectRatio: 2 / 3,
-                                                    child: MenuCard(
-                                                        images: menu.data!.downloadLink!,
-                                                        price: menu.data!.price!.price!,
-                                                        availability: 99,
-                                                        name: menu.data!.name!,
-                                                        unit: "Portion"),
-                                                  ),
-                                                ),
-                                              );
-                                            });
-                                      },
-                                    )
-                                  ]);
-                            } else {
-                              log(snapshot.error.toString(), error: "Error load menu");
-                              return SizedBox();
-                            }
-                          }),
-                    ),
-                    GetBuilder<TransactionController>(builder: (controller) {
-                      streamController.add(false);
-                      if (controller.transaction.menus != null) {
-                        if (controller.transaction.menus!.isNotEmpty) {
-                          return _orderTrackingSnackbar();
+                                          )),
+                                      SliverGrid.builder(
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 2, childAspectRatio: 2 / 3),
+                                        itemCount:
+                                            snapshot.data?[_selectedIndex].menus?.length ?? 0,
+                                        itemBuilder: (context, index) {
+                                          return FutureBuilder<MenuModel>(
+                                              future: _menuController.fetchMenuWithPrice(
+                                                  snapshot.data![_selectedIndex].menus![index]),
+                                              builder: (context, menu) {
+                                                if (menu.connectionState == ConnectionState.done) {
+                                                  return GestureDetector(
+                                                    onTap: () async {
+                                                      if (widget.isForMainMenu) {
+                                                        Get.dialog(_popUpMenu(menu.data!));
+                                                      } else {
+                                                        await _menuController
+                                                            .fetchMenuForEdit(menu.data!)
+                                                            .then((value) async {
+                                                          _menuController.listCategory
+                                                              .assignAll(snapshot.data!);
+                                                          _menuController
+                                                              .listCategory[_selectedIndex]
+                                                              .isChoosed = true;
+                                                          await Get.to(() => EditMenu(
+                                                                locationId:
+                                                                    _merchantController.branch.id!,
+                                                                merchantId: _merchantController
+                                                                    .merchant.id!,
+                                                              ))?.then((value) {
+                                                            _menuController.menu = MenuModel();
+                                                            _menuController.newImage = null;
+                                                            _menuController.listCategory.clear();
+                                                          });
+                                                        });
+                                                      }
+                                                    },
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: AspectRatio(
+                                                        aspectRatio: 2 / 3,
+                                                        child: MenuCard(
+                                                            images: menu.data!.downloadLink!,
+                                                            price: menu.data!.price!.price!,
+                                                            availability: 99,
+                                                            name: menu.data!.name!,
+                                                            unit: "Portion"),
+                                                      ),
+                                                    ),
+                                                  );
+                                                } else if (menu.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const Center(
+                                                    child: CircularProgressIndicator(),
+                                                  );
+                                                } else {
+                                                  return const Text("Something wrong");
+                                                }
+                                              });
+                                        },
+                                      )
+                                    ]);
+                              } else {
+                                log(snapshot.error.toString(), error: "Error load menu");
+                                return const SizedBox();
+                              }
+                            }),
+                      ),
+                      GetBuilder<TransactionController>(builder: (controller) {
+                        streamController.add(false);
+                        if (controller.transaction.menus != null) {
+                          if (controller.transaction.menus!.isNotEmpty) {
+                            return _orderTrackingSnackbar();
+                          }
                         }
-                      }
-                      return SizedBox();
-                    })
-                  ],
-                ),
-              );
+                        return const SizedBox();
+                      })
+                    ],
+                  ),
+                );
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return const Text("Terjadi Kesalahan");
+              }
             }),
       ),
     );
@@ -299,7 +316,7 @@ class _MainMenuState extends State<MainMenu> {
                 )),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(8, 16, 8, 4),
+            padding: const EdgeInsets.fromLTRB(8, 16, 8, 4),
             child: Text(selectedMenu.name!,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -364,14 +381,32 @@ class _MainMenuState extends State<MainMenu> {
           Padding(
             padding: const EdgeInsets.all(8),
             child: ButtonMain(
-              onTap: () {
+              onTap: () async {
                 _transactionController.transaction.menus ??= [];
+                var promo = await _menuController.getMenuPromo(data: selectedMenu);
+                log(promo.toString());
                 if (!_transactionController.transaction.menus!
                     .any((e) => e.id == selectedMenu.id)) {
+                  var buyingPrice;
+                  if (promo != PromotionModel()) {
+                    switch (promo.nominalTypeName) {
+                      case NominalTypeEnum.NOMINAL:
+                        buyingPrice = selectedMenu.price!.price! - promo.nominal!;
+                        break;
+                      case NominalTypeEnum.PERCENT:
+                        buyingPrice = selectedMenu.price!.price! -
+                            (selectedMenu.price!.price! * promo.nominal!);
+                        break;
+                      default:
+                        buyingPrice = selectedMenu.price!.price!;
+                    }
+                  } else {
+                    buyingPrice = selectedMenu.price!.price!;
+                  }
                   _transactionController.transaction.menus!.add(selectedMenu.copyWith(
-                    qty: _transactionController.menuQty,
-                    buyingPrice: selectedMenu.price!.price,
-                  ));
+                      qty: _transactionController.menuQty,
+                      buyingPrice: buyingPrice,
+                      singlePrice: selectedMenu.price!.price!));
                 } else {
                   var idx = _transactionController.transaction.menus!
                       .indexWhere((e) => e.id == selectedMenu.id);
@@ -404,7 +439,7 @@ class _MainMenuState extends State<MainMenu> {
       hyperlinkText: lang().payment,
       primaryMessage: "${_transactionController.transaction.menus?.length ?? 0} Pesanan",
       onTap: () {
-        Get.to(() => const SummaryOrder());
+        Get.to(() => SummaryOrder());
       },
       secondaryMessage:
           _transactionController.transaction.menus?.map((e) => "${e.name},").toString(),
