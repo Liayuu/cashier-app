@@ -112,6 +112,16 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 25,
                   ),
+                  RichText(
+                      text: TextSpan(children: [
+                    TextSpan(
+                      text: "Belum memiliki akun? Segera ",
+                      style: Get.textTheme.labelMedium,
+                    ),
+                    TextSpan(
+                        text: "Daftar disini",
+                        style: Get.textTheme.labelLarge!.copyWith(color: Get.theme.primaryColor))
+                  ])),
                   ElevatedButton(
                     onPressed: () {
                       _userCon.loginUser(emailC.text, passwordC.text);
