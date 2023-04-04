@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:cashier_app/controllers/enums/branch_type_enum.dart';
 import 'package:cashier_app/controllers/enums/document_name.dart';
+import 'package:cashier_app/controllers/enums/merchant_type_enum.dart';
+import 'package:cashier_app/controllers/enums/status_enum.dart';
 import 'package:cashier_app/models/merchant/branch_model.dart';
 import 'package:cashier_app/models/merchant/merchant_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,10 +55,10 @@ class MerchantController extends GetxController {
         .then((value) async {
       branch = value.docs.first.data();
       await FirebaseStorage.instance.ref(branch.logo).getDownloadURL().then((value) {
-        branch.logo = value;
+        branch.logoUrl = value;
       });
       await FirebaseStorage.instance.ref(branch.background).getDownloadURL().then((value) {
-        branch.background = value;
+        branch.backgroundUrl = value;
       });
       update();
     });
@@ -99,8 +102,24 @@ class MerchantController extends GetxController {
           branch.logo = value;
         });
       }
-      await _merchantCollection.add(merchant.toJson()).then((value) async {
-        await _merchantCollection.doc(value.id).collection("branch").add(branch.toJson());
+      await _merchantCollection
+          .add(merchant
+              .copyWith(
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
+                  status: StatusEnum.ACTIVE,
+                  type: MerchantType.RESTAURANT)
+              .toJson())
+          .then((value) async {
+        await _merchantCollection
+            .doc(value.id)
+            .collection("branch")
+            .add(branch
+                .copyWith(branchType: BranchType.MAIN_BRANCH, status: StatusEnum.ACTIVE)
+                .toJson())
+            .then((val) async {
+          await _fetchBranch(value.id);
+        });
       });
     }
   }

@@ -11,7 +11,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
 
 class EditMerchant extends StatefulWidget {
-  const EditMerchant({super.key});
+  bool isRegisterMember;
+  EditMerchant({super.key, this.isRegisterMember = false});
 
   @override
   State<EditMerchant> createState() => _EditMerchantState();
@@ -20,6 +21,8 @@ class EditMerchant extends StatefulWidget {
 class _EditMerchantState extends State<EditMerchant> {
   final MerchantController _merchantController = Get.find<MerchantController>();
   final UserController _userController = Get.find<UserController>();
+  final _passwordCon = TextEditingController();
+  final _rePasswordCon = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -96,9 +99,54 @@ class _EditMerchantState extends State<EditMerchant> {
                                           size: 24,
                                         );
                                 }),
-                            // child: Image.network(
-                            //     "https://akcdn.detik.net.id/visual/2020/11/04/borat-1_169.png?w=650",
-                            //     fit: BoxFit.cover),
+                          ),
+                          Positioned(
+                            right: 8,
+                            top: 8,
+                            child: GestureDetector(
+                              onTap: () async {
+                                if (kIsWeb) {
+                                  _imagePickerCommand(1, true);
+                                } else {
+                                  await Get.dialog(
+                                          ImagePickerPopUp(
+                                              width: Get.width * 0.8,
+                                              title: Text("Ambil gambar menggunakan",
+                                                  style: Get.textTheme.titleLarge!)),
+                                          useSafeArea: true)
+                                      .then((value) async {
+                                    if (value != null) {
+                                      _imagePickerCommand(value, false);
+                                    }
+                                  });
+                                }
+                              },
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Get.theme.unselectedWidgetColor, width: 4),
+                                    shape: BoxShape.circle,
+                                    color: Get.theme.primaryColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Get.theme.shadowColor,
+                                          blurRadius: 6,
+                                          offset: const Offset(0, 3),
+                                          spreadRadius: 4)
+                                    ]),
+                                child: ClipOval(
+                                  child: SizedBox.fromSize(
+                                      size: const Size.fromRadius(40),
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        color: Get.theme.colorScheme.background,
+                                        size: 24,
+                                      )),
+                                ),
+                              ),
+                            ),
                           ),
                           Positioned(
                             top: (Get.height / 4) - 75,
@@ -212,7 +260,7 @@ class _EditMerchantState extends State<EditMerchant> {
                           )
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 24,
                       ),
                       Form(
@@ -278,6 +326,52 @@ class _EditMerchantState extends State<EditMerchant> {
                                   _userController.userModel.email = value;
                                 },
                               ),
+                              ProfileTextfield(
+                                hintText: "Nomor Telepon",
+                                keyboardType: TextInputType.phone,
+                                initialValue: _userController.userModel.phone,
+                                title: Padding(
+                                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                  child: Text(
+                                    "Nomor Telepon",
+                                    style: Get.textTheme.titleMedium!
+                                        .copyWith(fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                                onSaved: (value) {
+                                  _userController.userModel.phone = value;
+                                },
+                              ),
+                              if (widget.isRegisterMember) ...[
+                                ProfileTextfield(
+                                  hintText: "Password",
+                                  obsecure: true,
+                                  controller: _passwordCon,
+                                  keyboardType: TextInputType.visiblePassword,
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    child: Text(
+                                      "Password",
+                                      style: Get.textTheme.titleMedium!
+                                          .copyWith(fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                                ProfileTextfield(
+                                  hintText: "Ketik Ulang Password",
+                                  obsecure: true,
+                                  controller: _rePasswordCon,
+                                  keyboardType: TextInputType.visiblePassword,
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    child: Text(
+                                      "Password",
+                                      style: Get.textTheme.titleMedium!
+                                          .copyWith(fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                              ],
                               SizedBox(
                                 height: 16,
                               ),
@@ -418,14 +512,32 @@ class _EditMerchantState extends State<EditMerchant> {
                                 ),
                                 barrierDismissible: false);
 
-                            Future.wait([
-                              _merchantController.addOrUpdateMerchant(),
-                              _userController.addOrUpdateUser()
-                            ]).then((value) {
-                              Get.back(result: 1);
-                            }).catchError((e) {
-                              Get.back(result: 0);
-                            });
+                            if (_userController.userModel.id == null) {
+                              if (_passwordCon.text == _rePasswordCon.text) {
+                                _userController
+                                    .createUserWithEmailAndPassword(
+                                        _userController.userModel.email!, _passwordCon.text)
+                                    .then((value) async {
+                                  Future.wait([
+                                    _merchantController.addOrUpdateMerchant(),
+                                    _userController.addOrUpdateUser(
+                                        merchantId: _merchantController.merchant.id!,
+                                        locationId: [_merchantController.branch.id!])
+                                  ]);
+                                });
+                              } else {
+                                Get.snackbar("Kesalahan", "Password tidak sesuai");
+                              }
+                            } else {
+                              Future.wait([
+                                _merchantController.addOrUpdateMerchant(),
+                                _userController.addOrUpdateUser()
+                              ]).then((value) {
+                                Get.back(result: 1);
+                              }).catchError((e) {
+                                Get.back(result: 0);
+                              });
+                            }
                           }
                         },
                         label: "Simpan",

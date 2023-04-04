@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ProfileTextfield extends StatelessWidget {
+class ProfileTextfield extends StatefulWidget {
   String? labelText;
   String? hintText;
   Widget? title;
@@ -40,44 +40,60 @@ class ProfileTextfield extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<ProfileTextfield> createState() => _ProfileTextfieldState();
+}
+
+class _ProfileTextfieldState extends State<ProfileTextfield> {
+  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        title ?? const SizedBox(),
+        widget.title ?? const SizedBox(),
         TextFormField(
           decoration: InputDecoration(
-              border: border,
-              labelText: labelText,
-              hintText: hintText,
+              border: widget.border,
+              labelText: widget.labelText,
+              hintText: widget.hintText,
               isDense: true,
+              suffixIcon: widget.keyboardType == TextInputType.visiblePassword
+                  ? IconButton(
+                      icon:
+                          Icon(widget.obsecure ? Icons.visibility_off_outlined : Icons.visibility),
+                      onPressed: () {
+                        setState(() {
+                          widget.obsecure = !widget.obsecure;
+                        });
+                      },
+                    )
+                  : null,
               contentPadding: const EdgeInsets.all(9),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Get.theme.primaryColor),
                   borderRadius: const BorderRadius.all(Radius.circular(10))),
-              fillColor: !enabled
+              fillColor: !widget.enabled
                   ? Get.theme.unselectedWidgetColor
                   : Get.theme.inputDecorationTheme.fillColor,
-              floatingLabelAlignment: floatingLabelAlignment,
-              floatingLabelBehavior: floatingLabelBehavior),
+              floatingLabelAlignment: widget.floatingLabelAlignment,
+              floatingLabelBehavior: widget.floatingLabelBehavior),
           autovalidateMode: AutovalidateMode.onUserInteraction,
           style: Get.textTheme.bodyText1,
           cursorWidth: 2.0,
-          controller: controller,
+          controller: widget.controller,
           cursorColor: Get.theme.primaryColor,
-          obscureText: obsecure,
-          keyboardType: keyboardType,
+          obscureText: widget.obsecure,
+          keyboardType: widget.keyboardType,
           maxLines: 1,
-          enabled: enabled,
-          initialValue: initialValue,
-          textInputAction: textInputAction,
-          validator: validator,
+          enabled: widget.enabled,
+          initialValue: widget.initialValue,
+          textInputAction: widget.textInputAction,
+          validator: widget.validator,
           onChanged: (value) {
-            if (onChanged != null) onChanged!(value);
+            if (widget.onChanged != null) widget.onChanged!(value);
           },
           onSaved: (value) {
-            if (onSaved != null) onSaved!(value);
+            if (widget.onSaved != null) widget.onSaved!(value);
           },
         ),
       ],

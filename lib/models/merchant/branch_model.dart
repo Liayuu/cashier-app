@@ -16,7 +16,11 @@ class BranchModel {
   String? country;
   String? disctrict;
   String? logo;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? logoUrl;
   String? background;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String? backgroundUrl;
   @JsonKey(includeIfNull: false)
   dynamic map;
   String? posCode;
@@ -31,7 +35,9 @@ class BranchModel {
     this.country,
     this.disctrict,
     this.logo,
+    this.logoUrl,
     this.background,
+    this.backgroundUrl,
     this.map,
     this.posCode,
     this.province,
@@ -47,7 +53,9 @@ class BranchModel {
     String? country,
     String? disctrict,
     String? logo,
+    String? logoUrl,
     String? background,
+    String? backgroundUrl,
     dynamic map,
     String? posCode,
     String? province,
@@ -62,7 +70,9 @@ class BranchModel {
       country: country ?? this.country,
       disctrict: disctrict ?? this.disctrict,
       logo: logo ?? this.logo,
+      logoUrl: logoUrl ?? this.logoUrl,
       background: background ?? this.background,
+      backgroundUrl: backgroundUrl ?? this.backgroundUrl,
       map: map ?? this.map,
       posCode: posCode ?? this.posCode,
       province: province ?? this.province,
@@ -79,7 +89,7 @@ class BranchModel {
 
   @override
   String toString() {
-    return 'BranchModel(id: $id, address: $address, branchType: $branchType, country: $country, disctrict: $disctrict, logo: $logo, background: $background, map: $map, posCode: $posCode, province: $province, rating: $rating, regency: $regency, status: $status)';
+    return 'BranchModel(id: $id, address: $address, branchType: $branchType, country: $country, disctrict: $disctrict, logo: $logo, logoUrl: $logoUrl, background: $background, backgroundUrl: $backgroundUrl, map: $map, posCode: $posCode, province: $province, rating: $rating, regency: $regency, status: $status)';
   }
 
   @override
@@ -93,7 +103,9 @@ class BranchModel {
         other.country == country &&
         other.disctrict == disctrict &&
         other.logo == logo &&
+        other.logoUrl == logoUrl &&
         other.background == background &&
+        other.backgroundUrl == backgroundUrl &&
         other.map == map &&
         other.posCode == posCode &&
         other.province == province &&
@@ -110,7 +122,9 @@ class BranchModel {
         country.hashCode ^
         disctrict.hashCode ^
         logo.hashCode ^
+        logoUrl.hashCode ^
         background.hashCode ^
+        backgroundUrl.hashCode ^
         map.hashCode ^
         posCode.hashCode ^
         province.hashCode ^

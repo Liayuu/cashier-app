@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:cashier_app/controllers/enums/document_name.dart';
+import 'package:cashier_app/controllers/enums/position_enum.dart';
+import 'package:cashier_app/controllers/enums/status_enum.dart';
 import 'package:cashier_app/models/employee_model.dart';
 import 'package:cashier_app/views/pages/authentication/login_page.dart';
 import 'package:cashier_app/views/pages/dashboard/dasboard.dart';
@@ -38,16 +40,20 @@ class UserController extends GetxController {
       Get.offAll(() => const LoginPage());
     } else {
       await fetchUserData(user.uid);
+      await addOrUpdateUser();
       Get.offAll(() => const MainDashboard());
     }
   }
 
   Future<void> createUserWithEmailAndPassword(String email, String password) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      await _auth.createUserWithEmailAndPassword(email: email, password: password).then((value) {
+        userModel.uuid = value.user!.uid;
+      });
     } on FirebaseAuthException catch (e) {
       // print(e.code);
       log(e.code, error: "$runtimeType");
+      throw e.code;
     }
   }
 
@@ -86,13 +92,33 @@ class UserController extends GetxController {
     });
   }
 
-  Future<void> addOrUpdateUser() async {
+  Future<void> addOrUpdateUser(
+      {DateTime? lastLogin, String? merchantId, List<String>? locationId}) async {
     if (userModel.id != null) {
-      _userControllerRef
-          .doc(userModel.id)
-          .update(userModel.copyWith(updatedAt: DateTime.now()).toJson());
+      _userControllerRef.doc(userModel.id).update(userModel
+          .copyWith(
+              updatedAt: DateTime.now(),
+              lastSignIn: lastLogin,
+              employeeAt: merchantId,
+              manageAt: locationId)
+          .toJson());
     } else {
-      _userControllerRef.add(userModel.toJson());
+      _userControllerRef
+          .add(userModel
+              .copyWith(
+                  createdAt: DateTime.now(),
+                  employeeAt: merchantId,
+                  lastSignIn: DateTime.now(),
+                  manageAt: locationId,
+                  position: PositionEnum.OWNER,
+                  positionName: PositionEnum.OWNER.name,
+                  status: StatusEnum.ACTIVE,
+                  updatedAt: DateTime.now())
+              .toJson())
+          .then((value) async {
+        await fetchUserData(value.id);
+        Get.offAll(() => const MainDashboard());
+      });
     }
   }
 }

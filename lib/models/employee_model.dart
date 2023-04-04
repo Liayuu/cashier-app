@@ -12,8 +12,11 @@ part 'employee_model.g.dart';
 
 @JsonSerializable()
 class EmployeeModel {
+  @JsonKey(includeToJson: false, includeFromJson: false)
   String? id;
   String? email;
+  @JsonKey(fromJson: _parseTimestamp, toJson: _parseDateTime)
+  DateTime? createdAt;
   String? employeeAt;
   @JsonKey(name: 'firebaseUID')
   String? uuid;
@@ -31,6 +34,7 @@ class EmployeeModel {
   EmployeeModel({
     this.id,
     this.email,
+    this.createdAt,
     this.employeeAt,
     this.uuid,
     this.lastSignIn,
@@ -47,6 +51,7 @@ class EmployeeModel {
   EmployeeModel copyWith({
     String? id,
     String? email,
+    DateTime? createdAt,
     String? employeeAt,
     String? uuid,
     DateTime? lastSignIn,
@@ -62,6 +67,7 @@ class EmployeeModel {
     return EmployeeModel(
       id: id ?? this.id,
       email: email ?? this.email,
+      createdAt: createdAt ?? this.createdAt,
       employeeAt: employeeAt ?? this.employeeAt,
       uuid: uuid ?? this.uuid,
       lastSignIn: lastSignIn ?? this.lastSignIn,
@@ -83,7 +89,7 @@ class EmployeeModel {
 
   @override
   String toString() {
-    return 'EmployeeModel(id: $id, email: $email, employeeAt: $employeeAt, uuid: $uuid, lastSignIn: $lastSignIn, manageAt: $manageAt, name: $name, phone: $phone, position: $position, positionName: $positionName, profilePict: $profilePict, status: $status, updatedAt: $updatedAt)';
+    return 'EmployeeModel(id: $id, email: $email, createdAt: $createdAt, employeeAt: $employeeAt, uuid: $uuid, lastSignIn: $lastSignIn, manageAt: $manageAt, name: $name, phone: $phone, position: $position, positionName: $positionName, profilePict: $profilePict, status: $status, updatedAt: $updatedAt)';
   }
 
   @override
@@ -93,6 +99,7 @@ class EmployeeModel {
     return other is EmployeeModel &&
         other.id == id &&
         other.email == email &&
+        other.createdAt == createdAt &&
         other.employeeAt == employeeAt &&
         other.uuid == uuid &&
         other.lastSignIn == lastSignIn &&
@@ -110,6 +117,7 @@ class EmployeeModel {
   int get hashCode {
     return id.hashCode ^
         email.hashCode ^
+        createdAt.hashCode ^
         employeeAt.hashCode ^
         uuid.hashCode ^
         lastSignIn.hashCode ^

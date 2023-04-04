@@ -8,8 +8,8 @@ part of 'employee_model.dart';
 
 EmployeeModel _$EmployeeModelFromJson(Map<String, dynamic> json) =>
     EmployeeModel(
-      id: json['id'] as String?,
       email: json['email'] as String?,
+      createdAt: _parseTimestamp(json['createdAt']),
       employeeAt: json['employeeAt'] as String?,
       uuid: json['firebaseUID'] as String?,
       lastSignIn: _parseTimestamp(json['lastSignIn']),
@@ -27,8 +27,8 @@ EmployeeModel _$EmployeeModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'email': instance.email,
+      'createdAt': _parseDateTime(instance.createdAt),
       'employeeAt': instance.employeeAt,
       'firebaseUID': instance.uuid,
       'lastSignIn': _parseDateTime(instance.lastSignIn),
