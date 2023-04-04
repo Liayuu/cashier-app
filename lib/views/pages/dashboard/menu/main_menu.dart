@@ -114,7 +114,7 @@ class _MainMenuState extends State<MainMenu> {
                                                                 "null",
                                                             name: "logo");
                                                         return AppBarMenu(
-                                                            companyLogo: controller.branch.logo!,
+                                                            companyLogo: controller.branch.logoUrl!,
                                                             companyName: controller.merchant.name!);
                                                       })
                                                   : const SizedBox(),

@@ -43,7 +43,7 @@ class SettingPage extends StatelessWidget {
                         height: Get.height / 4,
                         // color: Get.theme.primaryColor,
                         margin: const EdgeInsets.only(bottom: 75),
-                        child: Image.network(_merchantController.branch.background!,
+                        child: Image.network(_merchantController.branch.backgroundUrl!,
                             fit: BoxFit.cover),
                       );
                     }),
@@ -75,7 +75,7 @@ class SettingPage extends StatelessWidget {
                                   child: Hero(
                                     tag: "Test",
                                     child: Image.network(
-                                      _merchantController.branch.logo!,
+                                      _merchantController.branch.logoUrl!,
                                       fit: BoxFit.cover,
                                       alignment: Alignment.topCenter,
                                     ),
