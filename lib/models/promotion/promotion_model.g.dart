@@ -20,6 +20,8 @@ PromotionModel _$PromotionModelFromJson(Map<String, dynamic> json) =>
       includedItems: (json['includedItems'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      minQty: json['minQty'] as int?,
+      maxQty: json['maxQty'] as int?,
       maximumNominal: (json['maximumNominal'] as num?)?.toDouble(),
       merchantId: json['merchantId'] as String?,
       minimumTransaction: (json['minimumTransaction'] as num?)?.toDouble(),
@@ -47,6 +49,8 @@ Map<String, dynamic> _$PromotionModelToJson(PromotionModel instance) =>
       'endTime': _parseDateTime(instance.endTime),
       'excludedItems': instance.excludedItems,
       'includedItems': instance.includedItems,
+      'minQty': instance.minQty,
+      'maxQty': instance.maxQty,
       'maximumNominal': instance.maximumNominal,
       'merchantId': instance.merchantId,
       'minimumTransaction': instance.minimumTransaction,

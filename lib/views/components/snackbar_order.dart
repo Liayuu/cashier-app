@@ -28,7 +28,7 @@ class _SnackbarOrderState extends State<SnackbarOrder> with TickerProviderStateM
   void initState() {
     _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 400));
 
-    widget.stream!.listen((event) {
+    widget.stream!.asBroadcastStream().listen((event) {
       if (event) {
         setState(() {
           _showSnackbar();
@@ -57,6 +57,12 @@ class _SnackbarOrderState extends State<SnackbarOrder> with TickerProviderStateM
     });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   //* Edit ketika shipping service telah selesai dibuat

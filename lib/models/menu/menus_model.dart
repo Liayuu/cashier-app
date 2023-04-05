@@ -7,6 +7,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'package:cashier_app/controllers/enums/status_enum.dart';
 import 'package:cashier_app/models/menu/price_model.dart';
+import 'package:cashier_app/models/promotion/promotion_model.dart';
 
 part 'menus_model.g.dart';
 
@@ -40,6 +41,8 @@ class MenuModel {
   String? downloadLink;
   @JsonKey(includeIfNull: false)
   String? note;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  PromotionModel? promo;
   MenuModel({
     this.id,
     this.barcode,
@@ -59,6 +62,7 @@ class MenuModel {
     this.newImage,
     this.downloadLink,
     this.note,
+    this.promo,
   });
 
   MenuModel copyWith({
@@ -80,6 +84,7 @@ class MenuModel {
     String? newImage,
     String? downloadLink,
     String? note,
+    PromotionModel? promo,
   }) {
     return MenuModel(
       id: id ?? this.id,
@@ -100,6 +105,7 @@ class MenuModel {
       newImage: newImage ?? this.newImage,
       downloadLink: downloadLink ?? this.downloadLink,
       note: note ?? this.note,
+      promo: promo ?? this.promo,
     );
   }
 
@@ -110,7 +116,7 @@ class MenuModel {
 
   @override
   String toString() {
-    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, qty: $qty, buyingPrice: $buyingPrice, image: $image, specifiedAt: $specifiedAt, status: $status, singlePrice: $singlePrice, updatedAt: $updatedAt, price: $price, newImage: $newImage, downloadLink: $downloadLink, note: $note)';
+    return 'MenuModel(id: $id, barcode: $barcode, createdAt: $createdAt, description: $description, menuAt: $menuAt, name: $name, sku: $sku, qty: $qty, buyingPrice: $buyingPrice, image: $image, specifiedAt: $specifiedAt, status: $status, singlePrice: $singlePrice, updatedAt: $updatedAt, price: $price, newImage: $newImage, downloadLink: $downloadLink, note: $note, promo: $promo)';
   }
 
   @override
@@ -135,7 +141,8 @@ class MenuModel {
         other.price == price &&
         other.newImage == newImage &&
         other.downloadLink == downloadLink &&
-        other.note == note;
+        other.note == note &&
+        other.promo == promo;
   }
 
   @override
@@ -157,7 +164,8 @@ class MenuModel {
         price.hashCode ^
         newImage.hashCode ^
         downloadLink.hashCode ^
-        note.hashCode;
+        note.hashCode ^
+        promo.hashCode;
   }
 }
 

@@ -8,6 +8,7 @@ import 'package:cashier_app/models/menu/menus_model.dart';
 import 'package:cashier_app/models/menu/price_model.dart';
 import 'package:cashier_app/models/promotion/promotion_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cashier_app/controllers/enums/promotion_type_enum.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -128,26 +129,65 @@ class MenusController extends GetxController {
         .then((value) => param.copyWith(price: value.docs.first.data()));
   }
 
-  Future<PromotionModel> getMenuPromo({required MenuModel data}) async {
-    return await _menuCollection.doc(data.id!).collection('promotion').get().then((sub) async {
-      if (sub.docs.isNotEmpty) {
-        return await _menuCollection
-            .doc(data.id)
-            .collection('promotion')
-            .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime.now()))
-            .where('endTime', isLessThanOrEqualTo: Timestamp.fromDate(DateTime.now()))
-            .withConverter<PromotionModel>(
-              fromFirestore: (snapshot, options) {
-                return PromotionModel.fromJson(snapshot.id, snapshot.data()!);
-              },
-              toFirestore: (value, options) => {},
-            )
-            .get()
-            .then((value) => value.docs.first.data());
-      } else {
-        return PromotionModel();
+  Future<PromotionModel?> getMenuPromo({required MenuModel data, required int qty}) async {
+    return await _menuCollection
+        .doc(data.id!)
+        .collection('promotion')
+        .where('startTime', isLessThanOrEqualTo: Timestamp.fromDate(DateTime.now()))
+        .withConverter<PromotionModel>(
+          fromFirestore: (snapshot, options) {
+            return PromotionModel.fromJson(snapshot.id, snapshot.data()!);
+          },
+          toFirestore: (value, options) => {},
+        )
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        return _findBestPromo(
+            totalPrice: data.price?.price ?? 0.toDouble() * qty,
+            promo: value.docs.map((e) => e.data()).toList());
       }
+      // var data = value.docs.first.data();
+      // value.docs.first.data();
     });
+    // .get().then((sub) async {
+    //   if (sub.docs.isNotEmpty) {
+    //     return await _menuCollection
+    //         .doc(data.id)
+    //         .collection('promotion')
+    //         .where('startTime', isLessThanOrEqualTo: Timestamp.fromDate(DateTime.now()))
+    //         .withConverter<PromotionModel>(
+    //           fromFirestore: (snapshot, options) {
+    //             return PromotionModel.fromJson(snapshot.id, snapshot.data()!);
+    //           },
+    //           toFirestore: (value, options) => {},
+    //         )
+    //         .get()
+    //         .then((value) => value.docs.first.data());
+    //   } else {
+    //     return PromotionModel();
+    //   }
+    // });
+  }
+
+  PromotionModel _findBestPromo({required double totalPrice, required List<PromotionModel> promo}) {
+    PromotionModel bestDiscount = promo.first;
+    for (var e in promo) {
+      if (bestDiscount.nominalTypeName == NominalTypeEnum.PERCENT) {
+        if (e.nominalTypeName == NominalTypeEnum.PERCENT) {
+          if (e.nominal! * totalPrice > bestDiscount.nominal! * totalPrice) bestDiscount = e;
+        } else {
+          if (e.nominal! > bestDiscount.nominal! * totalPrice) bestDiscount = e;
+        }
+      } else {
+        if (e.nominalTypeName == NominalTypeEnum.PERCENT) {
+          if (e.nominal! * totalPrice > bestDiscount.nominal!) bestDiscount = e;
+        } else {
+          if (e.nominal! > bestDiscount.nominal!) bestDiscount = e;
+        }
+      }
+    }
+    return bestDiscount;
   }
 
   Future<void> fetchMenuForEdit(MenuModel data) async {

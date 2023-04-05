@@ -1,6 +1,10 @@
 import 'dart:developer';
 
+import 'package:cashier_app/controllers/enums/promotion_type_enum.dart';
+import 'package:cashier_app/controllers/merchant_controller.dart';
+import 'package:cashier_app/controllers/promotion_controller.dart';
 import 'package:cashier_app/controllers/transaction_controller.dart';
+import 'package:cashier_app/models/promotion/promotion_model.dart';
 import 'package:cashier_app/views/components/confirmation_popup.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/transaction_menu_card.dart';
 import 'package:cashier_app/views/pages/payment/payment.dart';
@@ -18,8 +22,14 @@ class SummaryOrder extends StatefulWidget {
 }
 
 class _SummaryOrderState extends State<SummaryOrder> {
+  final _promotionController = Get.find<PromotionController>();
+  final _merchantController = Get.find<MerchantController>();
+  final _transactionController = Get.find<TransactionController>();
   String _formatCurrency(double p) =>
       NumberFormat.currency(locale: 'id', decimalDigits: 2, symbol: "Rp. ").format(p);
+  String _formatPercent(double p) =>
+      NumberFormat.decimalPercentPattern(locale: 'id', decimalDigits: 0).format(p);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,8 +120,12 @@ class _SummaryOrderState extends State<SummaryOrder> {
                                                 onTap: () {
                                                   controller.transaction.menus!.removeAt(index);
                                                   controller.insertGrandTotal();
+                                                  controller.insertSubTotal();
                                                   controller.update();
                                                   Get.back();
+                                                  if (controller.transaction.menus!.isEmpty) {
+                                                    Get.back(result: true);
+                                                  }
                                                 },
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(8),
@@ -144,6 +158,8 @@ class _SummaryOrderState extends State<SummaryOrder> {
                                 ));
                               }
                             : null,
+                        discount: controller.transaction.menus![index].promo?.nominal,
+                        discountType: controller.transaction.menus![index].promo?.nominalTypeName,
                         images: controller.transaction.menus![index].downloadLink!,
                         price: controller.transaction.menus![index].price!.price!,
                         qty: controller.transaction.menus![index].qty!,
@@ -163,74 +179,177 @@ class _SummaryOrderState extends State<SummaryOrder> {
               color: Get.theme.primaryColor,
             ),
           ),
-          Expanded(
-            flex: 3,
-            child: GetBuilder<TransactionController>(
-              init: Get.find<TransactionController>(),
-              builder: (controller) => Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
+          FutureBuilder<List<PromotionModel>>(
+              future: _promotionController.getPromotion(
+                  merchantId: _merchantController.merchant.id!,
+                  locationId: _merchantController.branch.id!,
+                  forTransaction: true,
+                  minimumTransaction: _transactionController.getSubTotal(),
+                  currentTime: DateTime.now()),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Expanded(
+                    flex: 4,
+                    child: GetBuilder<TransactionController>(
+                      init: Get.find<TransactionController>(),
+                      builder: (controller) => Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Discount",
-                                style: Get.textTheme.bodyLarge,
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("Total Pemesanan",
+                                          style: Get.textTheme.bodyLarge!
+                                              .copyWith(fontWeight: FontWeight.w700)),
+                                      Text(_formatCurrency(controller.getSubTotal()),
+                                          style: Get.textTheme.bodyLarge)
+                                    ],
+                                  ),
+                                  snapshot.hasData
+                                      ? Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text("Diskon",
+                                              style: Get.textTheme.bodyLarge!
+                                                  .copyWith(fontWeight: FontWeight.w700)),
+                                        )
+                                      : const SizedBox(),
+                                  snapshot.hasData
+                                      ? Padding(
+                                          padding: const EdgeInsets.only(left: 16),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                _promotionController
+                                                    .findBestPromo(
+                                                        promo:
+                                                            _promotionController.listAvailablePromo,
+                                                        totalPrice: controller.getSubTotal())
+                                                    .name!,
+                                                style: Get.textTheme.bodyLarge,
+                                              ),
+                                              Text(
+                                                  _promotionController
+                                                              .findBestPromo(
+                                                                  promo: _promotionController
+                                                                      .listAvailablePromo,
+                                                                  totalPrice:
+                                                                      controller.getSubTotal())
+                                                              .nominalTypeName ==
+                                                          NominalTypeEnum.NOMINAL
+                                                      ? _formatCurrency(_promotionController
+                                                          .findBestPromo(
+                                                              promo: _promotionController
+                                                                  .listAvailablePromo,
+                                                              totalPrice: controller.getSubTotal())
+                                                          .nominal!)
+                                                      : _formatPercent(_promotionController
+                                                          .findBestPromo(
+                                                              promo: _promotionController
+                                                                  .listAvailablePromo,
+                                                              totalPrice: controller.getSubTotal())
+                                                          .nominal!),
+                                                  style: Get.textTheme.bodyLarge)
+                                            ],
+                                          ),
+                                        )
+                                      : const SizedBox(),
+                                  snapshot.hasData
+                                      ? Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Total Pembayaran",
+                                                style: Get.textTheme.bodyLarge!
+                                                    .copyWith(fontWeight: FontWeight.w700)),
+                                            Text(
+                                                _formatCurrency(_getTotalPayment(
+                                                    controller.getSubTotal(),
+                                                    _promotionController.findBestPromo(
+                                                        promo:
+                                                            _promotionController.listAvailablePromo,
+                                                        totalPrice: controller.getSubTotal()))),
+                                                style: Get.textTheme.bodyLarge)
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                ],
                               ),
-                              Text(_formatCurrency(0), style: Get.textTheme.bodyLarge)
-                            ],
+                            ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Total Pemesanan", style: Get.textTheme.bodyLarge),
-                              Text(_formatCurrency(controller.getSubTotal()),
-                                  style: Get.textTheme.bodyLarge)
-                            ],
-                          ),
+                          Container(
+                              height: Get.height * 0.085,
+                              width: Get.width,
+                              color: Get.theme.colorScheme.background,
+                              child: Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ButtonMain(
+                                    height: Get.height,
+                                    width: Get.width,
+                                    onTap: () {
+                                      _transactionController.transaction.promos = [];
+                                      if (_promotionController.listAvailablePromo.isNotEmpty) {
+                                        _transactionController.transaction.subTotal =
+                                            _getTotalPayment(
+                                                controller.getSubTotal(),
+                                                _promotionController.findBestPromo(
+                                                    promo: _promotionController.listAvailablePromo,
+                                                    totalPrice: controller.getSubTotal()));
+                                        _transactionController.transaction.promos!.assign(
+                                            _promotionController.findBestPromo(
+                                                promo: _promotionController.listAvailablePromo,
+                                                totalPrice: controller.getSubTotal()));
+                                        _transactionController.update();
+                                      }
+                                      Get.to(() => const Payment())?.then((value) {
+                                        if (value != null) {
+                                          if (value) {
+                                            Get.back(result: true);
+                                          }
+                                        }
+                                      });
+                                    },
+                                    color: Get.theme.primaryColor,
+                                    background: Get.theme.colorScheme.primary,
+                                    style: Get.textTheme.labelLarge,
+                                    label: "Konfirmasi Pembayaran",
+                                  ),
+                                ),
+                              ))
                         ],
                       ),
                     ),
-                  ),
-                  Container(
+                  );
+                } else if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container(
                       height: Get.height * 0.085,
                       width: Get.width,
                       color: Get.theme.colorScheme.background,
-                      child: Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ButtonMain(
-                            height: Get.height,
-                            width: Get.width,
-                            onTap: () async {
-                              log(controller.transaction.toString());
-                              await Get.to(() => Payment())?.then((value) {
-                                if (value != null) {
-                                  if (value) {
-                                    Get.back();
-                                  }
-                                }
-                              });
-                            },
-                            color: Get.theme.primaryColor,
-                            background: Get.theme.colorScheme.primary,
-                            style: Get.textTheme.labelLarge,
-                            label: "Konfirmasi Pembayaran",
-                          ),
-                        ),
-                      ))
-                ],
-              ),
-            ),
-          )
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ));
+                } else {
+                  return const Text("Error");
+                }
+              })
         ],
       )),
     );
+  }
+
+  double _getTotalPayment(double total, PromotionModel promo) {
+    double pay;
+    if (promo.nominalTypeName == NominalTypeEnum.PERCENT) {
+      pay = total - (total * promo.nominal!);
+    } else {
+      pay = total - promo.nominal!;
+    }
+    return pay;
   }
 }

@@ -37,7 +37,7 @@ class MainMenu extends StatefulWidget {
 class _MainMenuState extends State<MainMenu> {
   int _selectedIndex = 0;
   final ScrollController _scrollController = ScrollController();
-  StreamController<bool> streamController = StreamController<bool>();
+  StreamController<bool> streamController = StreamController<bool>.broadcast();
   // TextEditingController _qty = TextEditingController(text: 1.toString());
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   final _transactionController = Get.find<TransactionController>();
@@ -49,6 +49,12 @@ class _MainMenuState extends State<MainMenu> {
   String _formatCurrency(double p) =>
       NumberFormat.currency(locale: 'id', decimalDigits: 2, symbol: "Rp. ").format(p);
   String? searchMenu;
+
+  @override
+  void initState() {
+    streamController.add(false);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -259,11 +265,12 @@ class _MainMenuState extends State<MainMenu> {
                             }),
                       ),
                       GetBuilder<TransactionController>(builder: (controller) {
-                        streamController.add(false);
                         if (controller.transaction.menus != null) {
                           if (controller.transaction.menus!.isNotEmpty) {
                             return _orderTrackingSnackbar();
                           }
+                        } else {
+                          streamController.add(false);
                         }
                         return const SizedBox();
                       })
@@ -383,30 +390,28 @@ class _MainMenuState extends State<MainMenu> {
             child: ButtonMain(
               onTap: () async {
                 _transactionController.transaction.menus ??= [];
-                var promo = await _menuController.getMenuPromo(data: selectedMenu);
-                log(promo.toString());
+                // var promo = await _menuController.getMenuPromo(data: selectedMenu);
+                // log(promo.toString());
                 if (!_transactionController.transaction.menus!
                     .any((e) => e.id == selectedMenu.id)) {
-                  var buyingPrice;
-                  if (promo != PromotionModel()) {
-                    switch (promo.nominalTypeName) {
-                      case NominalTypeEnum.NOMINAL:
-                        buyingPrice = selectedMenu.price!.price! - promo.nominal!;
-                        break;
-                      case NominalTypeEnum.PERCENT:
-                        buyingPrice = selectedMenu.price!.price! -
-                            (selectedMenu.price!.price! * promo.nominal!);
-                        break;
-                      default:
-                        buyingPrice = selectedMenu.price!.price!;
-                    }
-                  } else {
-                    buyingPrice = selectedMenu.price!.price!;
-                  }
-                  _transactionController.transaction.menus!.add(selectedMenu.copyWith(
-                      qty: _transactionController.menuQty,
-                      buyingPrice: buyingPrice,
-                      singlePrice: selectedMenu.price!.price!));
+                  // var buyingPrice;
+                  // if (promo != PromotionModel()) {
+                  //   switch (promo.nominalTypeName) {
+                  //     case NominalTypeEnum.NOMINAL:
+                  //       buyingPrice = selectedMenu.price!.price! - promo.nominal!;
+                  //       break;
+                  //     case NominalTypeEnum.PERCENT:
+                  //       buyingPrice = selectedMenu.price!.price! -
+                  //           (selectedMenu.price!.price! * promo.nominal!);
+                  //       break;
+                  //     default:
+                  //       buyingPrice = selectedMenu.price!.price!;
+                  //   }
+                  // } else {
+                  //   buyingPrice = selectedMenu.price!.price!;
+                  // }
+                  _transactionController.transaction.menus!
+                      .add(selectedMenu.copyWith(qty: _transactionController.menuQty));
                 } else {
                   var idx = _transactionController.transaction.menus!
                       .indexWhere((e) => e.id == selectedMenu.id);
@@ -438,12 +443,55 @@ class _MainMenuState extends State<MainMenu> {
       stream: streamController.stream,
       hyperlinkText: lang().payment,
       primaryMessage: "${_transactionController.transaction.menus?.length ?? 0} Pesanan",
-      onTap: () {
-        Get.to(() => SummaryOrder());
+      onTap: () async {
+        for (var i = 0; i < _transactionController.transaction.menus!.length; i++) {
+          await _menuController
+              .getMenuPromo(
+                  data: _transactionController.transaction.menus![i],
+                  qty: _transactionController.transaction.menus![i].qty!)
+              .then((value) {
+            if (value != null) {
+              _transactionController.transaction.menus![i].promo = value;
+              if (_transactionController.transaction.menus![i].promo!.nominalTypeName ==
+                  NominalTypeEnum.NOMINAL) {
+                _transactionController.transaction.menus![i].buyingPrice =
+                    _transactionController.transaction.menus![i].price!.price! -
+                        (_transactionController.transaction.menus![i].price!.price! *
+                            _transactionController.transaction.menus![i].promo!.nominal!);
+              } else {
+                _transactionController.transaction.menus![i].buyingPrice =
+                    _transactionController.transaction.menus![i].price!.price! -
+                        _transactionController.transaction.menus![i].promo!.nominal!;
+              }
+            } else {
+              _transactionController.transaction.menus![i].buyingPrice =
+                  _transactionController.transaction.menus![i].price!.price!;
+            }
+          }).then((value) {
+            // _transactionController.insertSubTotal();
+            _transactionController.insertGrandTotal();
+          });
+        }
+        // await Future.wait(_transactionController.transaction.menus!.map((e) {
+        //   return _menuController.getMenuPromo(data: e, qty: e.qty!).then((value) {
+
+        //   });
+        // }));
+        Get.to(() => SummaryOrder())?.then((value) {
+          if (value) {
+            // streamController.add(false);
+          }
+        });
       },
       secondaryMessage:
           _transactionController.transaction.menus?.map((e) => "${e.name},").toString(),
     );
+  }
+
+  @override
+  void dispose() {
+    streamController.close();
+    super.dispose();
   }
 }
 

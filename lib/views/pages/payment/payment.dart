@@ -27,8 +27,6 @@ class _PaymentState extends State<Payment> {
   final _merchantController = Get.find<MerchantController>();
   final _userController = Get.find<UserController>();
   final _cashTextCon = TextEditingController();
-  final _totalTextCon = TextEditingController();
-  final _changeTextCon = TextEditingController();
   String _formatNumber(String s) => NumberFormat.decimalPattern('id').format(double.parse(s));
 
   @override
@@ -130,7 +128,7 @@ class _PaymentState extends State<Payment> {
                                   currency: NumberFormat.currency(locale: 'id', symbol: 'Rp. '),
                                   hintText: "Total Harga",
                                   initialValue:
-                                      _formatNumber(controller.transaction.grandTotal.toString()),
+                                      _formatNumber(controller.transaction.subTotal.toString()),
                                   enabled: false,
                                   title: Padding(
                                     padding: const EdgeInsets.only(top: 8, bottom: 4),
@@ -151,7 +149,7 @@ class _PaymentState extends State<Payment> {
                                           double.parse(value.replaceAll('.', ''));
                                       controller.transaction.change =
                                           double.parse(value.replaceAll('.', '')) -
-                                              controller.transaction.grandTotal!;
+                                              controller.transaction.subTotal!;
                                     } else {
                                       controller.transaction.cash = 0;
                                       controller.transaction.change = null;

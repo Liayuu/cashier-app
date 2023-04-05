@@ -6,12 +6,11 @@ import 'package:get/get.dart';
 
 class AppBarMenu extends StatelessWidget {
   final String companyName;
-  final String companyLogo;
-  const AppBarMenu({super.key, required this.companyLogo, required this.companyName});
+  final String? companyLogo;
+  const AppBarMenu({super.key, this.companyLogo, required this.companyName});
 
   @override
   Widget build(BuildContext context) {
-    log(companyLogo);
     return SizedBox(
       width: Get.width,
       height: 80,
@@ -36,15 +35,19 @@ class AppBarMenu extends StatelessWidget {
                             spreadRadius: 4)
                       ]),
                   child: GestureDetector(
-                    onTap: () => Get.to(() => ImageViewer(
-                        tag: "Test", image: NetworkImage(companyLogo), newsTitle: "Test")),
+                    onTap: () => companyLogo != null
+                        ? Get.to(() => ImageViewer(
+                            tag: companyName,
+                            image: NetworkImage(companyLogo!),
+                            newsTitle: companyName))
+                        : {},
                     child: ClipOval(
                       child: SizedBox.fromSize(
                         size: const Size.fromRadius(48),
                         child: Hero(
                           tag: "Test",
                           child: Image.network(
-                            companyLogo,
+                            companyLogo!,
                             fit: BoxFit.cover,
                             alignment: Alignment.topCenter,
                           ),

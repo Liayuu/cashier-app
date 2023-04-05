@@ -21,6 +21,7 @@ MenuModel _$MenuModelFromJson(Map<String, dynamic> json) => MenuModel(
           ?.map((e) => e as String)
           .toList(),
       status: $enumDecodeNullable(_$StatusEnumEnumMap, json['status']),
+      singlePrice: (json['price'] as num?)?.toDouble(),
       updatedAt: _parseTimestamp(json['updatedAt']),
       note: json['note'] as String?,
     );
@@ -46,6 +47,7 @@ Map<String, dynamic> _$MenuModelToJson(MenuModel instance) {
   val['image'] = instance.image;
   val['specifiedAt'] = instance.specifiedAt;
   val['status'] = _$StatusEnumEnumMap[instance.status];
+  val['price'] = instance.singlePrice;
   val['updatedAt'] = _parseDateTime(instance.updatedAt);
   writeNotNull('note', instance.note);
   return val;

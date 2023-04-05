@@ -4,7 +4,6 @@ import 'package:cashier_app/controllers/enums/document_name.dart';
 import 'package:cashier_app/controllers/enums/payment_type_enum.dart';
 import 'package:cashier_app/controllers/enums/transaction_status_enum.dart';
 import 'package:cashier_app/models/menu/menus_model.dart';
-import 'package:cashier_app/models/menu/price_model.dart';
 import 'package:cashier_app/models/report/dashboard_report_model.dart';
 import 'package:cashier_app/models/transaction/transaction_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,8 +22,6 @@ class TransactionController extends GetxController {
 
   Stream<QuerySnapshot<TransactionModel>> streamDashboardReport(
       {required String merchantId, required String locationId}) {
-    var today = DateTime.now();
-    var dataToReturn = <TransactionModel>[];
     return _transactionCollection
         .where('merchantId', isEqualTo: merchantId)
         .where('locationId', isEqualTo: locationId)
@@ -68,7 +65,7 @@ class TransactionController extends GetxController {
   Future<List<MenuModel>> _getTransactionMenu(String transactionId) async {
     return await _transactionCollection
         .doc(transactionId)
-        .collection('menu')
+        .collection('menus')
         .withConverter<MenuModel>(fromFirestore: (snapshot, options) {
           return MenuModel.fromJson(snapshot.id, snapshot.data()!);
         }, toFirestore: (value, options) {
@@ -119,6 +116,9 @@ class TransactionController extends GetxController {
             )
             .toJson())
         .then((value) async {
+      if (transaction.promos!.isNotEmpty) {
+        _createPromotionTransaction(value.id);
+      }
       await _createMenusTransaction(value.id).then((value) {
         transaction = TransactionModel();
       });
@@ -128,6 +128,11 @@ class TransactionController extends GetxController {
   Future<void> _createMenusTransaction(String transactionId) async {
     Future.wait(transaction.menus!
         .map((e) => _transactionCollection.doc(transactionId).collection("menus").add(e.toJson())));
+  }
+
+  Future<void> _createPromotionTransaction(String transactionId) async {
+    Future.wait(transaction.promos!.map(
+        (e) => _transactionCollection.doc(transactionId).collection("promotions").add(e.toJson())));
   }
 
   Future<List<MenuModel>> getTransactionMenu(String transactionId) async {
@@ -152,7 +157,12 @@ class TransactionController extends GetxController {
   void insertGrandTotal() {
     transaction.grandTotal = transaction.menus!.fold(
         0.0, (previousValue, element) => previousValue! + (element.price!.price! * element.qty!));
-    transaction.subTotal = transaction.menus!.fold(
-        0.0, (previousValue, element) => previousValue! + (element.price!.price! * element.qty!));
+    // transaction.subTotal = transaction.menus!.fold(
+    //     0.0, (previousValue, element) => previousValue! + (element.price!.price! * element.qty!));
+  }
+
+  void insertSubTotal() {
+    transaction.subTotal = transaction.menus!
+        .fold(0.0, (previousValue, element) => previousValue! + (element.buyingPrice!));
   }
 }
