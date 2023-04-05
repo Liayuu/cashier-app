@@ -52,7 +52,7 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   void initState() {
-    streamController.add(false);
+    streamController.add(true);
     super.initState();
   }
 
@@ -270,7 +270,7 @@ class _MainMenuState extends State<MainMenu> {
                             return _orderTrackingSnackbar();
                           }
                         } else {
-                          streamController.add(false);
+                          // streamController.add(false);
                         }
                         return const SizedBox();
                       })
@@ -412,6 +412,7 @@ class _MainMenuState extends State<MainMenu> {
                   // }
                   _transactionController.transaction.menus!
                       .add(selectedMenu.copyWith(qty: _transactionController.menuQty));
+                  log(_transactionController.transaction.menus.toString());
                 } else {
                   var idx = _transactionController.transaction.menus!
                       .indexWhere((e) => e.id == selectedMenu.id);

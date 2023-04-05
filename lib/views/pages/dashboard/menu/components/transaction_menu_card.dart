@@ -11,6 +11,8 @@ class TransactionMenuCard extends StatelessWidget {
   final double? width;
   final double? height;
   final String images;
+  final bool noteEnabled;
+  final String? noteInitialValue;
   final double? discount;
   final NominalTypeEnum? discountType;
   final double price;
@@ -28,6 +30,8 @@ class TransactionMenuCard extends StatelessWidget {
     this.width,
     this.height,
     required this.images,
+    this.noteEnabled = true,
+    this.noteInitialValue,
     this.discount,
     this.discountType,
     required this.price,
@@ -157,6 +161,8 @@ class TransactionMenuCard extends StatelessWidget {
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
                         child: ProfileTextfield(
                           hintText: "Note",
+                          enabled: noteEnabled,
+                          initialValue: noteInitialValue,
                           onChanged: (value) {
                             if (onChanged != null) onChanged;
                           },

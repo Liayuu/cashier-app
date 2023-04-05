@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:cashier_app/views/components/snackbar.dart';
 import 'package:get/get.dart';
@@ -28,7 +30,7 @@ class _SnackbarOrderState extends State<SnackbarOrder> with TickerProviderStateM
   void initState() {
     _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 400));
 
-    widget.stream!.asBroadcastStream().listen((event) {
+    widget.stream!.listen((event) {
       if (event) {
         setState(() {
           _showSnackbar();

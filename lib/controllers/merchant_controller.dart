@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cashier_app/controllers/enums/branch_type_enum.dart';
@@ -87,7 +88,10 @@ class MerchantController extends GetxController {
           .doc(merchant.id)
           .collection("branch")
           .doc(branch.id)
-          .update(branch.toJson());
+          .update(branch.toJson())
+          .catchError((e) {
+        log(e.toString(), error: "Branch");
+      });
       await _merchantCollection
           .doc(merchant.id)
           .update(merchant.copyWith(updatedAt: DateTime.now()).toJson());

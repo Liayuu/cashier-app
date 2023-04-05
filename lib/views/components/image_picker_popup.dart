@@ -6,12 +6,14 @@ class ImagePickerPopUp extends StatelessWidget {
   final double? height;
   final Widget title;
   final Color? bgColor;
+  final bool showDeleteImage;
   const ImagePickerPopUp({
     Key? key,
     this.width,
     this.height,
     required this.title,
     this.bgColor,
+    this.showDeleteImage = false,
   }) : super(key: key);
 
   @override
@@ -19,7 +21,7 @@ class ImagePickerPopUp extends StatelessWidget {
     return AlertDialog(
       content: ConstrainedBox(
         constraints: BoxConstraints(
-            minHeight: 0, maxHeight: height ?? 200, maxWidth: width ?? 200, minWidth: width ?? 200),
+            minHeight: 0, maxHeight: height ?? 300, maxWidth: width ?? 200, minWidth: width ?? 200),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -29,7 +31,35 @@ class ImagePickerPopUp extends StatelessWidget {
             const SizedBox(
               height: 24,
             ),
-            ..._imagePickerList()
+            ..._imagePickerList(),
+            if (showDeleteImage) ...{
+              Divider(thickness: 1, color: Get.theme.unselectedWidgetColor),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Get.back(result: 2);
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: Icon(
+                          Icons.delete_forever_outlined,
+                          size: 21,
+                          color: Get.theme.primaryColor,
+                        ),
+                      ),
+                      Text(
+                        "Hapus Foto",
+                        style: Get.textTheme.titleMedium,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            }
           ],
         ),
       ),

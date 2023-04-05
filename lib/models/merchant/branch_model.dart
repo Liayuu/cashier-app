@@ -15,9 +15,11 @@ class BranchModel {
   BranchType? branchType;
   String? country;
   String? disctrict;
+  @JsonKey(includeIfNull: true)
   String? logo;
   @JsonKey(includeFromJson: false, includeToJson: false)
   String? logoUrl;
+  @JsonKey(includeIfNull: true)
   String? background;
   @JsonKey(includeFromJson: false, includeToJson: false)
   String? backgroundUrl;

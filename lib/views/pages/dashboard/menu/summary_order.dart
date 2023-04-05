@@ -88,6 +88,8 @@ class _SummaryOrderState extends State<SummaryOrder> {
                     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: TransactionMenuCard(
                         width: Get.width,
+                        noteEnabled: !widget.isFromReport,
+                        noteInitialValue: controller.transaction.menus![index].note,
                         onChanged: (value) {
                           controller.transaction.menus![index].note = value.toString();
                           controller.update();
@@ -282,46 +284,49 @@ class _SummaryOrderState extends State<SummaryOrder> {
                               ),
                             ),
                           ),
-                          Container(
-                              height: Get.height * 0.085,
-                              width: Get.width,
-                              color: Get.theme.colorScheme.background,
-                              child: Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ButtonMain(
-                                    height: Get.height,
-                                    width: Get.width,
-                                    onTap: () {
-                                      _transactionController.transaction.promos = [];
-                                      if (_promotionController.listAvailablePromo.isNotEmpty) {
-                                        _transactionController.transaction.subTotal =
-                                            _getTotalPayment(
-                                                controller.getSubTotal(),
-                                                _promotionController.findBestPromo(
-                                                    promo: _promotionController.listAvailablePromo,
-                                                    totalPrice: controller.getSubTotal()));
-                                        _transactionController.transaction.promos!.assign(
-                                            _promotionController.findBestPromo(
-                                                promo: _promotionController.listAvailablePromo,
-                                                totalPrice: controller.getSubTotal()));
-                                        _transactionController.update();
-                                      }
-                                      Get.to(() => const Payment())?.then((value) {
-                                        if (value != null) {
-                                          if (value) {
-                                            Get.back(result: true);
-                                          }
+                          if (!widget.isFromReport) ...{
+                            Container(
+                                height: Get.height * 0.085,
+                                width: Get.width,
+                                color: Get.theme.colorScheme.background,
+                                child: Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ButtonMain(
+                                      height: Get.height,
+                                      width: Get.width,
+                                      onTap: () {
+                                        _transactionController.transaction.promos = [];
+                                        if (_promotionController.listAvailablePromo.isNotEmpty) {
+                                          _transactionController.transaction.subTotal =
+                                              _getTotalPayment(
+                                                  controller.getSubTotal(),
+                                                  _promotionController.findBestPromo(
+                                                      promo:
+                                                          _promotionController.listAvailablePromo,
+                                                      totalPrice: controller.getSubTotal()));
+                                          _transactionController.transaction.promos!.assign(
+                                              _promotionController.findBestPromo(
+                                                  promo: _promotionController.listAvailablePromo,
+                                                  totalPrice: controller.getSubTotal()));
+                                          _transactionController.update();
                                         }
-                                      });
-                                    },
-                                    color: Get.theme.primaryColor,
-                                    background: Get.theme.colorScheme.primary,
-                                    style: Get.textTheme.labelLarge,
-                                    label: "Konfirmasi Pembayaran",
+                                        Get.to(() => const Payment())?.then((value) {
+                                          if (value != null) {
+                                            if (value) {
+                                              Get.back(result: true);
+                                            }
+                                          }
+                                        });
+                                      },
+                                      color: Get.theme.primaryColor,
+                                      background: Get.theme.colorScheme.primary,
+                                      style: Get.textTheme.labelLarge,
+                                      label: "Konfirmasi Pembayaran",
+                                    ),
                                   ),
-                                ),
-                              ))
+                                ))
+                          }
                         ],
                       ),
                     ),

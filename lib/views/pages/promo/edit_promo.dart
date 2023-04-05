@@ -188,7 +188,10 @@ class _EditPromoState extends State<EditPromo> {
                                     },
                                     controller: _nominalEditingController,
                                     keyboardType: TextInputType.number,
-                                    initialValue: controller.promotionModel.nominal.toString(),
+                                    initialValue: controller.promotionModel.nominalTypeName ==
+                                            NominalTypeEnum.PERCENT
+                                        ? (controller.promotionModel.nominal! * 100).toString()
+                                        : controller.promotionModel.nominal.toString(),
                                     title: Padding(
                                       padding: const EdgeInsets.only(top: 8, bottom: 4),
                                       child: Text(
@@ -386,6 +389,11 @@ class _EditPromoState extends State<EditPromo> {
                                 ],
                               ),
                               barrierDismissible: false);
+                          if (_promotionController.promotionModel.nominalTypeName ==
+                              NominalTypeEnum.PERCENT) {
+                            _promotionController.promotionModel.nominal =
+                                _promotionController.promotionModel.nominal! / 100.toDouble();
+                          }
                           await _promotionController
                               .addOrUpdatePromotion(
                                   merchantId: _merchantController.merchant.id!,

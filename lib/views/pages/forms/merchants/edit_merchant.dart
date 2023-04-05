@@ -72,7 +72,7 @@ class _EditMerchantState extends State<EditMerchant> {
                                 builder: (controller) {
                                   if (controller.newBackground != null) {
                                     return Hero(
-                                      tag: "Test",
+                                      tag: "Background",
                                       child: kIsWeb
                                           ? Image.network(
                                               controller.newBackground!.path,
@@ -86,11 +86,11 @@ class _EditMerchantState extends State<EditMerchant> {
                                             ),
                                     );
                                   }
-                                  return controller.branch.background != null
+                                  return controller.branch.backgroundUrl != null
                                       ? Hero(
-                                          tag: "Test",
+                                          tag: "Background",
                                           child: Image.network(
-                                            controller.branch.background!,
+                                            controller.branch.backgroundUrl!,
                                             fit: BoxFit.cover,
                                             alignment: Alignment.topCenter,
                                           ))
@@ -111,6 +111,7 @@ class _EditMerchantState extends State<EditMerchant> {
                                   await Get.dialog(
                                           ImagePickerPopUp(
                                               width: Get.width * 0.8,
+                                              showDeleteImage: true,
                                               title: Text("Ambil gambar menggunakan",
                                                   style: Get.textTheme.titleLarge!)),
                                           useSafeArea: true)
@@ -174,7 +175,7 @@ class _EditMerchantState extends State<EditMerchant> {
                                             child: SizedBox.fromSize(
                                                 size: const Size.fromRadius(70),
                                                 child: Hero(
-                                                  tag: "Test",
+                                                  tag: "Logo",
                                                   child: kIsWeb
                                                       ? Image.network(
                                                           controller.newLogo!.path,
@@ -192,11 +193,11 @@ class _EditMerchantState extends State<EditMerchant> {
                                         return ClipOval(
                                           child: SizedBox.fromSize(
                                             size: const Size.fromRadius(70),
-                                            child: controller.branch.logo != null
+                                            child: controller.branch.logoUrl != null
                                                 ? Hero(
-                                                    tag: "Test",
+                                                    tag: "Logo",
                                                     child: Image.network(
-                                                      controller.branch.logo!,
+                                                      controller.branch.logoUrl!,
                                                       fit: BoxFit.cover,
                                                       alignment: Alignment.topCenter,
                                                     ))
@@ -217,6 +218,7 @@ class _EditMerchantState extends State<EditMerchant> {
                                           await Get.dialog(
                                                   ImagePickerPopUp(
                                                       width: Get.width * 0.8,
+                                                      showDeleteImage: true,
                                                       title: Text("Ambil gambar menggunakan",
                                                           style: Get.textTheme.titleLarge!)),
                                                   useSafeArea: true)
@@ -499,7 +501,7 @@ class _EditMerchantState extends State<EditMerchant> {
                         onTap: () async {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
-                            await Get.dialog(
+                            Get.dialog(
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -568,7 +570,7 @@ class _EditMerchantState extends State<EditMerchant> {
           _merchantController.update();
         });
       });
-    } else {
+    } else if (value == 1) {
       await ImagePicker()
           .pickImage(source: ImageSource.gallery, maxHeight: 600, maxWidth: 600, imageQuality: 75)
           .then((value) {
@@ -580,6 +582,18 @@ class _EditMerchantState extends State<EditMerchant> {
           }
           _merchantController.update();
         });
+      });
+    } else {
+      setState(() {
+        if (isLogo) {
+          _merchantController.newLogo = null;
+          _merchantController.branch.logo = null;
+          _merchantController.branch.logoUrl = null;
+        } else {
+          _merchantController.branch.background = null;
+          _merchantController.branch.backgroundUrl = null;
+          _merchantController.newBackground = null;
+        }
       });
     }
   }

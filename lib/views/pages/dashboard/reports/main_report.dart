@@ -3,6 +3,7 @@ import 'package:cashier_app/controllers/merchant_controller.dart';
 import 'package:cashier_app/controllers/transaction_controller.dart';
 import 'package:cashier_app/models/transaction/transaction_model.dart';
 import 'package:cashier_app/views/pages/dashboard/home/components/line_chart.dart';
+import 'package:cashier_app/views/pages/dashboard/menu/summary_order.dart';
 import 'package:cashier_app/views/pages/dashboard/reports/components/report_card.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
@@ -81,6 +82,15 @@ class MainReport extends StatelessWidget {
                         if (snapshot.hasData) {
                           return ListView.builder(
                             itemBuilder: (context, index) => ReportCard(
+                              onTap: () async {
+                                await _transactionController
+                                    .getSingleTransaction(snapshot.data![index].id!)
+                                    .then((value) {
+                                  Get.to(() => SummaryOrder(
+                                        isFromReport: true,
+                                      ));
+                                });
+                              },
                               idTransaction: snapshot.data?[index].id ?? "Unknown",
                               transactionDate: snapshot.data?[index].createdAt ?? DateTime.now(),
                               totalTransaction: snapshot.data?[index].subTotal ?? 0,

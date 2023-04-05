@@ -4,9 +4,12 @@ import 'package:cashier_app/controllers/enums/document_name.dart';
 import 'package:cashier_app/controllers/enums/payment_type_enum.dart';
 import 'package:cashier_app/controllers/enums/transaction_status_enum.dart';
 import 'package:cashier_app/models/menu/menus_model.dart';
+import 'package:cashier_app/models/menu/price_model.dart';
+import 'package:cashier_app/models/promotion/promotion_model.dart';
 import 'package:cashier_app/models/report/dashboard_report_model.dart';
 import 'package:cashier_app/models/transaction/transaction_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
@@ -57,9 +60,41 @@ class TransactionController extends GetxController {
         })
         .get()
         .then((value) async {
+          log(value.data()!.toString());
           var menu = await _getTransactionMenu(transactionId);
-          transaction = value.data()!.copyWith(menus: menu);
+          var promo = await _getTransactionPromo(transactionId);
+          log(menu.toString());
+          log(promo.toString());
+          transaction = value.data()!.copyWith(menus: menu, promos: promo);
         });
+  }
+
+  Future<List<PromotionModel>> _getTransactionPromo(String transactionId) async {
+    return await _transactionCollection
+        .doc(transactionId)
+        .collection('promotions')
+        .withConverter<PromotionModel>(fromFirestore: (snapshot, options) {
+          return PromotionModel.fromJson(snapshot.id, snapshot.data()!);
+        }, toFirestore: (value, options) {
+          return {};
+        })
+        .get()
+        .then((value) => value.docs.map((e) => e.data()).toList());
+  }
+
+  Future<PriceModel> _getTransactionMenuPrice(String transactionId, String menuId) async {
+    return await _transactionCollection
+        .doc(transactionId)
+        .collection('menus')
+        .doc(menuId)
+        .collection('price')
+        .withConverter<PriceModel>(fromFirestore: (snapshot, options) {
+          return PriceModel.fromJson(snapshot.id, snapshot.data()!);
+        }, toFirestore: (value, options) {
+          return {};
+        })
+        .get()
+        .then((value) => value.docs.map((e) => e.data()).toList().first);
   }
 
   Future<List<MenuModel>> _getTransactionMenu(String transactionId) async {
@@ -72,7 +107,20 @@ class TransactionController extends GetxController {
           return {};
         })
         .get()
-        .then((value) => value.docs.map((e) => e.data()).toList());
+        .then((value) => value.docs.map((e) => e.data()).toList())
+        .then((value) async {
+          return Future.wait(value.map((e) async {
+            return await _getTransactionMenuPrice(transactionId, e.id!).then((aa) {
+              return e.copyWith(price: aa);
+            });
+          }));
+        })
+        .then((value) async {
+          return Future.wait(value.map((e) async {
+            var dlLink = await FirebaseStorage.instance.ref(e.image).getDownloadURL();
+            return e.copyWith(downloadLink: dlLink);
+          }));
+        });
   }
 
   Future<Map<String, List<TransactionModel>>> groupedTransaction(
@@ -126,8 +174,20 @@ class TransactionController extends GetxController {
   }
 
   Future<void> _createMenusTransaction(String transactionId) async {
-    Future.wait(transaction.menus!
-        .map((e) => _transactionCollection.doc(transactionId).collection("menus").add(e.toJson())));
+    Future.wait(transaction.menus!.map((e) {
+      return _transactionCollection
+          .doc(transactionId)
+          .collection("menus")
+          .add(e.toJson())
+          .then((value) async {
+        await _transactionCollection
+            .doc(transactionId)
+            .collection("menus")
+            .doc(value.id)
+            .collection('price')
+            .add(e.price!.toJson());
+      });
+    }));
   }
 
   Future<void> _createPromotionTransaction(String transactionId) async {
