@@ -45,6 +45,13 @@
             {
               "client_id": "786940598098-hklsqmleu73o12lsobpa94le99v8o56j.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "786940598098-h293doarpa642hr3n8t4op1vo41skofc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cashierApp"
+              }
             }
           ]
         }
