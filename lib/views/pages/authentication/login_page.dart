@@ -1,6 +1,8 @@
 import 'package:cashier_app/configs/language_config.dart';
 import 'package:cashier_app/controllers/user_controller.dart';
 import 'package:cashier_app/views/pages/dashboard/dasboard.dart';
+import 'package:cashier_app/views/pages/forms/merchants/edit_merchant.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -120,6 +122,12 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     TextSpan(
                         text: "Daftar disini",
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Get.to(() => EditMerchant(
+                                  isRegisterMember: true,
+                                ));
+                          },
                         style: Get.textTheme.labelLarge!.copyWith(color: Get.theme.primaryColor))
                   ])),
                   ElevatedButton(

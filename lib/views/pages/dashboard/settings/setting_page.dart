@@ -43,8 +43,10 @@ class SettingPage extends StatelessWidget {
                         height: Get.height / 4,
                         // color: Get.theme.primaryColor,
                         margin: const EdgeInsets.only(bottom: 75),
-                        child: Image.network(_merchantController.branch.backgroundUrl!,
-                            fit: BoxFit.cover),
+                        child: _merchantController.branch.backgroundUrl != null
+                            ? Image.network(_merchantController.branch.backgroundUrl!,
+                                fit: BoxFit.cover)
+                            : SizedBox(),
                       );
                     }),
                     Positioned(

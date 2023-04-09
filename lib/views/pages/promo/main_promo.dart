@@ -58,7 +58,7 @@ class _MainPromoState extends State<MainPromo> {
           child: SingleChildScrollView(
               child: Padding(
             padding: EdgeInsets.all(8),
-            child: FutureBuilder<List<PromotionModel>>(
+            child: FutureBuilder<List<PromotionModel>?>(
               future: _promotionController.getPromotion(
                   merchantId: _merchantController.merchant.id!,
                   locationId: _merchantController.branch.id!),

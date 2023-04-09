@@ -68,7 +68,10 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> logout() async => await _auth.signOut();
+  Future<void> logout() async {
+    userModel = EmployeeModel();
+    await _auth.signOut();
+  }
 
   void registerUser(String email, String password) {
     createUserWithEmailAndPassword(email, password);

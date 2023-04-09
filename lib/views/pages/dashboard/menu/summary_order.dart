@@ -181,7 +181,7 @@ class _SummaryOrderState extends State<SummaryOrder> {
               color: Get.theme.primaryColor,
             ),
           ),
-          FutureBuilder<List<PromotionModel>>(
+          FutureBuilder<List<PromotionModel>?>(
               future: _promotionController.getPromotion(
                   merchantId: _merchantController.merchant.id!,
                   locationId: _merchantController.branch.id!,
@@ -190,6 +190,7 @@ class _SummaryOrderState extends State<SummaryOrder> {
                   currentTime: DateTime.now()),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
+                  log(snapshot.hasData.toString());
                   return Expanded(
                     flex: 4,
                     child: GetBuilder<TransactionController>(

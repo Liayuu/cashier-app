@@ -13,7 +13,7 @@ class PromotionController extends GetxController {
   PromotionModel promotionModel = PromotionModel();
   List<PromotionModel> listAvailablePromo = [];
 
-  Future<List<PromotionModel>> getPromotion(
+  Future<List<PromotionModel>?> getPromotion(
       {required String merchantId,
       required String locationId,
       DateTime? currentTime,
@@ -48,18 +48,22 @@ class PromotionController extends GetxController {
         .get()
         .then((value) {
       var data = value.docs.map((e) => e.data()).toList();
-      if (currentTime != null) {
-        data = data.where((e) => e.startTime!.isBefore(currentTime)).toList();
-      }
-      listAvailablePromo.assignAll(data);
-      // if (!forTransaction) {
-      //   listAvailablePromo.assignAll(data);
+      if (data.isNotEmpty) {
+        if (currentTime != null) {
+          data = data.where((e) => e.startTime!.isBefore(currentTime)).toList();
+        }
+        listAvailablePromo.assignAll(data);
+        // if (!forTransaction) {
+        //   listAvailablePromo.assignAll(data);
 
-      // } else {
-      //   listAvailablePromo.assignAll(data.where((element) => false));
-      // }
-      update();
-      return listAvailablePromo;
+        // } else {
+        //   listAvailablePromo.assignAll(data.where((element) => false));
+        // }
+        update();
+        log(listAvailablePromo.toString());
+        return listAvailablePromo;
+      }
+      return null;
     });
   }
 
