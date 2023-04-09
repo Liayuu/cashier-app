@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
                       init: Get.find<MerchantController>(),
                       builder: (controller) {
                         return AppBarMenu(
-                            companyLogo: controller.branch.logo!,
+                            companyLogo: controller.branch.logoUrl!,
                             companyName: controller.merchant.name!);
                       }),
                 ),
@@ -99,14 +99,16 @@ class _HomeState extends State<Home> {
                                               horizontal: 16, vertical: 8),
                                           child: _cardChild(
                                               title: "Pemasukan",
-                                              info: NumberFormat.compact().format(snapshot
-                                                  .data?.docs
-                                                  .map((e) => e.data().grandTotal)
-                                                  .toList()
-                                                  .fold<double>(
-                                                      0,
-                                                      (previousValue, element) =>
-                                                          previousValue + element!))))),
+                                              info: snapshot.data!.docs.isNotEmpty
+                                                  ? NumberFormat.compact().format(snapshot
+                                                      .data?.docs
+                                                      .map((e) => e.data().grandTotal)
+                                                      .toList()
+                                                      .fold<double>(
+                                                          0,
+                                                          (previousValue, element) =>
+                                                              previousValue + element!))
+                                                  : 0.toString()))),
                                 ),
                               )
                             ],
@@ -125,11 +127,13 @@ class _HomeState extends State<Home> {
                                               horizontal: 16, vertical: 8),
                                           child: _cardChild(
                                               title: "Transaksi Terkecil",
-                                              info: NumberFormat.compact().format(snapshot
-                                                  .data?.docs
-                                                  .map((e) => e.data().grandTotal)
-                                                  .reduce((value, element) =>
-                                                      value! < element! ? value : element))))),
+                                              info: snapshot.data!.docs.isNotEmpty
+                                                  ? NumberFormat.compact().format(snapshot
+                                                      .data?.docs
+                                                      .map((e) => e.data().grandTotal)
+                                                      .reduce((value, element) =>
+                                                          value! < element! ? value : element))
+                                                  : 0.toString()))),
                                 ),
                               ),
                               Expanded(
@@ -142,11 +146,13 @@ class _HomeState extends State<Home> {
                                               horizontal: 16, vertical: 8),
                                           child: _cardChild(
                                               title: "Transaksi Terbesar",
-                                              info: NumberFormat.compact().format(snapshot
-                                                  .data?.docs
-                                                  .map((e) => e.data().grandTotal)
-                                                  .reduce((value, element) =>
-                                                      value! > element! ? value : element))))),
+                                              info: snapshot.data!.docs.isNotEmpty
+                                                  ? NumberFormat.compact().format(snapshot
+                                                      .data?.docs
+                                                      .map((e) => e.data().grandTotal)
+                                                      .reduce((value, element) =>
+                                                          value! > element! ? value : element))
+                                                  : 0.toString()))),
                                 ),
                               )
                             ],
@@ -154,10 +160,9 @@ class _HomeState extends State<Home> {
                         ],
                       );
                     } else if (snapshot.hasError) {
-                      print(snapshot.error.toString());
-                      return SizedBox();
+                      return const SizedBox();
                     } else {
-                      return SizedBox();
+                      return const SizedBox();
                     }
                   },
                 ),

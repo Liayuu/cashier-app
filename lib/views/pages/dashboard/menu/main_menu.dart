@@ -195,68 +195,71 @@ class _MainMenuState extends State<MainMenu> {
                                               ),
                                             ),
                                           )),
-                                      SliverGrid.builder(
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 2, childAspectRatio: 2 / 3),
-                                        itemCount:
-                                            snapshot.data?[_selectedIndex].menus?.length ?? 0,
-                                        itemBuilder: (context, index) {
-                                          return FutureBuilder<MenuModel>(
-                                              future: _menuController.fetchMenuWithPrice(
-                                                  snapshot.data![_selectedIndex].menus![index]),
-                                              builder: (context, menu) {
-                                                if (menu.connectionState == ConnectionState.done) {
-                                                  return GestureDetector(
-                                                    onTap: () async {
-                                                      if (widget.isForMainMenu) {
-                                                        Get.dialog(_popUpMenu(menu.data!));
-                                                      } else {
-                                                        await _menuController
-                                                            .fetchMenuForEdit(menu.data!)
-                                                            .then((value) async {
-                                                          _menuController.listCategory
-                                                              .assignAll(snapshot.data!);
-                                                          _menuController
-                                                              .listCategory[_selectedIndex]
-                                                              .isChoosed = true;
-                                                          await Get.to(() => EditMenu(
-                                                                locationId:
-                                                                    _merchantController.branch.id!,
-                                                                merchantId: _merchantController
-                                                                    .merchant.id!,
-                                                              ))?.then((value) {
-                                                            _menuController.menu = MenuModel();
-                                                            _menuController.newImage = null;
-                                                            _menuController.listCategory.clear();
+                                      if (snapshot.data!.isNotEmpty) ...{
+                                        SliverGrid.builder(
+                                          gridDelegate:
+                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 2, childAspectRatio: 2 / 3),
+                                          itemCount:
+                                              snapshot.data?[_selectedIndex].menus?.length ?? 0,
+                                          itemBuilder: (context, index) {
+                                            return FutureBuilder<MenuModel>(
+                                                future: _menuController.fetchMenuWithPrice(
+                                                    snapshot.data![_selectedIndex].menus![index]),
+                                                builder: (context, menu) {
+                                                  if (menu.connectionState ==
+                                                      ConnectionState.done) {
+                                                    return GestureDetector(
+                                                      onTap: () async {
+                                                        if (widget.isForMainMenu) {
+                                                          Get.dialog(_popUpMenu(menu.data!));
+                                                        } else {
+                                                          await _menuController
+                                                              .fetchMenuForEdit(menu.data!)
+                                                              .then((value) async {
+                                                            _menuController.listCategory
+                                                                .assignAll(snapshot.data!);
+                                                            _menuController
+                                                                .listCategory[_selectedIndex]
+                                                                .isChoosed = true;
+                                                            await Get.to(() => EditMenu(
+                                                                  locationId: _merchantController
+                                                                      .branch.id!,
+                                                                  merchantId: _merchantController
+                                                                      .merchant.id!,
+                                                                ))?.then((value) {
+                                                              _menuController.menu = MenuModel();
+                                                              _menuController.newImage = null;
+                                                              _menuController.listCategory.clear();
+                                                            });
                                                           });
-                                                        });
-                                                      }
-                                                    },
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.all(8.0),
-                                                      child: AspectRatio(
-                                                        aspectRatio: 2 / 3,
-                                                        child: MenuCard(
-                                                            images: menu.data!.downloadLink!,
-                                                            price: menu.data!.price!.price!,
-                                                            availability: 99,
-                                                            name: menu.data!.name!,
-                                                            unit: "Portion"),
+                                                        }
+                                                      },
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: AspectRatio(
+                                                          aspectRatio: 2 / 3,
+                                                          child: MenuCard(
+                                                              images: menu.data!.downloadLink!,
+                                                              price: menu.data!.price!.price!,
+                                                              availability: 99,
+                                                              name: menu.data!.name!,
+                                                              unit: "Portion"),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  );
-                                                } else if (menu.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const Center(
-                                                    child: CircularProgressIndicator(),
-                                                  );
-                                                } else {
-                                                  return const Text("Something wrong");
-                                                }
-                                              });
-                                        },
-                                      )
+                                                    );
+                                                  } else if (menu.connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return const Center(
+                                                      child: CircularProgressIndicator(),
+                                                    );
+                                                  } else {
+                                                    return const Text("Something wrong");
+                                                  }
+                                                });
+                                          },
+                                        )
+                                      }
                                     ]);
                               } else {
                                 log(snapshot.error.toString(), error: "Error load menu");

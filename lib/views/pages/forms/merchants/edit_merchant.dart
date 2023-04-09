@@ -520,18 +520,16 @@ class _EditMerchantState extends State<EditMerchant> {
                                     .createUserWithEmailAndPassword(
                                         _userController.userModel.email!, _passwordCon.text)
                                     .then((value) async {
-                                  Future.wait([
-                                    _merchantController.addOrUpdateMerchant(),
-                                    _userController.addOrUpdateUser(
-                                        merchantId: _merchantController.merchant.id!,
-                                        locationId: [_merchantController.branch.id!])
-                                  ]);
+                                  await _merchantController.addOrUpdateMerchant();
+                                  await _userController.addOrUpdateUser(
+                                      merchantId: _merchantController.merchant.id!,
+                                      locationId: [_merchantController.branch.id!]);
                                 });
                               } else {
                                 Get.snackbar("Kesalahan", "Password tidak sesuai");
                               }
                             } else {
-                              Future.wait([
+                              await Future.wait([
                                 _merchantController.addOrUpdateMerchant(),
                                 _userController.addOrUpdateUser()
                               ]).then((value) {

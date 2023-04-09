@@ -119,7 +119,8 @@ class UserController extends GetxController {
                   updatedAt: DateTime.now())
               .toJson())
           .then((value) async {
-        await fetchUserData(value.id);
+        userModel = await value.get().then((val) => EmployeeModel.fromJson(val.id, val.data()!));
+        // await fetchUserData(value.id);
         Get.offAll(() => const MainDashboard());
       });
     }

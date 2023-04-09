@@ -96,16 +96,6 @@ class MerchantController extends GetxController {
           .doc(merchant.id)
           .update(merchant.copyWith(updatedAt: DateTime.now()).toJson());
     } else {
-      if (newLogo != null) {
-        await _uploadImage(branch.id!, newLogo!).then((value) {
-          branch.logo = value;
-        });
-      }
-      if (newBackground != null) {
-        await _uploadImage(branch.id!, newBackground!).then((value) {
-          branch.logo = value;
-        });
-      }
       await _merchantCollection
           .add(merchant
               .copyWith(
@@ -115,6 +105,10 @@ class MerchantController extends GetxController {
                   type: MerchantType.RESTAURANT)
               .toJson())
           .then((value) async {
+        await value.get().then((merch) {
+          merchant = MerchantModel.fromJson(merch.id, merch.data()!);
+        });
+        log(merchant.toString(), name: "Merchant");
         await _merchantCollection
             .doc(value.id)
             .collection("branch")
@@ -122,7 +116,25 @@ class MerchantController extends GetxController {
                 .copyWith(branchType: BranchType.MAIN_BRANCH, status: StatusEnum.ACTIVE)
                 .toJson())
             .then((val) async {
-          await _fetchBranch(value.id);
+          await val.get().then((br) {
+            branch = BranchModel.fromJson(br.id, br.data()!);
+          });
+          log(branch.toString(), name: "Branch");
+          if (newLogo != null) {
+            await _uploadImage(branch.id!, newLogo!).then((value) {
+              branch.logo = value;
+            });
+          }
+          if (newBackground != null) {
+            await _uploadImage(branch.id!, newBackground!).then((value) {
+              branch.background = value;
+            });
+          }
+          await _merchantCollection
+              .doc(value.id)
+              .collection('branch')
+              .doc(val.id)
+              .update(branch.toJson());
         });
       });
     }

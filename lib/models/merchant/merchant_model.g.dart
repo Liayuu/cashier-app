@@ -19,6 +19,7 @@ MerchantModel _$MerchantModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$MerchantModelToJson(MerchantModel instance) =>
     <String, dynamic>{
+      'createdAt': _parseDateTime(instance.createdAt),
       'updatedAt': _parseDateTime(instance.updatedAt),
       'name': instance.name,
       'logo': instance.logo,
