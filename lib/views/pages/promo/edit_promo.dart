@@ -30,8 +30,16 @@ class _EditPromoState extends State<EditPromo> {
 
   @override
   void initState() {
-    if (_promotionController.promotionModel.nominal != null)
+    if (_promotionController.promotionModel.nominal != null) {
       _nominalEditingController.text = _promotionController.promotionModel.nominal.toString();
+    }
+    if (_promotionController.promotionModel.minimumTransaction != null) {
+      _minEditingController.text =
+          _promotionController.promotionModel.minimumTransaction.toString();
+    }
+    if (_promotionController.promotionModel.maximumNominal != null) {
+      _maxEditingController.text = _promotionController.promotionModel.maximumNominal.toString();
+    }
     super.initState();
   }
 
@@ -152,7 +160,6 @@ class _EditPromoState extends State<EditPromo> {
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: GetBuilder<PromotionController>(
-                            init: Get.find<PromotionController>(),
                             builder: (controller) {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,21 +184,25 @@ class _EditPromoState extends State<EditPromo> {
                                     onChanged: (value) {
                                       var val = _formatNumber(value.replaceAll('.', ''));
                                       if (value != null && value != "") {
-                                        controller.promotionModel.nominal = double.parse(value);
+                                        controller.promotionModel.nominal =
+                                            double.parse(_formatNumber(value.replaceAll('.', '')));
                                       } else {
                                         controller.promotionModel.nominal = 0;
                                       }
                                       _nominalEditingController.value = TextEditingValue(
                                           selection: TextSelection.collapsed(offset: val.length),
                                           text: val);
-                                      controller.update();
+                                      // controller.update();
                                     },
                                     controller: _nominalEditingController,
                                     keyboardType: TextInputType.number,
-                                    initialValue: controller.promotionModel.nominalTypeName ==
-                                            NominalTypeEnum.PERCENT
-                                        ? (controller.promotionModel.nominal! * 100).toString()
-                                        : controller.promotionModel.nominal.toString(),
+                                    initialValue: _initPromoValue(
+                                        type: controller.promotionModel.nominalTypeName,
+                                        nominal: controller.promotionModel.nominal),
+                                    // initialValue: controller.promotionModel.nominalTypeName ==
+                                    //         NominalTypeEnum.PERCENT
+                                    //     ? (controller.promotionModel.nominal! * 100).toString()
+                                    //     : controller.promotionModel.nominal.toString(),
                                     title: Padding(
                                       padding: const EdgeInsets.only(top: 8, bottom: 4),
                                       child: Text(
@@ -200,13 +211,13 @@ class _EditPromoState extends State<EditPromo> {
                                             .copyWith(fontWeight: FontWeight.w700),
                                       ),
                                     ),
-                                    onSaved: (value) {
-                                      if (double.parse(value) < 0) {
-                                        controller.promotionModel.nominal = 0;
-                                      } else {
-                                        controller.promotionModel.nominal = double.parse(value);
-                                      }
-                                    },
+                                    // onSaved: (value) {
+                                    //   if (double.parse(value) < 0) {
+                                    //     controller.promotionModel.nominal = 0;
+                                    //   } else {
+                                    //     controller.promotionModel.nominal = double.parse(value);
+                                    //   }
+                                    // },
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 8, bottom: 4),
@@ -223,7 +234,7 @@ class _EditPromoState extends State<EditPromo> {
                                           NominalTypeEnum.NOMINAL,
                                       onChanged: (value) {
                                         controller.promotionModel.nominalTypeName = value;
-                                        controller.update();
+                                        // controller.update();
                                       },
                                       items: [
                                         DropdownMenuItem(
@@ -246,78 +257,86 @@ class _EditPromoState extends State<EditPromo> {
                                     ),
                                   ),
                                   PriceTextfield(
-                                    hintText: "Minimal Pembelanjaan",
-                                    initialValue:
-                                        controller.promotionModel.minimumTransaction.toString(),
+                                    hintText: "Transaksi Minimal",
                                     onChanged: (value) {
                                       var val = _formatNumber(value.replaceAll('.', ''));
                                       if (value != null && value != "") {
                                         controller.promotionModel.minimumTransaction =
-                                            double.parse(value);
+                                            double.parse(_formatNumber(value.replaceAll('.', '')));
                                       } else {
-                                        controller.promotionModel.minimumTransaction = null;
+                                        controller.promotionModel.minimumTransaction = 0;
                                       }
                                       _minEditingController.value = TextEditingValue(
                                           selection: TextSelection.collapsed(offset: val.length),
                                           text: val);
-                                      controller.update();
+                                      // controller.update();
                                     },
                                     controller: _minEditingController,
                                     keyboardType: TextInputType.number,
+                                    initialValue: _initPromoValue(
+                                        type: controller.promotionModel.nominalTypeName,
+                                        nominal: controller.promotionModel.minimumTransaction),
+                                    // initialValue: controller.promotionModel.nominalTypeName ==
+                                    //         NominalTypeEnum.PERCENT
+                                    //     ? (controller.promotionModel.nominal! * 100).toString()
+                                    //     : controller.promotionModel.nominal.toString(),
                                     title: Padding(
                                       padding: const EdgeInsets.only(top: 8, bottom: 4),
                                       child: Text(
-                                        "Minimal",
+                                        "Transaksi Minimal",
                                         style: Get.textTheme.titleMedium!
                                             .copyWith(fontWeight: FontWeight.w700),
                                       ),
                                     ),
-                                    onSaved: (value) {
-                                      if (double.parse(value) < 0) {
-                                        controller.promotionModel.minimumTransaction = null;
-                                      } else {
-                                        controller.promotionModel.minimumTransaction =
-                                            double.parse(value);
-                                      }
-                                    },
+                                    // onSaved: (value) {
+                                    //   if (double.parse(value) < 0) {
+                                    //     controller.promotionModel.nominal = 0;
+                                    //   } else {
+                                    //     controller.promotionModel.nominal = double.parse(value);
+                                    //   }
+                                    // },
                                   ),
                                   PriceTextfield(
-                                    hintText: "Diskon Maksimal",
-                                    initialValue:
-                                        controller.promotionModel.maximumNominal.toString(),
+                                    hintText: "Maksimal Potongan",
                                     enabled: controller.promotionModel.nominalTypeName ==
                                         NominalTypeEnum.PERCENT,
                                     onChanged: (value) {
                                       var val = _formatNumber(value.replaceAll('.', ''));
                                       if (value != null && value != "") {
                                         controller.promotionModel.maximumNominal =
-                                            double.parse(value);
+                                            double.parse(_formatNumber(value.replaceAll('.', '')));
                                       } else {
-                                        controller.promotionModel.maximumNominal = null;
+                                        controller.promotionModel.maximumNominal = 0;
                                       }
                                       _maxEditingController.value = TextEditingValue(
                                           selection: TextSelection.collapsed(offset: val.length),
                                           text: val);
-                                      controller.update();
+                                      // controller.update();
                                     },
                                     controller: _maxEditingController,
                                     keyboardType: TextInputType.number,
+                                    initialValue: _initPromoValue(
+                                        type: controller.promotionModel.nominalTypeName,
+                                        nominal: controller.promotionModel.maximumNominal),
+                                    // initialValue: controller.promotionModel.nominalTypeName ==
+                                    //         NominalTypeEnum.PERCENT
+                                    //     ? (controller.promotionModel.nominal! * 100).toString()
+                                    //     : controller.promotionModel.nominal.toString(),
                                     title: Padding(
                                       padding: const EdgeInsets.only(top: 8, bottom: 4),
                                       child: Text(
-                                        "Maksimal",
+                                        "Potongan Maksimal",
                                         style: Get.textTheme.titleMedium!
                                             .copyWith(fontWeight: FontWeight.w700),
                                       ),
                                     ),
-                                    onSaved: (value) {
-                                      if (double.parse(value) < 0) {
-                                        controller.promotionModel.maximumNominal = null;
-                                      } else {
-                                        controller.promotionModel.maximumNominal =
-                                            double.parse(value);
-                                      }
-                                    },
+                                    // onSaved: (value) {
+                                    //   if (double.parse(value) < 0) {
+                                    //     controller.promotionModel.nominal = 0;
+                                    //   } else {
+                                    //     controller.promotionModel.nominal = double.parse(value);
+                                    //   }
+                                    // },
                                   ),
                                   _formWithDatePicker(
                                     label: "Berlaku mulai",
@@ -429,6 +448,24 @@ class _EditPromoState extends State<EditPromo> {
         ),
       ),
     );
+  }
+
+  String? _initPromoValue({NominalTypeEnum? type, double? nominal}) {
+    if (type != null) {
+      if (nominal != null) {
+        switch (type) {
+          case NominalTypeEnum.NOMINAL:
+            return nominal.toString();
+          case NominalTypeEnum.PERCENT:
+            return (nominal * 100).toString();
+          default:
+            return null;
+        }
+      } else {
+        return null;
+      }
+    }
+    return null;
   }
 
   Widget _formWithDatePicker(

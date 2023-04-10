@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class PriceTextfield extends StatelessWidget {
+class PriceTextfield extends StatefulWidget {
   String? labelText;
   String? hintText;
   Widget? title;
@@ -45,26 +45,32 @@ class PriceTextfield extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    String formatNumber(String s) =>
-        NumberFormat.decimalPattern('id').format(double.parse(s));
-    log(initialValue ?? "null", name: "Initial Value");
-    log(controller?.text ?? "null", name: "Controller Value");
-    if (initialValue != null && controller != null) {
-      controller!.text = formatNumber(initialValue!.replaceAll('.', ''));
+  State<PriceTextfield> createState() => _PriceTextfieldState();
+}
+
+class _PriceTextfieldState extends State<PriceTextfield> {
+  String formatNumber(String s) => NumberFormat.decimalPattern('id').format(double.parse(s));
+  @override
+  void initState() {
+    if (widget.initialValue != null && widget.controller != null) {
+      widget.controller!.text = formatNumber(widget.initialValue!.replaceAll('.', ''));
     }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        title ?? const SizedBox(),
+        widget.title ?? const SizedBox(),
         Row(
           children: [
-            currency != null
+            widget.currency != null
                 ? Text(
-                    currency!.currencySymbol,
-                    style: Get.textTheme.titleMedium!
-                        .copyWith(fontWeight: FontWeight.w700),
+                    widget.currency!.currencySymbol,
+                    style: Get.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
                   )
                 : const SizedBox(),
             const SizedBox(
@@ -74,37 +80,36 @@ class PriceTextfield extends StatelessWidget {
               fit: FlexFit.loose,
               child: TextFormField(
                 decoration: InputDecoration(
-                    border: border,
-                    labelText: labelText,
-                    hintText: hintText,
+                    border: widget.border,
+                    labelText: widget.labelText,
+                    hintText: widget.hintText,
                     isDense: true,
                     contentPadding: const EdgeInsets.all(9),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Get.theme.primaryColor),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
-                    fillColor: !enabled
+                        borderRadius: const BorderRadius.all(Radius.circular(10))),
+                    fillColor: !widget.enabled
                         ? Get.theme.unselectedWidgetColor
                         : Get.theme.inputDecorationTheme.fillColor,
-                    floatingLabelAlignment: floatingLabelAlignment,
-                    floatingLabelBehavior: floatingLabelBehavior),
+                    floatingLabelAlignment: widget.floatingLabelAlignment,
+                    floatingLabelBehavior: widget.floatingLabelBehavior),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 style: Get.textTheme.bodyText1,
                 cursorWidth: 2.0,
-                controller: controller,
+                controller: widget.controller,
                 cursorColor: Get.theme.primaryColor,
-                obscureText: obsecure,
-                keyboardType: keyboardType,
+                obscureText: widget.obsecure,
+                keyboardType: widget.keyboardType,
                 maxLines: 1,
-                enabled: enabled,
-                initialValue: controller != null ? null : initialValue,
-                textInputAction: textInputAction,
-                validator: validator,
+                enabled: widget.enabled,
+                initialValue: widget.controller != null ? null : widget.initialValue,
+                textInputAction: widget.textInputAction,
+                validator: widget.validator,
                 onChanged: (value) {
-                  if (onChanged != null) onChanged!(value);
+                  if (widget.onChanged != null) widget.onChanged!(value);
                 },
                 onSaved: (value) {
-                  if (onSaved != null) onSaved!(value);
+                  if (widget.onSaved != null) widget.onSaved!(value);
                 },
               ),
             ),
