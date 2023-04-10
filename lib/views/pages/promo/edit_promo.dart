@@ -182,10 +182,13 @@ class _EditPromoState extends State<EditPromo> {
                                   PriceTextfield(
                                     hintText: "Promo Produk",
                                     onChanged: (value) {
-                                      var val = _formatNumber(value.replaceAll('.', ''));
+                                      var val =
+                                          "${_formatNumber(value.toString().replaceAll('.', ''))}";
                                       if (value != null && value != "") {
                                         controller.promotionModel.nominal =
-                                            double.parse(_formatNumber(value.replaceAll('.', '')));
+                                            double.parse(value.toString().replaceAll('.', ''));
+                                        log(controller.promotionModel.nominal.toString(),
+                                            name: "Promo");
                                       } else {
                                         controller.promotionModel.nominal = 0;
                                       }
@@ -262,7 +265,7 @@ class _EditPromoState extends State<EditPromo> {
                                       var val = _formatNumber(value.replaceAll('.', ''));
                                       if (value != null && value != "") {
                                         controller.promotionModel.minimumTransaction =
-                                            double.parse(_formatNumber(value.replaceAll('.', '')));
+                                            double.parse(value.toString().replaceAll('.', ''));
                                       } else {
                                         controller.promotionModel.minimumTransaction = 0;
                                       }
@@ -304,7 +307,7 @@ class _EditPromoState extends State<EditPromo> {
                                       var val = _formatNumber(value.replaceAll('.', ''));
                                       if (value != null && value != "") {
                                         controller.promotionModel.maximumNominal =
-                                            double.parse(_formatNumber(value.replaceAll('.', '')));
+                                            double.parse(value.toString().replaceAll('.', ''));
                                       } else {
                                         controller.promotionModel.maximumNominal = 0;
                                       }
