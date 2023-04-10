@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -44,7 +46,10 @@ class PriceTextfield extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formatNumber(String s) => NumberFormat.decimalPattern('id').format(double.parse(s));
+    String formatNumber(String s) =>
+        NumberFormat.decimalPattern('id').format(double.parse(s));
+    log(initialValue ?? "null", name: "Initial Value");
+    log(controller?.text ?? "null", name: "Controller Value");
     if (initialValue != null && controller != null) {
       controller!.text = formatNumber(initialValue!.replaceAll('.', ''));
     }
@@ -58,7 +63,8 @@ class PriceTextfield extends StatelessWidget {
             currency != null
                 ? Text(
                     currency!.currencySymbol,
-                    style: Get.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
+                    style: Get.textTheme.titleMedium!
+                        .copyWith(fontWeight: FontWeight.w700),
                   )
                 : const SizedBox(),
             const SizedBox(
@@ -75,7 +81,8 @@ class PriceTextfield extends StatelessWidget {
                     contentPadding: const EdgeInsets.all(9),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Get.theme.primaryColor),
-                        borderRadius: const BorderRadius.all(Radius.circular(10))),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
                     fillColor: !enabled
                         ? Get.theme.unselectedWidgetColor
                         : Get.theme.inputDecorationTheme.fillColor,

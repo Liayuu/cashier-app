@@ -21,7 +21,8 @@ import 'package:intl/intl.dart';
 class EditMenu extends StatefulWidget {
   final String merchantId;
   final String locationId;
-  const EditMenu({super.key, required this.merchantId, required this.locationId});
+  const EditMenu(
+      {super.key, required this.merchantId, required this.locationId});
 
   @override
   State<EditMenu> createState() => _EditMenuState();
@@ -31,7 +32,8 @@ class _EditMenuState extends State<EditMenu> {
   final _formKey = GlobalKey<FormState>();
   final _menuController = Get.find<MenusController>();
 
-  String _formatNumber(String s) => NumberFormat.decimalPattern('id').format(double.parse(s));
+  String _formatNumber(String s) =>
+      NumberFormat.decimalPattern('id').format(double.parse(s));
   var _priceEditingController = TextEditingController();
 
   @override
@@ -68,25 +70,31 @@ class _EditMenuState extends State<EditMenu> {
                                   color: Colors.transparent,
                                   child: InkWell(
                                       borderRadius: BorderRadius.circular(12),
-                                      splashColor: Colors.white.withOpacity(0.8),
+                                      splashColor:
+                                          Colors.white.withOpacity(0.8),
                                       onTap: () async {
                                         Get.dialog(
                                             Column(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   "Mohon tunggu",
-                                                  style: Get.textTheme.labelMedium,
+                                                  style:
+                                                      Get.textTheme.labelMedium,
                                                 ),
                                                 const CircularProgressIndicator()
                                               ],
                                             ),
                                             barrierDismissible: false);
-                                        await _menuController.deleteMenu().then((value) {
+                                        await _menuController
+                                            .deleteMenu()
+                                            .then((value) {
                                           _menuController.menu = MenuModel();
                                           _menuController.newImage = null;
                                           _menuController.newPrice = null;
-                                          _menuController.currentCategory = CategoriesModel();
+                                          _menuController.currentCategory =
+                                              CategoriesModel();
                                           Get.back();
                                         }).then((value) {
                                           Get.back();
@@ -104,7 +112,8 @@ class _EditMenuState extends State<EditMenu> {
                                   color: Colors.transparent,
                                   child: InkWell(
                                       borderRadius: BorderRadius.circular(12),
-                                      splashColor: Colors.white.withOpacity(0.8),
+                                      splashColor:
+                                          Colors.white.withOpacity(0.8),
                                       onTap: () {
                                         Get.back();
                                       },
@@ -172,12 +181,15 @@ class _EditMenuState extends State<EditMenu> {
                                               ? Image.network(
                                                   controller.newImage!.path,
                                                   fit: BoxFit.cover,
-                                                  alignment: Alignment.topCenter,
+                                                  alignment:
+                                                      Alignment.topCenter,
                                                 )
                                               : Image.file(
-                                                  File(controller.newImage!.path),
+                                                  File(controller
+                                                      .newImage!.path),
                                                   fit: BoxFit.cover,
-                                                  alignment: Alignment.topCenter,
+                                                  alignment:
+                                                      Alignment.topCenter,
                                                 ),
                                         )),
                                   );
@@ -210,8 +222,10 @@ class _EditMenuState extends State<EditMenu> {
                                   await Get.dialog(
                                           ImagePickerPopUp(
                                               width: Get.width * 0.8,
-                                              title: Text("Ambil gambar menggunakan",
-                                                  style: Get.textTheme.titleLarge!)),
+                                              title: Text(
+                                                  "Ambil gambar menggunakan",
+                                                  style: Get
+                                                      .textTheme.titleLarge!)),
                                           useSafeArea: true)
                                       .then((value) async {
                                     if (value != null) {
@@ -225,7 +239,8 @@ class _EditMenuState extends State<EditMenu> {
                                 height: 40,
                                 decoration: BoxDecoration(
                                     border: Border.all(
-                                        color: Get.theme.unselectedWidgetColor, width: 4),
+                                        color: Get.theme.unselectedWidgetColor,
+                                        width: 4),
                                     shape: BoxShape.circle,
                                     color: Get.theme.primaryColor,
                                     boxShadow: [
@@ -268,7 +283,8 @@ class _EditMenuState extends State<EditMenu> {
                                   style: Get.textTheme.titleLarge,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 4),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4),
                                   child: Divider(
                                     thickness: 2,
                                     color: Get.theme.unselectedWidgetColor,
@@ -281,11 +297,13 @@ class _EditMenuState extends State<EditMenu> {
                                     _menuController.menu.name = value;
                                   },
                                   title: Padding(
-                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    padding: const EdgeInsets.only(
+                                        top: 8, bottom: 4),
                                     child: Text(
                                       "Nama Menu",
                                       style: Get.textTheme.titleMedium!
-                                          .copyWith(fontWeight: FontWeight.w700),
+                                          .copyWith(
+                                              fontWeight: FontWeight.w700),
                                     ),
                                   ),
                                 ),
@@ -296,11 +314,13 @@ class _EditMenuState extends State<EditMenu> {
                                     _menuController.menu.description = value;
                                   },
                                   title: Padding(
-                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    padding: const EdgeInsets.only(
+                                        top: 8, bottom: 4),
                                     child: Text(
                                       "Deskripsi Produk",
                                       style: Get.textTheme.titleMedium!
-                                          .copyWith(fontWeight: FontWeight.w700),
+                                          .copyWith(
+                                              fontWeight: FontWeight.w700),
                                     ),
                                   ),
                                 ),
@@ -312,11 +332,13 @@ class _EditMenuState extends State<EditMenu> {
                                   },
                                   keyboardType: TextInputType.number,
                                   title: Padding(
-                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    padding: const EdgeInsets.only(
+                                        top: 8, bottom: 4),
                                     child: Text(
                                       "Barcode",
                                       style: Get.textTheme.titleMedium!
-                                          .copyWith(fontWeight: FontWeight.w700),
+                                          .copyWith(
+                                              fontWeight: FontWeight.w700),
                                     ),
                                   ),
                                 ),
@@ -327,11 +349,13 @@ class _EditMenuState extends State<EditMenu> {
                                     _menuController.menu.sku = value;
                                   },
                                   title: Padding(
-                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    padding: const EdgeInsets.only(
+                                        top: 8, bottom: 4),
                                     child: Text(
                                       "SKU",
                                       style: Get.textTheme.titleMedium!
-                                          .copyWith(fontWeight: FontWeight.w700),
+                                          .copyWith(
+                                              fontWeight: FontWeight.w700),
                                     ),
                                   ),
                                 ),
@@ -340,30 +364,41 @@ class _EditMenuState extends State<EditMenu> {
                                   child: Container(
                                       width: Get.width,
                                       decoration: BoxDecoration(
-                                          border: Border.all(color: Get.theme.primaryColor),
-                                          borderRadius: BorderRadius.circular(10)),
+                                          border: Border.all(
+                                              color: Get.theme.primaryColor),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
                                       child: Padding(
-                                        padding:
-                                            const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 4),
                                         child: _sectionMenu(
                                             title: "Kategori Produk",
-                                            subtitleText: controller.listCategory
-                                                .firstWhere(
-                                                  (element) => element.isChoosed,
-                                                  orElse: () => CategoriesModel(),
-                                                )
-                                                .name,
+                                            subtitleText:
+                                                controller.listCategory
+                                                    .firstWhere(
+                                                      (element) =>
+                                                          element.isChoosed,
+                                                      orElse: () =>
+                                                          CategoriesModel(),
+                                                    )
+                                                    .name,
                                             onTap: () async {
-                                              if (_menuController.listCategory.isEmpty) {
-                                                await _menuController.fetchCategories(
-                                                    widget.merchantId, widget.locationId);
+                                              if (_menuController
+                                                  .listCategory.isEmpty) {
+                                                await _menuController
+                                                    .fetchCategories(
+                                                        widget.merchantId,
+                                                        widget.locationId);
                                               }
                                               await Get.to(() => AddCategory(
-                                                    locationId: widget.locationId,
-                                                    merchantId: widget.merchantId,
+                                                    locationId:
+                                                        widget.locationId,
+                                                    merchantId:
+                                                        widget.merchantId,
                                                   ))?.then((value) {
                                                 if (value != null) {
-                                                  _menuController.currentCategory = value;
+                                                  _menuController
+                                                      .currentCategory = value;
                                                 }
                                               });
                                             }),
@@ -377,44 +412,52 @@ class _EditMenuState extends State<EditMenu> {
                                   style: Get.textTheme.titleLarge,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 4),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4),
                                   child: Divider(
                                     thickness: 2,
                                     color: Get.theme.unselectedWidgetColor,
                                   ),
                                 ),
                                 PriceTextfield(
-                                  currency: NumberFormat.currency(locale: 'id', symbol: 'Rp.'),
+                                  currency: NumberFormat.currency(
+                                      locale: 'id', symbol: 'Rp.'),
                                   hintText: "Harga Produk",
                                   onChanged: (value) {
-                                    var val = _formatNumber(value.replaceAll('.', ''));
+                                    var val = _formatNumber(
+                                        value.replaceAll('.', ''));
                                     if (value != null && value != "") {
-                                      _menuController.newPrice = double.parse(value);
+                                      _menuController.newPrice =
+                                          double.parse(value);
                                     } else {
                                       _menuController.newPrice = 0;
                                     }
-                                    _priceEditingController.value = TextEditingValue(
-                                        selection: TextSelection.collapsed(offset: val.length),
-                                        text: val);
+                                    _priceEditingController.value =
+                                        TextEditingValue(
+                                            selection: TextSelection.collapsed(
+                                                offset: val.length),
+                                            text: val);
                                     _menuController.update();
                                   },
                                   controller: _priceEditingController,
                                   keyboardType: TextInputType.number,
                                   title: Padding(
-                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    padding: const EdgeInsets.only(
+                                        top: 8, bottom: 4),
                                     child: Text(
                                       "Harga",
                                       style: Get.textTheme.titleMedium!
-                                          .copyWith(fontWeight: FontWeight.w700),
+                                          .copyWith(
+                                              fontWeight: FontWeight.w700),
                                     ),
                                   ),
-                                  onSaved: (value) {
-                                    if (double.parse(value) < 0) {
-                                      _menuController.newPrice = 0;
-                                    } else {
-                                      _menuController.newPrice = value;
-                                    }
-                                  },
+                                  // onSaved: (value) {
+                                  //   if (double.parse(value) < 0) {
+                                  //     _menuController.newPrice = 0;
+                                  //   } else {
+                                  //     _menuController.newPrice = value;
+                                  //   }
+                                  // },
                                 ),
                                 // ProfileTextfield(
                                 //   hintText: "Harga",
@@ -442,11 +485,13 @@ class _EditMenuState extends State<EditMenu> {
                                   child: Container(
                                       width: Get.width,
                                       decoration: BoxDecoration(
-                                          border: Border.all(color: Get.theme.primaryColor),
-                                          borderRadius: BorderRadius.circular(10)),
+                                          border: Border.all(
+                                              color: Get.theme.primaryColor),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
                                       child: Padding(
-                                        padding:
-                                            const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 4),
                                         child: _sectionMenu(
                                             title: "Buat variasi produk",
                                             onTap: () {
@@ -462,15 +507,18 @@ class _EditMenuState extends State<EditMenu> {
                                   child: Container(
                                       width: Get.width,
                                       decoration: BoxDecoration(
-                                          border: Border.all(color: Get.theme.primaryColor),
-                                          borderRadius: BorderRadius.circular(10)),
+                                          border: Border.all(
+                                              color: Get.theme.primaryColor),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
                                       child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 8, horizontal: 4),
                                           child: _sectionMenu(
                                               title: "Tambahkan Topping Produk",
                                               onTap: () {
-                                                Get.to(() => const AddTopping());
+                                                Get.to(
+                                                    () => const AddTopping());
                                               }))),
                                 ),
                               ],
@@ -507,7 +555,8 @@ class _EditMenuState extends State<EditMenu> {
                             barrierDismissible: false);
                         await _menuController
                             .addOrUpdateMenu(
-                                locationId: widget.locationId, merchantId: widget.merchantId)
+                                locationId: widget.locationId,
+                                merchantId: widget.merchantId)
                             .then((value) {
                           _menuController.menu = MenuModel();
                           _menuController.newImage = null;
@@ -532,7 +581,10 @@ class _EditMenuState extends State<EditMenu> {
   }
 
   Widget _sectionMenu(
-      {required String title, Function()? onTap, Widget? icon, String? subtitleText}) {
+      {required String title,
+      Function()? onTap,
+      Widget? icon,
+      String? subtitleText}) {
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
@@ -546,7 +598,8 @@ class _EditMenuState extends State<EditMenu> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Get.theme.primaryColor.withAlpha(45)),
+                        shape: BoxShape.circle,
+                        color: Get.theme.primaryColor.withAlpha(45)),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: icon,
@@ -562,9 +615,12 @@ class _EditMenuState extends State<EditMenu> {
                     children: [
                       Text(
                         title,
-                        style: Get.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
+                        style: Get.textTheme.titleMedium!
+                            .copyWith(fontWeight: FontWeight.w700),
                       ),
-                      subtitleText != null && subtitleText.isNotEmpty && !subtitleText.isBlank!
+                      subtitleText != null &&
+                              subtitleText.isNotEmpty &&
+                              !subtitleText.isBlank!
                           ? Text(
                               subtitleText,
                               style: Get.textTheme.titleSmall!,
@@ -587,7 +643,11 @@ class _EditMenuState extends State<EditMenu> {
   void _imagePickerCommand(int value) async {
     if (value == 0) {
       await ImagePicker()
-          .pickImage(source: ImageSource.camera, maxHeight: 600, maxWidth: 600, imageQuality: 75)
+          .pickImage(
+              source: ImageSource.camera,
+              maxHeight: 600,
+              maxWidth: 600,
+              imageQuality: 75)
           .then((value) {
         setState(() {
           _menuController.newImage = value;
@@ -596,7 +656,11 @@ class _EditMenuState extends State<EditMenu> {
       });
     } else {
       await ImagePicker()
-          .pickImage(source: ImageSource.gallery, maxHeight: 600, maxWidth: 600, imageQuality: 75)
+          .pickImage(
+              source: ImageSource.gallery,
+              maxHeight: 600,
+              maxWidth: 600,
+              imageQuality: 75)
           .then((value) {
         setState(() {
           log(value!.path.toString(), name: "gambar");

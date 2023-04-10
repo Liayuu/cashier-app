@@ -14,8 +14,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class MerchantController extends GetxController {
-  final _merchantCollection =
-      FirebaseFirestore.instance.collection(DocumentName.MERCHANT.name.toLowerCase());
+  final _merchantCollection = FirebaseFirestore.instance
+      .collection(DocumentName.MERCHANT.name.toLowerCase());
   MerchantModel merchant = MerchantModel();
   BranchModel branch = BranchModel();
   XFile? newLogo;
@@ -55,10 +55,16 @@ class MerchantController extends GetxController {
         .get()
         .then((value) async {
       branch = value.docs.first.data();
-      await FirebaseStorage.instance.ref(branch.logo).getDownloadURL().then((value) {
+      await FirebaseStorage.instance
+          .ref(branch.logo)
+          .getDownloadURL()
+          .then((value) {
         branch.logoUrl = value;
       });
-      await FirebaseStorage.instance.ref(branch.background).getDownloadURL().then((value) {
+      await FirebaseStorage.instance
+          .ref(branch.background)
+          .getDownloadURL()
+          .then((value) {
         branch.backgroundUrl = value;
       });
       update();
@@ -113,7 +119,9 @@ class MerchantController extends GetxController {
             .doc(value.id)
             .collection("branch")
             .add(branch
-                .copyWith(branchType: BranchType.MAIN_BRANCH, status: StatusEnum.ACTIVE)
+                .copyWith(
+                    branchType: BranchType.MAIN_BRANCH,
+                    status: StatusEnum.ACTIVE)
                 .toJson())
             .then((val) async {
           await val.get().then((br) {
@@ -134,14 +142,23 @@ class MerchantController extends GetxController {
               .doc(value.id)
               .collection('branch')
               .doc(val.id)
-              .update(branch.toJson());
+              .update(branch.toJson())
+              .then((value) async {
+            branch.logoUrl = await FirebaseStorage.instance
+                .ref(branch.logo)
+                .getDownloadURL();
+            branch.backgroundUrl = await FirebaseStorage.instance
+                .ref(branch.background)
+                .getDownloadURL();
+          });
         });
       });
     }
   }
 
   Future<String> uploadFile(XFile file, String destination) async {
-    var directory = "$destination/${DateTime.now().millisecondsSinceEpoch}-${file.name}";
+    var directory =
+        "$destination/${DateTime.now().millisecondsSinceEpoch}-${file.name}";
     var ref = FirebaseStorage.instance.ref(directory);
     if (kIsWeb) {
       await file.readAsBytes().then((value) async {

@@ -24,7 +24,8 @@ class SettingPage extends StatelessWidget {
     //   _merchantController.fetchMerchantModel(_userController.userModel.employeeAt!);
     // }
 
-    _merchantController.initializeMerchant(_userController.userModel.employeeAt!);
+    _merchantController
+        .initializeMerchant(_userController.userModel.employeeAt!);
 
     return SafeArea(
       child: Scaffold(
@@ -44,20 +45,23 @@ class SettingPage extends StatelessWidget {
                         // color: Get.theme.primaryColor,
                         margin: const EdgeInsets.only(bottom: 75),
                         child: _merchantController.branch.backgroundUrl != null
-                            ? Image.network(_merchantController.branch.backgroundUrl!,
+                            ? Image.network(
+                                _merchantController.branch.backgroundUrl!,
                                 fit: BoxFit.cover)
                             : SizedBox(),
                       );
                     }),
                     Positioned(
                       top: (Get.height / 4) - 75,
-                      child: GetBuilder<MerchantController>(builder: (controller) {
+                      child:
+                          GetBuilder<MerchantController>(builder: (controller) {
                         return Container(
                             width: 150,
                             height: 150,
                             decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Get.theme.colorScheme.onBackground, width: 8),
+                                border: Border.all(
+                                    color: Get.theme.colorScheme.onBackground,
+                                    width: 8),
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
@@ -69,13 +73,16 @@ class SettingPage extends StatelessWidget {
                             child: GestureDetector(
                               onTap: () => Get.to(() => ImageViewer(
                                   tag: _merchantController.merchant.name ?? '',
-                                  image: NetworkImage(_merchantController.branch.logoUrl!),
-                                  newsTitle: _merchantController.merchant.name ?? '')),
+                                  image: NetworkImage(
+                                      _merchantController.branch.logoUrl!),
+                                  newsTitle:
+                                      _merchantController.merchant.name ?? '')),
                               child: ClipOval(
                                 child: SizedBox.fromSize(
                                   size: const Size.fromRadius(48),
                                   child: Hero(
-                                    tag: _merchantController.merchant.name ?? '',
+                                    tag:
+                                        _merchantController.merchant.name ?? '',
                                     child: Image.network(
                                       _merchantController.branch.logoUrl!,
                                       fit: BoxFit.cover,
@@ -96,7 +103,8 @@ class SettingPage extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: Get.width,
-                        child: GetBuilder<MerchantController>(builder: (controller) {
+                        child: GetBuilder<MerchantController>(
+                            builder: (controller) {
                           return Text(
                             _merchantController.merchant.name!,
                             textAlign: TextAlign.center,
@@ -130,7 +138,10 @@ class SettingPage extends StatelessWidget {
                                 icon: SvgPicture.asset(AssetsDirectory.shopIcon,
                                     color: Get.theme.primaryColor),
                                 onTap: () async {
-                                  await Get.to(() => EditMerchant());
+                                  await Get.to(() => EditMerchant())
+                                      ?.then((value) {
+                                    _merchantController.update();
+                                  });
                                 },
                               ),
                               const SizedBox(
@@ -151,7 +162,8 @@ class SettingPage extends StatelessWidget {
                               ),
                               _userMenu(
                                 title: "Promotion Management",
-                                icon: SvgPicture.asset(AssetsDirectory.promoIcon,
+                                icon: SvgPicture.asset(
+                                    AssetsDirectory.promoIcon,
                                     color: Get.theme.primaryColor),
                                 onTap: () async {
                                   await Get.to(() => MainPromo());
@@ -162,7 +174,8 @@ class SettingPage extends StatelessWidget {
                               ),
                               _userMenu(
                                 title: "Logout",
-                                icon: SvgPicture.asset(AssetsDirectory.logoutIcon,
+                                icon: SvgPicture.asset(
+                                    AssetsDirectory.logoutIcon,
                                     color: Get.theme.primaryColor),
                                 onTap: () async {
                                   await _userController.logout().then((value) {
@@ -192,8 +205,9 @@ class SettingPage extends StatelessWidget {
           Container(
             width: 40,
             height: 40,
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Get.theme.primaryColor.withAlpha(45)),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Get.theme.primaryColor.withAlpha(45)),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: icon ?? const SizedBox(),
@@ -205,7 +219,8 @@ class SettingPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   title,
-                  style: Get.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
+                  style: Get.textTheme.titleMedium!
+                      .copyWith(fontWeight: FontWeight.w700),
                 ),
               )),
           Icon(

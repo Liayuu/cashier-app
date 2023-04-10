@@ -80,7 +80,8 @@ class _EditMerchantState extends State<EditMerchant> {
                                               alignment: Alignment.topCenter,
                                             )
                                           : Image.file(
-                                              File(controller.newBackground!.path),
+                                              File(controller
+                                                  .newBackground!.path),
                                               fit: BoxFit.cover,
                                               alignment: Alignment.topCenter,
                                             ),
@@ -106,14 +107,16 @@ class _EditMerchantState extends State<EditMerchant> {
                             child: GestureDetector(
                               onTap: () async {
                                 if (kIsWeb) {
-                                  _imagePickerCommand(1, true);
+                                  _imagePickerCommand(1, false);
                                 } else {
                                   await Get.dialog(
                                           ImagePickerPopUp(
                                               width: Get.width * 0.8,
                                               showDeleteImage: true,
-                                              title: Text("Ambil gambar menggunakan",
-                                                  style: Get.textTheme.titleLarge!)),
+                                              title: Text(
+                                                  "Ambil gambar menggunakan",
+                                                  style: Get
+                                                      .textTheme.titleLarge!)),
                                           useSafeArea: true)
                                       .then((value) async {
                                     if (value != null) {
@@ -127,7 +130,8 @@ class _EditMerchantState extends State<EditMerchant> {
                                 height: 40,
                                 decoration: BoxDecoration(
                                     border: Border.all(
-                                        color: Get.theme.unselectedWidgetColor, width: 4),
+                                        color: Get.theme.unselectedWidgetColor,
+                                        width: 4),
                                     shape: BoxShape.circle,
                                     color: Get.theme.primaryColor,
                                     boxShadow: [
@@ -156,7 +160,8 @@ class _EditMerchantState extends State<EditMerchant> {
                               height: 150,
                               decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: Get.theme.colorScheme.onBackground, width: 8),
+                                      color: Get.theme.colorScheme.onBackground,
+                                      width: 8),
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
@@ -178,14 +183,18 @@ class _EditMerchantState extends State<EditMerchant> {
                                                   tag: "Logo",
                                                   child: kIsWeb
                                                       ? Image.network(
-                                                          controller.newLogo!.path,
+                                                          controller
+                                                              .newLogo!.path,
                                                           fit: BoxFit.cover,
-                                                          alignment: Alignment.topCenter,
+                                                          alignment: Alignment
+                                                              .topCenter,
                                                         )
                                                       : Image.file(
-                                                          File(controller.newLogo!.path),
+                                                          File(controller
+                                                              .newLogo!.path),
                                                           fit: BoxFit.cover,
-                                                          alignment: Alignment.topCenter,
+                                                          alignment: Alignment
+                                                              .topCenter,
                                                         ),
                                                 )),
                                           );
@@ -193,13 +202,16 @@ class _EditMerchantState extends State<EditMerchant> {
                                         return ClipOval(
                                           child: SizedBox.fromSize(
                                             size: const Size.fromRadius(70),
-                                            child: controller.branch.logoUrl != null
+                                            child: controller.branch.logoUrl !=
+                                                    null
                                                 ? Hero(
                                                     tag: "Logo",
                                                     child: Image.network(
-                                                      controller.branch.logoUrl!,
+                                                      controller
+                                                          .branch.logoUrl!,
                                                       fit: BoxFit.cover,
-                                                      alignment: Alignment.topCenter,
+                                                      alignment:
+                                                          Alignment.topCenter,
                                                     ))
                                                 : const Icon(
                                                     Icons.fastfood_rounded,
@@ -219,8 +231,10 @@ class _EditMerchantState extends State<EditMerchant> {
                                                   ImagePickerPopUp(
                                                       width: Get.width * 0.8,
                                                       showDeleteImage: true,
-                                                      title: Text("Ambil gambar menggunakan",
-                                                          style: Get.textTheme.titleLarge!)),
+                                                      title: Text(
+                                                          "Ambil gambar menggunakan",
+                                                          style: Get.textTheme
+                                                              .titleLarge!)),
                                                   useSafeArea: true)
                                               .then((value) async {
                                             if (value != null) {
@@ -234,7 +248,9 @@ class _EditMerchantState extends State<EditMerchant> {
                                         height: 40,
                                         decoration: BoxDecoration(
                                             border: Border.all(
-                                                color: Get.theme.unselectedWidgetColor, width: 4),
+                                                color: Get.theme
+                                                    .unselectedWidgetColor,
+                                                width: 4),
                                             shape: BoxShape.circle,
                                             color: Get.theme.primaryColor,
                                             boxShadow: [
@@ -249,7 +265,8 @@ class _EditMerchantState extends State<EditMerchant> {
                                               size: const Size.fromRadius(40),
                                               child: Icon(
                                                 Icons.camera_alt,
-                                                color: Get.theme.colorScheme.background,
+                                                color: Get.theme.colorScheme
+                                                    .background,
                                                 size: 24,
                                               )),
                                         ),
@@ -276,7 +293,8 @@ class _EditMerchantState extends State<EditMerchant> {
                                 style: Get.textTheme.titleLarge,
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4),
                                 child: Divider(
                                   thickness: 2,
                                   color: Get.theme.unselectedWidgetColor,
@@ -286,7 +304,8 @@ class _EditMerchantState extends State<EditMerchant> {
                                 hintText: "Nama Merchant",
                                 initialValue: _merchantController.merchant.name,
                                 title: Padding(
-                                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 4),
                                   child: Text(
                                     "Nama Merchant",
                                     style: Get.textTheme.titleMedium!
@@ -301,7 +320,8 @@ class _EditMerchantState extends State<EditMerchant> {
                                 hintText: "Nama Pemilik",
                                 initialValue: _userController.userModel.name,
                                 title: Padding(
-                                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 4),
                                   child: Text(
                                     "Nama Pemilik",
                                     style: Get.textTheme.titleMedium!
@@ -317,7 +337,8 @@ class _EditMerchantState extends State<EditMerchant> {
                                 keyboardType: TextInputType.emailAddress,
                                 initialValue: _userController.userModel.email,
                                 title: Padding(
-                                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 4),
                                   child: Text(
                                     "Email",
                                     style: Get.textTheme.titleMedium!
@@ -333,7 +354,8 @@ class _EditMerchantState extends State<EditMerchant> {
                                 keyboardType: TextInputType.phone,
                                 initialValue: _userController.userModel.phone,
                                 title: Padding(
-                                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 4),
                                   child: Text(
                                     "Nomor Telepon",
                                     style: Get.textTheme.titleMedium!
@@ -351,11 +373,13 @@ class _EditMerchantState extends State<EditMerchant> {
                                   controller: _passwordCon,
                                   keyboardType: TextInputType.visiblePassword,
                                   title: Padding(
-                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    padding: const EdgeInsets.only(
+                                        top: 8, bottom: 4),
                                     child: Text(
                                       "Password",
                                       style: Get.textTheme.titleMedium!
-                                          .copyWith(fontWeight: FontWeight.w700),
+                                          .copyWith(
+                                              fontWeight: FontWeight.w700),
                                     ),
                                   ),
                                 ),
@@ -365,11 +389,13 @@ class _EditMerchantState extends State<EditMerchant> {
                                   controller: _rePasswordCon,
                                   keyboardType: TextInputType.visiblePassword,
                                   title: Padding(
-                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                    padding: const EdgeInsets.only(
+                                        top: 8, bottom: 4),
                                     child: Text(
                                       "Password",
                                       style: Get.textTheme.titleMedium!
-                                          .copyWith(fontWeight: FontWeight.w700),
+                                          .copyWith(
+                                              fontWeight: FontWeight.w700),
                                     ),
                                   ),
                                 ),
@@ -382,7 +408,8 @@ class _EditMerchantState extends State<EditMerchant> {
                                 style: Get.textTheme.titleLarge,
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4),
                                 child: Divider(
                                   thickness: 2,
                                   color: Get.theme.unselectedWidgetColor,
@@ -390,9 +417,11 @@ class _EditMerchantState extends State<EditMerchant> {
                               ),
                               ProfileTextfield(
                                 hintText: "Negara",
-                                initialValue: _merchantController.branch.country,
+                                initialValue:
+                                    _merchantController.branch.country,
                                 title: Padding(
-                                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 4),
                                   child: Text(
                                     "Negara Merchant",
                                     style: Get.textTheme.titleMedium!
@@ -405,9 +434,11 @@ class _EditMerchantState extends State<EditMerchant> {
                               ),
                               ProfileTextfield(
                                 hintText: "Provinsi",
-                                initialValue: _merchantController.branch.province,
+                                initialValue:
+                                    _merchantController.branch.province,
                                 title: Padding(
-                                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 4),
                                   child: Text(
                                     "Provinsi",
                                     style: Get.textTheme.titleMedium!
@@ -420,9 +451,11 @@ class _EditMerchantState extends State<EditMerchant> {
                               ),
                               ProfileTextfield(
                                 hintText: "Kabupaten/Kota",
-                                initialValue: _merchantController.branch.regency,
+                                initialValue:
+                                    _merchantController.branch.regency,
                                 title: Padding(
-                                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 4),
                                   child: Text(
                                     "Kabupaten",
                                     style: Get.textTheme.titleMedium!
@@ -435,9 +468,11 @@ class _EditMerchantState extends State<EditMerchant> {
                               ),
                               ProfileTextfield(
                                 hintText: "Kecamatan",
-                                initialValue: _merchantController.branch.disctrict,
+                                initialValue:
+                                    _merchantController.branch.disctrict,
                                 title: Padding(
-                                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 4),
                                   child: Text(
                                     "Kecamatan",
                                     style: Get.textTheme.titleMedium!
@@ -450,9 +485,11 @@ class _EditMerchantState extends State<EditMerchant> {
                               ),
                               ProfileTextfield(
                                 hintText: "Alamat",
-                                initialValue: _merchantController.branch.address,
+                                initialValue:
+                                    _merchantController.branch.address,
                                 title: Padding(
-                                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 4),
                                   child: Text(
                                     "Alamat",
                                     style: Get.textTheme.titleMedium!
@@ -465,10 +502,12 @@ class _EditMerchantState extends State<EditMerchant> {
                               ),
                               ProfileTextfield(
                                 hintText: "Kode Pos",
-                                initialValue: _merchantController.branch.posCode,
+                                initialValue:
+                                    _merchantController.branch.posCode,
                                 keyboardType: TextInputType.number,
                                 title: Padding(
-                                  padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 4),
                                   child: Text(
                                     "Kode Pos",
                                     style: Get.textTheme.titleMedium!
@@ -518,21 +557,28 @@ class _EditMerchantState extends State<EditMerchant> {
                               if (_passwordCon.text == _rePasswordCon.text) {
                                 _userController
                                     .createUserWithEmailAndPassword(
-                                        _userController.userModel.email!, _passwordCon.text)
+                                        _userController.userModel.email!,
+                                        _passwordCon.text)
                                     .then((value) async {
-                                  await _merchantController.addOrUpdateMerchant();
+                                  await _merchantController
+                                      .addOrUpdateMerchant();
                                   await _userController.addOrUpdateUser(
-                                      merchantId: _merchantController.merchant.id!,
-                                      locationId: [_merchantController.branch.id!]);
+                                      merchantId:
+                                          _merchantController.merchant.id!,
+                                      locationId: [
+                                        _merchantController.branch.id!
+                                      ]);
                                 });
                               } else {
-                                Get.snackbar("Kesalahan", "Password tidak sesuai");
+                                Get.snackbar(
+                                    "Kesalahan", "Password tidak sesuai");
                               }
                             } else {
                               await Future.wait([
                                 _merchantController.addOrUpdateMerchant(),
                                 _userController.addOrUpdateUser()
                               ]).then((value) {
+                                Get.back();
                                 Get.back(result: 1);
                               }).catchError((e) {
                                 Get.back(result: 0);
@@ -557,7 +603,11 @@ class _EditMerchantState extends State<EditMerchant> {
   void _imagePickerCommand(int value, bool isLogo) async {
     if (value == 0) {
       await ImagePicker()
-          .pickImage(source: ImageSource.camera, maxHeight: 600, maxWidth: 600, imageQuality: 75)
+          .pickImage(
+              source: ImageSource.camera,
+              maxHeight: 600,
+              maxWidth: 600,
+              imageQuality: 75)
           .then((value) {
         setState(() {
           if (isLogo) {
@@ -570,7 +620,11 @@ class _EditMerchantState extends State<EditMerchant> {
       });
     } else if (value == 1) {
       await ImagePicker()
-          .pickImage(source: ImageSource.gallery, maxHeight: 600, maxWidth: 600, imageQuality: 75)
+          .pickImage(
+              source: ImageSource.gallery,
+              maxHeight: 600,
+              maxWidth: 600,
+              imageQuality: 75)
           .then((value) {
         setState(() {
           if (isLogo) {
