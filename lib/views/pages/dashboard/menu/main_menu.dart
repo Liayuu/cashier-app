@@ -67,9 +67,11 @@ class _MainMenuState extends State<MainMenu> {
                       locationId: _merchantController.branch.id!,
                       merchantId: _merchantController.merchant.id!,
                     ))?.then((value) {
-                  _menuController.menu = MenuModel();
-                  _menuController.newImage = null;
-                  _menuController.listCategory.clear();
+                  setState(() {
+                    _menuController.menu = MenuModel();
+                    _menuController.newImage = null;
+                    _menuController.listCategory.clear();
+                  });
                 });
               },
               backgroundColor: Get.theme.primaryColor,
@@ -240,11 +242,12 @@ class _MainMenuState extends State<MainMenu> {
                                                         child: AspectRatio(
                                                           aspectRatio: 2 / 3,
                                                           child: MenuCard(
-                                                              images: menu.data!.downloadLink!,
-                                                              price: menu.data!.price!.price!,
-                                                              availability: 99,
-                                                              name: menu.data!.name!,
-                                                              unit: "Portion"),
+                                                            images: menu.data!.downloadLink!,
+                                                            price: menu.data!.price!.price!,
+                                                            availability: 99,
+                                                            name: menu.data!.name!,
+                                                            // unit: "Portion"
+                                                          ),
                                                         ),
                                                       ),
                                                     );

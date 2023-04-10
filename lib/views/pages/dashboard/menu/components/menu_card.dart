@@ -9,19 +9,20 @@ class MenuCard extends StatelessWidget {
   final double price;
   final String name;
   final double availability;
-  final String unit;
+  // final String unit;
   String _formatCurrency(double p) =>
       NumberFormat.currency(locale: 'id', decimalDigits: 2, symbol: "Rp. ").format(p);
 
-  const MenuCard(
-      {super.key,
-      this.height,
-      this.width,
-      required this.images,
-      required this.price,
-      required this.name,
-      required this.availability,
-      required this.unit});
+  const MenuCard({
+    super.key,
+    this.height,
+    this.width,
+    required this.images,
+    required this.price,
+    required this.name,
+    required this.availability,
+    // required this.unit
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -89,13 +90,13 @@ class MenuCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
-                          child: Text(
-                            "$availability $unit tersedia",
-                            style: Get.textTheme.bodySmall,
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
+                        //   child: Text(
+                        //     "$availability $unit tersedia",
+                        //     style: Get.textTheme.bodySmall,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],

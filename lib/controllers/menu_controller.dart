@@ -38,8 +38,8 @@ class MenusController extends GetxController {
             toFirestore: (value, options) => value.toJson())
         .snapshots()
         .asyncMap((event) {
-      return Future.wait(
-          event.docs.map((e) => fetchCategoriesWithMenu(param: e.data(), searchMenu: searchMenu)));
+      return Future.wait(event.docs.map(
+          (e) async => await fetchCategoriesWithMenu(param: e.data(), searchMenu: searchMenu)));
     });
   }
 

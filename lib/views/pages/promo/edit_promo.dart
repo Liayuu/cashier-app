@@ -23,8 +23,7 @@ class _EditPromoState extends State<EditPromo> {
   final _formKey = GlobalKey<FormState>();
   final _promotionController = Get.find<PromotionController>();
   final _merchantController = Get.find<MerchantController>();
-  String _formatNumber(String s) =>
-      NumberFormat.decimalPattern('id').format(double.parse(s));
+  String _formatNumber(String s) => NumberFormat.decimalPattern('id').format(double.parse(s));
   final _nominalEditingController = TextEditingController();
   final _minEditingController = TextEditingController();
   final _maxEditingController = TextEditingController();
@@ -32,8 +31,7 @@ class _EditPromoState extends State<EditPromo> {
   @override
   void initState() {
     if (_promotionController.promotionModel.nominal != null)
-      _nominalEditingController.text =
-          _promotionController.promotionModel.nominal.toString();
+      _nominalEditingController.text = _promotionController.promotionModel.nominal.toString();
     super.initState();
   }
 
@@ -71,26 +69,21 @@ class _EditPromoState extends State<EditPromo> {
                                     color: Colors.transparent,
                                     child: InkWell(
                                         borderRadius: BorderRadius.circular(12),
-                                        splashColor:
-                                            Colors.white.withOpacity(0.8),
+                                        splashColor: Colors.white.withOpacity(0.8),
                                         onTap: () async {
                                           Get.dialog(
                                               Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: [
                                                   Text(
                                                     "Mohon tunggu",
-                                                    style: Get
-                                                        .textTheme.labelMedium,
+                                                    style: Get.textTheme.labelMedium,
                                                   ),
                                                   const CircularProgressIndicator()
                                                 ],
                                               ),
                                               barrierDismissible: false);
-                                          await _promotionController
-                                              .deletePromo()
-                                              .then((value) {
+                                          await _promotionController.deletePromo().then((value) {
                                             Get.back();
                                             Get.back();
                                             Get.back();
@@ -107,8 +100,7 @@ class _EditPromoState extends State<EditPromo> {
                                     color: Colors.transparent,
                                     child: InkWell(
                                         borderRadius: BorderRadius.circular(12),
-                                        splashColor:
-                                            Colors.white.withOpacity(0.8),
+                                        splashColor: Colors.white.withOpacity(0.8),
                                         onTap: () {},
                                         child: Padding(
                                           padding: const EdgeInsets.all(8),
@@ -167,91 +159,70 @@ class _EditPromoState extends State<EditPromo> {
                                 children: [
                                   ProfileTextfield(
                                     hintText: "Nama Promo",
-                                    initialValue:
-                                        controller.promotionModel.name,
+                                    initialValue: controller.promotionModel.name,
                                     onSaved: (value) {
                                       controller.promotionModel.name = value;
                                     },
                                     title: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 8, bottom: 4),
+                                      padding: const EdgeInsets.only(top: 8, bottom: 4),
                                       child: Text(
                                         "Nama Promo",
                                         style: Get.textTheme.titleMedium!
-                                            .copyWith(
-                                                fontWeight: FontWeight.w700),
+                                            .copyWith(fontWeight: FontWeight.w700),
                                       ),
                                     ),
                                   ),
                                   PriceTextfield(
                                     hintText: "Promo Produk",
                                     onChanged: (value) {
-                                      var val = _formatNumber(
-                                          value.replaceAll('.', ''));
+                                      var val = _formatNumber(value.replaceAll('.', ''));
                                       if (value != null && value != "") {
-                                        controller.promotionModel.nominal =
-                                            double.parse(value);
+                                        controller.promotionModel.nominal = double.parse(value);
                                       } else {
                                         controller.promotionModel.nominal = 0;
                                       }
-                                      _nominalEditingController.value =
-                                          TextEditingValue(
-                                              selection:
-                                                  TextSelection.collapsed(
-                                                      offset: val.length),
-                                              text: val);
+                                      _nominalEditingController.value = TextEditingValue(
+                                          selection: TextSelection.collapsed(offset: val.length),
+                                          text: val);
                                       controller.update();
                                     },
                                     controller: _nominalEditingController,
                                     keyboardType: TextInputType.number,
-                                    initialValue: controller.promotionModel
-                                                .nominalTypeName ==
+                                    initialValue: controller.promotionModel.nominalTypeName ==
                                             NominalTypeEnum.PERCENT
-                                        ? (controller.promotionModel.nominal! *
-                                                100)
-                                            .toString()
-                                        : controller.promotionModel.nominal
-                                            .toString(),
+                                        ? (controller.promotionModel.nominal! * 100).toString()
+                                        : controller.promotionModel.nominal.toString(),
                                     title: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 8, bottom: 4),
+                                      padding: const EdgeInsets.only(top: 8, bottom: 4),
                                       child: Text(
                                         "Promo",
                                         style: Get.textTheme.titleMedium!
-                                            .copyWith(
-                                                fontWeight: FontWeight.w700),
+                                            .copyWith(fontWeight: FontWeight.w700),
                                       ),
                                     ),
                                     onSaved: (value) {
                                       if (double.parse(value) < 0) {
                                         controller.promotionModel.nominal = 0;
                                       } else {
-                                        controller.promotionModel.nominal =
-                                            double.parse(value);
+                                        controller.promotionModel.nominal = double.parse(value);
                                       }
                                     },
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8, bottom: 4),
+                                    padding: const EdgeInsets.only(top: 8, bottom: 4),
                                     child: Text(
                                       "Jenis Promo",
                                       style: Get.textTheme.titleMedium!
-                                          .copyWith(
-                                              fontWeight: FontWeight.w700),
+                                          .copyWith(fontWeight: FontWeight.w700),
                                     ),
                                   ),
                                   Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 4, 0, 8),
-                                    child: DropdownButtonFormField<
-                                        NominalTypeEnum>(
-                                      value: controller
-                                              .promotionModel.nominalTypeName ??
+                                    padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
+                                    child: DropdownButtonFormField<NominalTypeEnum>(
+                                      value: controller.promotionModel.nominalTypeName ??
                                           NominalTypeEnum.NOMINAL,
                                       onChanged: (value) {
-                                        controller.promotionModel
-                                            .nominalTypeName = value;
+                                        controller.promotionModel.nominalTypeName = value;
                                         controller.update();
                                       },
                                       items: [
@@ -264,114 +235,86 @@ class _EditPromoState extends State<EditPromo> {
                                         ),
                                         DropdownMenuItem(
                                           value: NominalTypeEnum.PERCENT,
-                                          child: Text("Persen",
-                                              style: Get.textTheme.bodyMedium),
+                                          child: Text("Persen", style: Get.textTheme.bodyMedium),
                                         )
                                       ],
                                       decoration: InputDecoration(
-                                          enabledBorder: Get
-                                              .theme
-                                              .inputDecorationTheme
-                                              .enabledBorder,
-                                          focusedBorder: Get
-                                              .theme
-                                              .inputDecorationTheme
-                                              .focusedBorder),
+                                          enabledBorder:
+                                              Get.theme.inputDecorationTheme.enabledBorder,
+                                          focusedBorder:
+                                              Get.theme.inputDecorationTheme.focusedBorder),
                                     ),
                                   ),
                                   PriceTextfield(
                                     hintText: "Minimal Pembelanjaan",
-                                    initialValue: controller
-                                        .promotionModel.minimumTransaction
-                                        .toString(),
+                                    initialValue:
+                                        controller.promotionModel.minimumTransaction.toString(),
                                     onChanged: (value) {
-                                      var val = _formatNumber(
-                                          value.replaceAll('.', ''));
+                                      var val = _formatNumber(value.replaceAll('.', ''));
                                       if (value != null && value != "") {
-                                        controller.promotionModel
-                                                .minimumTransaction =
+                                        controller.promotionModel.minimumTransaction =
                                             double.parse(value);
                                       } else {
-                                        controller.promotionModel
-                                            .minimumTransaction = null;
+                                        controller.promotionModel.minimumTransaction = null;
                                       }
-                                      _minEditingController.value =
-                                          TextEditingValue(
-                                              selection:
-                                                  TextSelection.collapsed(
-                                                      offset: val.length),
-                                              text: val);
+                                      _minEditingController.value = TextEditingValue(
+                                          selection: TextSelection.collapsed(offset: val.length),
+                                          text: val);
                                       controller.update();
                                     },
                                     controller: _minEditingController,
                                     keyboardType: TextInputType.number,
                                     title: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 8, bottom: 4),
+                                      padding: const EdgeInsets.only(top: 8, bottom: 4),
                                       child: Text(
                                         "Minimal",
                                         style: Get.textTheme.titleMedium!
-                                            .copyWith(
-                                                fontWeight: FontWeight.w700),
+                                            .copyWith(fontWeight: FontWeight.w700),
                                       ),
                                     ),
                                     onSaved: (value) {
                                       if (double.parse(value) < 0) {
-                                        controller.promotionModel
-                                            .minimumTransaction = null;
+                                        controller.promotionModel.minimumTransaction = null;
                                       } else {
-                                        controller.promotionModel
-                                                .minimumTransaction =
+                                        controller.promotionModel.minimumTransaction =
                                             double.parse(value);
                                       }
                                     },
                                   ),
                                   PriceTextfield(
                                     hintText: "Diskon Maksimal",
-                                    initialValue: controller
-                                        .promotionModel.maximumNominal
-                                        .toString(),
-                                    enabled: controller
-                                            .promotionModel.nominalTypeName ==
+                                    initialValue:
+                                        controller.promotionModel.maximumNominal.toString(),
+                                    enabled: controller.promotionModel.nominalTypeName ==
                                         NominalTypeEnum.PERCENT,
                                     onChanged: (value) {
-                                      var val = _formatNumber(
-                                          value.replaceAll('.', ''));
+                                      var val = _formatNumber(value.replaceAll('.', ''));
                                       if (value != null && value != "") {
-                                        controller
-                                                .promotionModel.maximumNominal =
+                                        controller.promotionModel.maximumNominal =
                                             double.parse(value);
                                       } else {
-                                        controller.promotionModel
-                                            .maximumNominal = null;
+                                        controller.promotionModel.maximumNominal = null;
                                       }
-                                      _maxEditingController.value =
-                                          TextEditingValue(
-                                              selection:
-                                                  TextSelection.collapsed(
-                                                      offset: val.length),
-                                              text: val);
+                                      _maxEditingController.value = TextEditingValue(
+                                          selection: TextSelection.collapsed(offset: val.length),
+                                          text: val);
                                       controller.update();
                                     },
                                     controller: _maxEditingController,
                                     keyboardType: TextInputType.number,
                                     title: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 8, bottom: 4),
+                                      padding: const EdgeInsets.only(top: 8, bottom: 4),
                                       child: Text(
                                         "Maksimal",
                                         style: Get.textTheme.titleMedium!
-                                            .copyWith(
-                                                fontWeight: FontWeight.w700),
+                                            .copyWith(fontWeight: FontWeight.w700),
                                       ),
                                     ),
                                     onSaved: (value) {
                                       if (double.parse(value) < 0) {
-                                        controller.promotionModel
-                                            .maximumNominal = null;
+                                        controller.promotionModel.maximumNominal = null;
                                       } else {
-                                        controller
-                                                .promotionModel.maximumNominal =
+                                        controller.promotionModel.maximumNominal =
                                             double.parse(value);
                                       }
                                     },
@@ -379,19 +322,16 @@ class _EditPromoState extends State<EditPromo> {
                                   _formWithDatePicker(
                                     label: "Berlaku mulai",
                                     hint: "Masukkan tanggal",
-                                    initialValue:
-                                        controller.promotionModel.startTime,
+                                    initialValue: controller.promotionModel.startTime,
                                     onTap: () {
                                       _selectDate(
                                         context: Get.context!,
-                                        initialDate: controller
-                                                .promotionModel.startTime ??
-                                            DateTime.now(),
+                                        initialDate:
+                                            controller.promotionModel.startTime ?? DateTime.now(),
                                         onDatePicked: (selectedDate) {
                                           log("selected date: $selectedDate");
                                           setState(() {
-                                            controller.promotionModel
-                                                .startTime = selectedDate;
+                                            controller.promotionModel.startTime = selectedDate;
                                           });
                                         },
                                       );
@@ -400,19 +340,16 @@ class _EditPromoState extends State<EditPromo> {
                                   _formWithDatePicker(
                                     label: "Berakhir pada",
                                     hint: "Masukkan tanggal",
-                                    initialValue:
-                                        controller.promotionModel.endTime,
+                                    initialValue: controller.promotionModel.endTime,
                                     onTap: () {
                                       _selectDate(
                                         context: Get.context!,
                                         initialDate:
-                                            controller.promotionModel.endTime ??
-                                                DateTime.now(),
+                                            controller.promotionModel.endTime ?? DateTime.now(),
                                         onDatePicked: (selectedDate) {
                                           log("selected date: $selectedDate");
                                           setState(() {
-                                            controller.promotionModel.endTime =
-                                                selectedDate;
+                                            controller.promotionModel.endTime = selectedDate;
                                           });
                                         },
                                       );
@@ -452,20 +389,17 @@ class _EditPromoState extends State<EditPromo> {
                                 ],
                               ),
                               barrierDismissible: false);
-                          if (_promotionController
-                                  .promotionModel.nominalTypeName ==
+                          if (_promotionController.promotionModel.nominalTypeName ==
                               NominalTypeEnum.PERCENT) {
                             _promotionController.promotionModel.nominal =
-                                _promotionController.promotionModel.nominal! /
-                                    100.toDouble();
+                                _promotionController.promotionModel.nominal! / 100.toDouble();
                           }
                           await _promotionController
                               .addOrUpdatePromotion(
                                   merchantId: _merchantController.merchant.id!,
                                   locationId: _merchantController.branch.id!)
                               .then((value) {
-                            _promotionController.promotionModel =
-                                PromotionModel();
+                            _promotionController.promotionModel = PromotionModel();
                             Get.back();
                           }).then((value) {
                             Get.back();
@@ -519,8 +453,7 @@ class _EditPromoState extends State<EditPromo> {
                   padding: const EdgeInsets.all(0),
                   child: Text(
                     label,
-                    style: Get.textTheme.titleMedium!
-                        .copyWith(fontWeight: FontWeight.w700),
+                    style: Get.textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700),
                   ),
                 ),
                 const SizedBox(height: 8.0),
@@ -533,8 +466,7 @@ class _EditPromoState extends State<EditPromo> {
                 height: 45,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    border:
-                        Border.all(color: Get.theme.primaryColor, width: 1)),
+                    border: Border.all(color: Get.theme.primaryColor, width: 1)),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Align(
