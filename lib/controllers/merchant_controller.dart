@@ -139,9 +139,13 @@ class MerchantController extends GetxController {
               .doc(val.id)
               .update(branch.toJson())
               .then((value) async {
-            branch.logoUrl = await FirebaseStorage.instance.ref(branch.logo).getDownloadURL();
-            branch.backgroundUrl =
-                await FirebaseStorage.instance.ref(branch.background).getDownloadURL();
+            if (branch.logo != null) {
+              branch.logoUrl = await FirebaseStorage.instance.ref(branch.logo).getDownloadURL();
+            }
+            if (branch.background != null) {
+              branch.backgroundUrl =
+                  await FirebaseStorage.instance.ref(branch.background).getDownloadURL();
+            }
           });
         });
       });

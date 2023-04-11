@@ -9,7 +9,6 @@ import 'package:cashier_app/controllers/menu_controller.dart';
 import 'package:cashier_app/controllers/user_controller.dart';
 import 'package:cashier_app/models/categories_model.dart';
 import 'package:cashier_app/models/menu/menus_model.dart';
-import 'package:cashier_app/models/promotion/promotion_model.dart';
 import 'package:cashier_app/themes/color_pallete.dart';
 import 'package:cashier_app/views/components/button_main.dart';
 import 'package:cashier_app/views/components/in_page_search_bar.dart';
@@ -120,7 +119,7 @@ class _MainMenuState extends State<MainMenu> {
                                                     ? GetBuilder<MerchantController>(
                                                         builder: (controller) {
                                                         return AppBarMenu(
-                                                            companyLogo: controller.branch.logoUrl!,
+                                                            companyLogo: controller.branch.logoUrl,
                                                             companyName: controller.merchant.name!);
                                                       })
                                                     : const SizedBox(),
