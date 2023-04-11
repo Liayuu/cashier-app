@@ -21,7 +21,6 @@ class PromotionController extends GetxController {
       List<String>? includedItems,
       List<String>? excludeItems,
       bool forTransaction = false}) async {
-    log(merchantId);
     var query = _promotionController
         .where('merchantId', isEqualTo: merchantId)
         .where('appliedAt', arrayContains: locationId);
@@ -48,9 +47,17 @@ class PromotionController extends GetxController {
         .get()
         .then((value) {
       var data = value.docs.map((e) => e.data()).toList();
+      log(value.docs.map((e) => e.data()).toList().toString());
       if (data.isNotEmpty) {
         if (currentTime != null) {
           data = data.where((e) => e.startTime!.isBefore(currentTime)).toList();
+          if (data.isNotEmpty) {
+            listAvailablePromo.assignAll(data);
+            update();
+            return listAvailablePromo;
+          } else {
+            return null;
+          }
         }
         listAvailablePromo.assignAll(data);
         // if (!forTransaction) {
@@ -60,7 +67,6 @@ class PromotionController extends GetxController {
         //   listAvailablePromo.assignAll(data.where((element) => false));
         // }
         update();
-        log(listAvailablePromo.toString());
         return listAvailablePromo;
       }
       return null;
