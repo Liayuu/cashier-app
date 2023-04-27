@@ -20,6 +20,7 @@ class TransactionMenuCard extends StatelessWidget {
   final String name;
   final ValueChanged<dynamic>? onChanged;
   final Function()? onDeleted;
+  final Function()? onQtyTapped;
   String _formatCurrency(double p) =>
       NumberFormat.currency(locale: 'id', decimalDigits: 2, symbol: "Rp. ").format(p);
   String _formatPercent(double p) =>
@@ -38,6 +39,7 @@ class TransactionMenuCard extends StatelessWidget {
     required this.qty,
     required this.name,
     this.onChanged,
+    this.onQtyTapped,
     this.onDeleted,
   }) : super(key: key);
 
@@ -100,15 +102,18 @@ class TransactionMenuCard extends StatelessWidget {
                       aspectRatio: 1,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Get.theme.unselectedWidgetColor),
-                          child: Center(
-                            child: Text(
-                              qty.toString(),
-                              style:
-                                  Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+                        child: GestureDetector(
+                          onTap: onQtyTapped,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Get.theme.unselectedWidgetColor),
+                            child: Center(
+                              child: Text(
+                                qty.toString(),
+                                style:
+                                    Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         ),

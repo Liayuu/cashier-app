@@ -269,16 +269,34 @@ class _MainMenuState extends State<MainMenu> {
                               }
                             }),
                       ),
-                      GetBuilder<TransactionController>(builder: (controller) {
-                        if (controller.transaction.menus != null) {
-                          if (controller.transaction.menus!.isNotEmpty) {
-                            return _orderTrackingSnackbar();
-                          }
-                        } else {
-                          // streamController.add(false);
-                        }
-                        return const SizedBox();
-                      })
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: GetBuilder<TransactionController>(
+                          builder: (controller) {
+                            if (controller.transaction.menus != null) {
+                              if (controller.transaction.menus!.isNotEmpty) {
+                                return _orderButton();
+                              } else {
+                                return const SizedBox();
+                              }
+                            } else {
+                              return const SizedBox();
+                            }
+                          },
+                        ),
+                      )
+                      // GetBuilder<TransactionController>(builder: (controller) {
+                      //   if (controller.transaction.menus != null) {
+                      //     if (controller.transaction.menus!.isNotEmpty) {
+                      //       return _orderTrackingSnackbar();
+                      //     }
+                      //   } else {
+                      //     // streamController.add(false);
+                      //   }
+                      //   return const SizedBox();
+                      // })
                     ],
                   ),
                 );
@@ -291,6 +309,58 @@ class _MainMenuState extends State<MainMenu> {
               }
             }),
       ),
+    );
+  }
+
+  Widget _orderButton() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ButtonMain(
+          width: Get.width,
+          color: Get.theme.primaryColor,
+          background: Get.theme.colorScheme.primary,
+          style: Get.textTheme.labelLarge,
+          label: "Detail Order",
+          onTap: () async {
+            for (var i = 0; i < _transactionController.transaction.menus!.length; i++) {
+              await _menuController
+                  .getMenuPromo(
+                      data: _transactionController.transaction.menus![i],
+                      qty: _transactionController.transaction.menus![i].qty!)
+                  .then((value) {
+                if (value != null) {
+                  _transactionController.transaction.menus![i].promo = value;
+                  if (_transactionController.transaction.menus![i].promo!.nominalTypeName ==
+                      NominalTypeEnum.NOMINAL) {
+                    _transactionController.transaction.menus![i].buyingPrice =
+                        _transactionController.transaction.menus![i].price!.price! -
+                            (_transactionController.transaction.menus![i].price!.price! *
+                                _transactionController.transaction.menus![i].promo!.nominal!);
+                  } else {
+                    _transactionController.transaction.menus![i].buyingPrice =
+                        _transactionController.transaction.menus![i].price!.price! -
+                            _transactionController.transaction.menus![i].promo!.nominal!;
+                  }
+                } else {
+                  _transactionController.transaction.menus![i].buyingPrice =
+                      _transactionController.transaction.menus![i].price!.price!;
+                }
+              }).then((value) {
+                // _transactionController.insertSubTotal();
+                _transactionController.insertGrandTotal();
+              });
+            }
+            // await Future.wait(_transactionController.transaction.menus!.map((e) {
+            //   return _menuController.getMenuPromo(data: e, qty: e.qty!).then((value) {
+
+            //   });
+            // }));
+            Get.to(() => SummaryOrder())?.then((value) {
+              if (value) {
+                // streamController.add(false);
+              }
+            });
+          }),
     );
   }
 

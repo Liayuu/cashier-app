@@ -4,8 +4,11 @@ import 'package:cashier_app/controllers/enums/promotion_type_enum.dart';
 import 'package:cashier_app/controllers/merchant_controller.dart';
 import 'package:cashier_app/controllers/promotion_controller.dart';
 import 'package:cashier_app/controllers/transaction_controller.dart';
+import 'package:cashier_app/models/menu/menus_model.dart';
 import 'package:cashier_app/models/promotion/promotion_model.dart';
 import 'package:cashier_app/views/components/confirmation_popup.dart';
+import 'package:cashier_app/views/components/menu_popup.dart';
+import 'package:cashier_app/views/components/underline_input_text.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/transaction_menu_card.dart';
 import 'package:cashier_app/views/pages/payment/payment.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +93,11 @@ class _SummaryOrderState extends State<SummaryOrder> {
                         width: Get.width,
                         noteEnabled: !widget.isFromReport,
                         noteInitialValue: controller.transaction.menus![index].note,
+                        onQtyTapped: () {
+                          _transactionController.menuQty =
+                              _transactionController.transaction.menus![index].qty!;
+                          Get.dialog(_popUpMenu(index));
+                        },
                         onChanged: (value) {
                           controller.transaction.menus![index].note = value.toString();
                           controller.update();
@@ -357,5 +365,144 @@ class _SummaryOrderState extends State<SummaryOrder> {
       pay = total - promo.nominal!;
     }
     return pay;
+  }
+
+  Widget _popUpMenu(int index) {
+    return CustomPopUp(
+      width: Get.width * 0.8,
+      height: Get.height,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Align(
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  height: 100,
+                  width: 100,
+                  child: ClipOval(
+                    child: Image.network(
+                      _transactionController.transaction.menus![index].downloadLink!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 16, 8, 4),
+            child: Text(_transactionController.transaction.menus![index].name!,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: Get.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w700)),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Text(
+              _formatCurrency(_transactionController.transaction.menus![index].price?.price ?? 0),
+              // selectedMenu.price?.price.toString() ?? "0",
+              style: Get.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.w700),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ButtonMain(
+                  onTap: () {
+                    if (_transactionController.menuQty > 1) {
+                      _transactionController.menuQty = _transactionController.menuQty - 1;
+                      _transactionController.update();
+                    }
+                  },
+                  width: 40,
+                  height: 40,
+                  label: "-",
+                  style: Get.textTheme.labelLarge,
+                  background: Get.theme.primaryColor,
+                ),
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: GetBuilder<TransactionController>(builder: (controller) {
+                    return UnderlineInputText(
+                      textEditingController: TextEditingController()
+                        ..text = controller.menuQty.toString(),
+                      maxLines: 1,
+                      readOnly: true,
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                    );
+                  }),
+                )),
+                ButtonMain(
+                  onTap: () {
+                    _transactionController.menuQty = _transactionController.menuQty + 1;
+                    _transactionController.update();
+                  },
+                  width: 40,
+                  height: 40,
+                  label: "+",
+                  style: Get.textTheme.labelLarge,
+                  background: Get.theme.primaryColor,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ButtonMain(
+              onTap: () async {
+                _transactionController.transaction.menus![index].qty =
+                    _transactionController.menuQty;
+                // _transactionController.transaction.menus ??= [];
+                // // var promo = await _menuController.getMenuPromo(data: selectedMenu);
+                // // log(promo.toString());
+                // if (!_transactionController.transaction.menus!
+                //     .any((e) => e.id == _transactionController.transaction.menus![index].id)) {
+                //   // var buyingPrice;
+                //   // if (promo != PromotionModel()) {
+                //   //   switch (promo.nominalTypeName) {
+                //   //     case NominalTypeEnum.NOMINAL:
+                //   //       buyingPrice = selectedMenu.price!.price! - promo.nominal!;
+                //   //       break;
+                //   //     case NominalTypeEnum.PERCENT:
+                //   //       buyingPrice = selectedMenu.price!.price! -
+                //   //           (selectedMenu.price!.price! * promo.nominal!);
+                //   //       break;
+                //   //     default:
+                //   //       buyingPrice = selectedMenu.price!.price!;
+                //   //   }
+                //   // } else {
+                //   //   buyingPrice = selectedMenu.price!.price!;
+                //   // }
+                //   _transactionController.transaction.menus!
+                //       .add(selectedMenu.copyWith(qty: _transactionController.menuQty));
+                //   log(_transactionController.transaction.menus.toString());
+                // } else {
+                //   var idx = _transactionController.transaction.menus!
+                //       .indexWhere((e) => e.id == selectedMenu.id);
+                //   _transactionController.transaction.menus![idx].qty =
+                //       _transactionController.transaction.menus![idx].qty! +
+                //           _transactionController.menuQty;
+                // }
+                _transactionController.insertGrandTotal();
+                _transactionController.menuQty = 1;
+                _transactionController.update();
+                Get.back();
+              },
+              background: Get.theme.primaryColor,
+              height: 50,
+              width: Get.width * 0.7,
+              label: "Tambahkan",
+              style: Get.textTheme.labelLarge,
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
