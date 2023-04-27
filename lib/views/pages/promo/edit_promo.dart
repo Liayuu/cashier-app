@@ -276,9 +276,13 @@ class _EditPromoState extends State<EditPromo> {
                                     },
                                     controller: _minEditingController,
                                     keyboardType: TextInputType.number,
-                                    initialValue: _initPromoValue(
-                                        type: controller.promotionModel.nominalTypeName,
-                                        nominal: controller.promotionModel.minimumTransaction),
+                                    initialValue: controller.promotionModel.minimumTransaction
+                                        .toString()
+                                        .split('.')
+                                        .first,
+                                    // initialValue: _initPromoValue(
+                                    //     type: controller.promotionModel.nominalTypeName,
+                                    //     nominal: controller.promotionModel.minimumTransaction),
                                     // initialValue: controller.promotionModel.nominalTypeName ==
                                     //         NominalTypeEnum.PERCENT
                                     //     ? (controller.promotionModel.nominal! * 100).toString()
@@ -318,9 +322,13 @@ class _EditPromoState extends State<EditPromo> {
                                     },
                                     controller: _maxEditingController,
                                     keyboardType: TextInputType.number,
-                                    initialValue: _initPromoValue(
-                                        type: controller.promotionModel.nominalTypeName,
-                                        nominal: controller.promotionModel.maximumNominal),
+                                    initialValue: controller.promotionModel.maximumNominal
+                                        .toString()
+                                        .split('.')
+                                        .first,
+                                    // initialValue: _initPromoValue(
+                                    //     type: controller.promotionModel.nominalTypeName,
+                                    //     nominal: controller.promotionModel.maximumNominal),
                                     // initialValue: controller.promotionModel.nominalTypeName ==
                                     //         NominalTypeEnum.PERCENT
                                     //     ? (controller.promotionModel.nominal! * 100).toString()
@@ -458,9 +466,9 @@ class _EditPromoState extends State<EditPromo> {
       if (nominal != null) {
         switch (type) {
           case NominalTypeEnum.NOMINAL:
-            return nominal.toString();
+            return nominal.toString().split('.').first;
           case NominalTypeEnum.PERCENT:
-            return (nominal * 100).toString();
+            return (nominal * 100).toString().split('.').first;
           default:
             return null;
         }
