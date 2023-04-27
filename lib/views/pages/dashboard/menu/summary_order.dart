@@ -94,9 +94,11 @@ class _SummaryOrderState extends State<SummaryOrder> {
                         noteEnabled: !widget.isFromReport,
                         noteInitialValue: controller.transaction.menus![index].note,
                         onQtyTapped: () {
-                          _transactionController.menuQty =
-                              _transactionController.transaction.menus![index].qty!;
-                          Get.dialog(_popUpMenu(index));
+                          if (!widget.isFromReport) {
+                            _transactionController.menuQty =
+                                _transactionController.transaction.menus![index].qty!;
+                            Get.dialog(_popUpMenu(index));
+                          }
                         },
                         onChanged: (value) {
                           controller.transaction.menus![index].note = value.toString();

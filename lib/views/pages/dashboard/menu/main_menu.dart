@@ -118,6 +118,7 @@ class _MainMenuState extends State<MainMenu> {
                                                 widget.isForMainMenu
                                                     ? GetBuilder<MerchantController>(
                                                         builder: (controller) {
+                                                        log("Logo Url: ${controller.branch.logo}");
                                                         return AppBarMenu(
                                                             companyLogo: controller.branch.logoUrl,
                                                             companyName: controller.merchant.name!);

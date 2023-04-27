@@ -98,7 +98,7 @@ class UserController extends GetxController {
   Future<void> addOrUpdateUser(
       {DateTime? lastLogin, String? merchantId, List<String>? locationId}) async {
     if (userModel.id != null) {
-      _userControllerRef.doc(userModel.id).update(userModel
+      await _userControllerRef.doc(userModel.id).update(userModel
           .copyWith(
               updatedAt: DateTime.now(),
               lastSignIn: lastLogin,
@@ -106,7 +106,7 @@ class UserController extends GetxController {
               manageAt: locationId)
           .toJson());
     } else {
-      _userControllerRef
+      await _userControllerRef
           .add(userModel
               .copyWith(
                   createdAt: DateTime.now(),
@@ -120,6 +120,7 @@ class UserController extends GetxController {
               .toJson())
           .then((value) async {
         userModel = await value.get().then((val) => EmployeeModel.fromJson(val.id, val.data()!));
+
         // await fetchUserData(value.id);
         Get.offAll(() => const MainDashboard());
       });

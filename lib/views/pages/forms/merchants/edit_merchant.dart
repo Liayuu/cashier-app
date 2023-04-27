@@ -1,9 +1,11 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cashier_app/controllers/user_controller.dart';
 import 'package:cashier_app/views/components/button_main.dart';
 import 'package:cashier_app/views/components/image_picker_popup.dart';
 import 'package:cashier_app/views/components/profile_textfield.dart';
+import 'package:cashier_app/views/pages/dashboard/dasboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cashier_app/controllers/merchant_controller.dart';
@@ -516,7 +518,7 @@ class _EditMerchantState extends State<EditMerchant> {
 
                             if (_userController.userModel.id == null) {
                               if (_passwordCon.text == _rePasswordCon.text) {
-                                _userController
+                                await _userController
                                     .createUserWithEmailAndPassword(
                                         _userController.userModel.email!, _passwordCon.text)
                                     .then((value) async {
