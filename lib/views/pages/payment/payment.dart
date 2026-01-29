@@ -143,7 +143,7 @@ class _PaymentState extends State<Payment> {
                                   currency: NumberFormat.currency(locale: 'id', symbol: 'Rp. '),
                                   hintText: lang().cash,
                                   onChanged: (value) async {
-                                    var val = '${_formatNumber(value.replaceAll('.', ''))}';
+                                    var val = _formatNumber(value.replaceAll('.', ''));
                                     if (value != null && value != "") {
                                       controller.transaction.cash =
                                           double.parse(value.replaceAll('.', ''));
@@ -242,7 +242,7 @@ class _PaymentState extends State<Payment> {
           Container(
             height: Get.height * 0.085,
             width: Get.width,
-            color: Get.theme.colorScheme.background,
+            color: Get.theme.colorScheme.surface,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -258,7 +258,7 @@ class _PaymentState extends State<Payment> {
                         Get.back(result: false);
                       },
                       color: Get.theme.primaryColor,
-                      background: Get.theme.colorScheme.background,
+                      background: Get.theme.colorScheme.surface,
                       style: Get.textTheme.labelLarge,
                       label: "Cancel",
                     ),

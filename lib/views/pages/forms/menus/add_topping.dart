@@ -1,7 +1,5 @@
 import 'package:cashier_app/views/components/button_main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 
 class AddTopping extends StatelessWidget {
@@ -12,7 +10,7 @@ class AddTopping extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        backgroundColor: Get.theme.colorScheme.background,
+        backgroundColor: Get.theme.colorScheme.surface,
         elevation: 1,
         leading: IconButton(
             onPressed: () => Get.back(),
@@ -93,7 +91,7 @@ class AddTopping extends StatelessWidget {
                                   )),
                               IconButton(
                                   onPressed: () {},
-                                  icon: Icon(Icons.delete_rounded, color: Colors.red)),
+                                  icon: const Icon(Icons.delete_rounded, color: Colors.red)),
                             ],
                           )
                         ],
@@ -113,7 +111,7 @@ class AddTopping extends StatelessWidget {
             Container(
                 height: Get.height * 0.085,
                 width: Get.width,
-                color: Get.theme.colorScheme.background,
+                color: Get.theme.colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ButtonMain(

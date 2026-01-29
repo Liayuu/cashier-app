@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cashier_app/controllers/menu_controller.dart';
 import 'package:cashier_app/models/categories_model.dart';
 import 'package:cashier_app/models/menu/menus_model.dart';
@@ -39,7 +38,7 @@ class _EditMenuState extends State<EditMenu> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        backgroundColor: Get.theme.colorScheme.background,
+        backgroundColor: Get.theme.colorScheme.surface,
         elevation: 1,
         actions: _menuController.menu.id == null
             ? null
@@ -240,7 +239,7 @@ class _EditMenuState extends State<EditMenu> {
                                       size: const Size.fromRadius(40),
                                       child: Icon(
                                         Icons.camera_alt,
-                                        color: Get.theme.colorScheme.background,
+                                        color: Get.theme.colorScheme.surface,
                                         size: 24,
                                       )),
                                 ),
@@ -251,7 +250,7 @@ class _EditMenuState extends State<EditMenu> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Form(
@@ -388,7 +387,7 @@ class _EditMenuState extends State<EditMenu> {
                                   hintText: "Harga Produk",
                                   onChanged: (value) {
                                     var val =
-                                        "${_formatNumber(value.toString().replaceAll('.', ''))}";
+                                        _formatNumber(value.toString().replaceAll('.', ''));
 
                                     if (value != null && value != "") {
                                       _menuController.newPrice =
@@ -489,7 +488,7 @@ class _EditMenuState extends State<EditMenu> {
             Container(
                 height: Get.height * 0.085,
                 width: Get.width,
-                color: Get.theme.colorScheme.background,
+                color: Get.theme.colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ButtonMain(
@@ -557,7 +556,7 @@ class _EditMenuState extends State<EditMenu> {
                       child: icon,
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
             Flexible(
                 fit: FlexFit.tight,
                 child: Padding(

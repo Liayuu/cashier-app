@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
 
@@ -26,6 +25,7 @@ class BranchModel {
   @JsonKey(includeIfNull: false)
   dynamic map;
   String? posCode;
+  String? merchantId;
   String? province;
   double? rating;
   String? regency;
@@ -36,6 +36,7 @@ class BranchModel {
     this.branchType,
     this.country,
     this.disctrict,
+    this.merchantId,
     this.logo,
     this.logoUrl,
     this.background,
@@ -54,6 +55,7 @@ class BranchModel {
     BranchType? branchType,
     String? country,
     String? disctrict,
+    String? merchantId,
     String? logo,
     String? logoUrl,
     String? background,
@@ -71,6 +73,7 @@ class BranchModel {
       branchType: branchType ?? this.branchType,
       country: country ?? this.country,
       disctrict: disctrict ?? this.disctrict,
+      merchantId: merchantId ?? this.merchantId,
       logo: logo ?? this.logo,
       logoUrl: logoUrl ?? this.logoUrl,
       background: background ?? this.background,
@@ -91,7 +94,7 @@ class BranchModel {
 
   @override
   String toString() {
-    return 'BranchModel(id: $id, address: $address, branchType: $branchType, country: $country, disctrict: $disctrict, logo: $logo, logoUrl: $logoUrl, background: $background, backgroundUrl: $backgroundUrl, map: $map, posCode: $posCode, province: $province, rating: $rating, regency: $regency, status: $status)';
+    return 'BranchModel(id: $id, address: $address, branchType: $branchType, country: $country, disctrict: $disctrict, merchantId: $merchantId, logo: $logo, logoUrl: $logoUrl, background: $background, backgroundUrl: $backgroundUrl, map: $map, posCode: $posCode, province: $province, rating: $rating, regency: $regency, status: $status)';
   }
 
   @override
@@ -104,6 +107,7 @@ class BranchModel {
         other.branchType == branchType &&
         other.country == country &&
         other.disctrict == disctrict &&
+        other.merchantId == merchantId &&
         other.logo == logo &&
         other.logoUrl == logoUrl &&
         other.background == background &&
@@ -123,6 +127,7 @@ class BranchModel {
         branchType.hashCode ^
         country.hashCode ^
         disctrict.hashCode ^
+        merchantId.hashCode ^
         logo.hashCode ^
         logoUrl.hashCode ^
         background.hashCode ^

@@ -1,7 +1,5 @@
 import 'package:cashier_app/views/pages/forms/menus/components/variant_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 
 class AddVariant extends StatelessWidget {
@@ -12,7 +10,7 @@ class AddVariant extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        backgroundColor: Get.theme.colorScheme.background,
+        backgroundColor: Get.theme.colorScheme.surface,
         elevation: 1,
         leading: IconButton(
             onPressed: () => Get.back(),
@@ -42,7 +40,7 @@ class AddVariant extends StatelessWidget {
         child: ListView.builder(
           shrinkWrap: true,
           itemCount: 5,
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(8.0),
             child: VariantCard(title: "Variant $index"),

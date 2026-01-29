@@ -1,6 +1,5 @@
 import 'package:cashier_app/configs/language_config.dart';
 import 'package:cashier_app/controllers/user_controller.dart';
-import 'package:cashier_app/views/pages/dashboard/dasboard.dart';
 import 'package:cashier_app/views/pages/forms/merchants/edit_merchant.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -58,9 +57,9 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 30),
+                padding: const EdgeInsets.only(left: 30),
                 child: Text(lang().loginTitle,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
             ],
           ),

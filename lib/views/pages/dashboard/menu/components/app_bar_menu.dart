@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cashier_app/views/components/image_viewer.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,7 @@ class AppBarMenu extends StatelessWidget {
               aspectRatio: 1,
               child: Container(
                   decoration: BoxDecoration(
-                      border: Border.all(color: Get.theme.colorScheme.onBackground, width: 8),
+                      border: Border.all(color: Get.theme.colorScheme.onSurface, width: 8),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(

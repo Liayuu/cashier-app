@@ -4,12 +4,11 @@ import 'package:cashier_app/controllers/enums/document_name.dart';
 import 'package:cashier_app/controllers/enums/promotion_type_enum.dart';
 import 'package:cashier_app/controllers/enums/status_enum.dart';
 import 'package:cashier_app/models/promotion/promotion_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cashier_app/services/local_database.dart';
 import 'package:get/get.dart';
 
 class PromotionController extends GetxController {
-  final _promotionController =
-      FirebaseFirestore.instance.collection(DocumentName.PROMOTION.name.toLowerCase());
+  final _collectionName = DocumentName.PROMOTION.name.toLowerCase();
   PromotionModel promotionModel = PromotionModel();
   List<PromotionModel> listAvailablePromo = [];
 
@@ -21,64 +20,70 @@ class PromotionController extends GetxController {
       List<String>? includedItems,
       List<String>? excludeItems,
       bool forTransaction = false}) async {
-    var query = _promotionController
-        .where('merchantId', isEqualTo: merchantId)
-        .where('appliedAt', arrayContains: locationId);
+    // fetch promotions from local DB and filter in memory
+    var data = await LocalDatabase.instance
+        .whereEquals(_collectionName, 'merchantId', merchantId);
+    data = data
+        .where((e) => (e['appliedAt'] as List?)?.contains(locationId) ?? false)
+        .toList();
     if (currentTime != null) {
-      query = query.where('endTime', isGreaterThanOrEqualTo: currentTime);
+      data = data.where((e) {
+        final t = e['endTime'];
+        if (t == null) return false;
+        final dt = DateTime.tryParse(t.toString()) ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        return dt.isAfter(currentTime) || dt.isAtSameMomentAs(currentTime);
+      }).toList();
     }
     if (includedItems != null) {
-      query = query.where('includedItems', arrayContainsAny: includedItems);
+      data = data
+          .where((e) =>
+              (e['includedItems'] as List?)
+                  ?.any((i) => includedItems.contains(i)) ??
+              false)
+          .toList();
     }
     if (excludeItems != null) {
-      query = query.where('excludedItems', arrayContainsAny: excludeItems);
+      data = data
+          .where((e) =>
+              (e['excludedItems'] as List?)
+                  ?.any((i) => excludeItems.contains(i)) ??
+              false)
+          .toList();
     }
-    // if (minimumTransaction != null) {
-    //   query = query.where('minimumTransaction', isLessThanOrEqualTo: minimumTransaction);
-    // }
 
-    return await query
-        .withConverter<PromotionModel>(
-          fromFirestore: (snapshot, options) {
-            return PromotionModel.fromJson(snapshot.id, snapshot.data()!);
-          },
-          toFirestore: (value, options) => {},
-        )
-        .get()
-        .then((value) {
-      var data = value.docs.map((e) => e.data()).toList();
-      log(value.docs.map((e) => e.data()).toList().toString());
-      if (data.isNotEmpty) {
-        if (currentTime != null) {
-          data = data.where((e) => e.startTime!.isBefore(currentTime)).toList();
-          if (data.isNotEmpty) {
-            listAvailablePromo.assignAll(data);
-            update();
-            return listAvailablePromo;
-          } else {
-            return null;
-          }
+    log(data.toString());
+    if (data.isNotEmpty) {
+      final promos =
+          data.map((e) => PromotionModel.fromJson(e['id'], e)).toList();
+      if (currentTime != null) {
+        final filtered = promos
+            .where((e) =>
+                e.startTime != null && e.startTime!.isBefore(currentTime))
+            .toList();
+        if (filtered.isNotEmpty) {
+          listAvailablePromo.assignAll(filtered);
+          update();
+          return listAvailablePromo;
         }
-        listAvailablePromo.assignAll(data);
-        // if (!forTransaction) {
-        //   listAvailablePromo.assignAll(data);
-
-        // } else {
-        //   listAvailablePromo.assignAll(data.where((element) => false));
-        // }
-        update();
-        return listAvailablePromo;
+        return null;
       }
-      return null;
-    });
+      listAvailablePromo.assignAll(promos);
+      update();
+      return listAvailablePromo;
+    }
+    return null;
   }
 
-  PromotionModel findBestPromo({required double totalPrice, required List<PromotionModel> promo}) {
+  PromotionModel findBestPromo(
+      {required double totalPrice, required List<PromotionModel> promo}) {
     PromotionModel bestDiscount = promo.first;
     for (var e in promo) {
       if (bestDiscount.nominalTypeName == NominalTypeEnum.PERCENT) {
         if (e.nominalTypeName == NominalTypeEnum.PERCENT) {
-          if (e.nominal! * totalPrice > bestDiscount.nominal! * totalPrice) bestDiscount = e;
+          if (e.nominal! * totalPrice > bestDiscount.nominal! * totalPrice) {
+            bestDiscount = e;
+          }
         } else {
           if (e.nominal! > bestDiscount.nominal! * totalPrice) bestDiscount = e;
         }
@@ -95,24 +100,28 @@ class PromotionController extends GetxController {
 
   Future<void> addOrUpdatePromotion(
       {required String merchantId, required String locationId}) async {
+    final now = DateTime.now();
     if (promotionModel.id != null) {
-      await _promotionController
-          .doc(promotionModel.id)
-          .update(promotionModel.copyWith(updatedAt: DateTime.now()).toJson());
+      await LocalDatabase.instance.updateDocument(_collectionName,
+          promotionModel.id!, promotionModel.copyWith(updatedAt: now).toJson());
     } else {
-      await _promotionController.add(promotionModel.copyWith(
+      final data = promotionModel.copyWith(
           appliedAt: [locationId],
-          createdAt: DateTime.now(),
+          createdAt: now,
           currency: 'id_ID',
           merchantId: merchantId,
           multipleReward: false,
           status: StatusEnum.ACTIVE,
-          updatedAt: DateTime.now(),
-          usingWithOtherPromo: true).toJson());
+          updatedAt: now,
+          usingWithOtherPromo: true).toJson();
+      await LocalDatabase.instance.addDocument(_collectionName, data);
     }
   }
 
   Future<void> deletePromo() async {
-    await _promotionController.doc(promotionModel.id).delete();
+    if (promotionModel.id != null) {
+      await LocalDatabase.instance
+          .deleteDocument(_collectionName, promotionModel.id!);
+    }
   }
 }

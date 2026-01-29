@@ -1,11 +1,9 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:cashier_app/controllers/user_controller.dart';
 import 'package:cashier_app/views/components/button_main.dart';
 import 'package:cashier_app/views/components/image_picker_popup.dart';
 import 'package:cashier_app/views/components/profile_textfield.dart';
-import 'package:cashier_app/views/pages/dashboard/dasboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cashier_app/controllers/merchant_controller.dart';
@@ -32,7 +30,7 @@ class _EditMerchantState extends State<EditMerchant> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Get.theme.colorScheme.background,
+          backgroundColor: Get.theme.colorScheme.surface,
           elevation: 1,
           leading: IconButton(
               onPressed: () => Get.back(),
@@ -144,7 +142,7 @@ class _EditMerchantState extends State<EditMerchant> {
                                       size: const Size.fromRadius(40),
                                       child: Icon(
                                         Icons.camera_alt,
-                                        color: Get.theme.colorScheme.background,
+                                        color: Get.theme.colorScheme.surface,
                                         size: 24,
                                       )),
                                 ),
@@ -158,7 +156,7 @@ class _EditMerchantState extends State<EditMerchant> {
                               height: 150,
                               decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: Get.theme.colorScheme.onBackground, width: 8),
+                                      color: Get.theme.colorScheme.onSurface, width: 8),
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
@@ -251,7 +249,7 @@ class _EditMerchantState extends State<EditMerchant> {
                                               size: const Size.fromRadius(40),
                                               child: Icon(
                                                 Icons.camera_alt,
-                                                color: Get.theme.colorScheme.background,
+                                                color: Get.theme.colorScheme.surface,
                                                 size: 24,
                                               )),
                                         ),
@@ -376,7 +374,7 @@ class _EditMerchantState extends State<EditMerchant> {
                                   ),
                                 ),
                               ],
-                              SizedBox(
+                              const SizedBox(
                                 height: 16,
                               ),
                               Text(
@@ -495,7 +493,7 @@ class _EditMerchantState extends State<EditMerchant> {
                 child: Container(
                   height: 60,
                   width: Get.width,
-                  color: Get.theme.colorScheme.background,
+                  color: Get.theme.colorScheme.surface,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(

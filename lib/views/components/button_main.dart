@@ -47,8 +47,8 @@ class ButtonMain extends StatelessWidget {
                       icon,
                       color: iconColor,
                     )
-                  : SizedBox(),
-              icon != null ? SizedBox(width: 8) : SizedBox(),
+                  : const SizedBox(),
+              icon != null ? const SizedBox(width: 8) : const SizedBox(),
               Text(
                 label,
                 style: style,

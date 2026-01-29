@@ -12,7 +12,7 @@ class ImageViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Get.theme.colorScheme.background,
+        backgroundColor: Get.theme.colorScheme.surface,
         titleSpacing: 8,
         title: Align(
           alignment: Alignment.centerLeft,

@@ -1,8 +1,6 @@
-import 'dart:developer';
 
 import 'package:cashier_app/controllers/merchant_controller.dart';
 import 'package:cashier_app/controllers/user_controller.dart';
-import 'package:cashier_app/models/merchant/merchant_model.dart';
 import 'package:cashier_app/themes/asset_dir.dart';
 import 'package:cashier_app/views/components/image_viewer.dart';
 import 'package:cashier_app/views/pages/authentication/login_page.dart';
@@ -48,7 +46,7 @@ class SettingPage extends StatelessWidget {
                             ? Image.network(
                                 _merchantController.branch.backgroundUrl!,
                                 fit: BoxFit.cover)
-                            : SizedBox(),
+                            : const SizedBox(),
                       );
                     }),
                     Positioned(
@@ -60,7 +58,7 @@ class SettingPage extends StatelessWidget {
                             height: 150,
                             decoration: BoxDecoration(
                                 border: Border.all(
-                                    color: Get.theme.colorScheme.onBackground,
+                                    color: Get.theme.colorScheme.onSurface,
                                     width: 8),
                                 shape: BoxShape.circle,
                                 boxShadow: [
@@ -166,7 +164,7 @@ class SettingPage extends StatelessWidget {
                                     AssetsDirectory.promoIcon,
                                     color: Get.theme.primaryColor),
                                 onTap: () async {
-                                  await Get.to(() => MainPromo());
+                                  await Get.to(() => const MainPromo());
                                 },
                               ),
                               const SizedBox(
@@ -179,7 +177,7 @@ class SettingPage extends StatelessWidget {
                                     color: Get.theme.primaryColor),
                                 onTap: () async {
                                   await _userController.logout().then((value) {
-                                    Get.offAll(() => LoginPage());
+                                    Get.offAll(() => const LoginPage());
                                   });
                                 },
                               )

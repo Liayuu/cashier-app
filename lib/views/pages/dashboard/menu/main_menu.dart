@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:cashier_app/configs/language_config.dart';
 import 'package:cashier_app/controllers/enums/promotion_type_enum.dart';
 import 'package:cashier_app/controllers/merchant_controller.dart';
@@ -104,7 +103,7 @@ class _MainMenuState extends State<MainMenu> {
                                         pinned: false,
                                         floating: true,
                                         foregroundColor: Pallete.transparent,
-                                        backgroundColor: Get.theme.colorScheme.background,
+                                        backgroundColor: Get.theme.colorScheme.surface,
                                         snap: true,
                                         leading: const SizedBox(),
                                         leadingWidth: 0,
@@ -129,8 +128,9 @@ class _MainMenuState extends State<MainMenu> {
                                                   child: InPageSearchBar(
                                                     hint: "Cari menu disini",
                                                     searchQuery: (query) {
-                                                      if (_debouncer?.isActive ?? false)
+                                                      if (_debouncer?.isActive ?? false) {
                                                         _debouncer!.cancel();
+                                                      }
                                                       _debouncer = Timer(
                                                           const Duration(milliseconds: 800), () {
                                                         if (searchMenu != query) {
@@ -159,7 +159,7 @@ class _MainMenuState extends State<MainMenu> {
                                                   blurRadius: 9,
                                                   offset: const Offset(0, -3),
                                                   spreadRadius: 1)
-                                            ], color: Get.theme.colorScheme.background),
+                                            ], color: Get.theme.colorScheme.surface),
                                             width: Get.width,
                                             child: ListView.builder(
                                               itemCount: snapshot.data?.length ?? 0,

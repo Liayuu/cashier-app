@@ -8,7 +8,7 @@ class DropdownRaw extends StatefulWidget {
   List<DropdownMenuItem<dynamic>> menuItem;
 
   DropdownRaw(
-      {required this.label, required this.menuItem, required this.onChanged, this.selected});
+      {super.key, required this.label, required this.menuItem, required this.onChanged, this.selected});
   @override
   _DropdownRawState createState() => _DropdownRawState();
 }
@@ -24,7 +24,7 @@ class _DropdownRawState extends State<DropdownRaw> {
       ),
       value: widget.selected,
       items: widget.menuItem,
-      icon: Icon(
+      icon: const Icon(
         Icons.arrow_drop_down,
         // color: Pallete.primary,
       ),

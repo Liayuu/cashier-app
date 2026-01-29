@@ -91,7 +91,7 @@ class _ReportCardState extends State<ReportCard> with TickerProviderStateMixin {
                           )
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 8,
                       ),
                       Row(

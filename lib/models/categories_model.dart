@@ -1,6 +1,5 @@
-import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+// Removed Cloud Firestore dependency — using local JSON storage instead
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -112,10 +111,20 @@ class CategoriesModel {
   }
 }
 
-DateTime _parseTimestamp(_) {
-  return DateTime.parse(_.toDate().toString());
+DateTime _parseTimestamp(dynamic value) {
+  if (value == null) return DateTime.fromMillisecondsSinceEpoch(0);
+  if (value is int) return DateTime.fromMillisecondsSinceEpoch(value);
+  if (value is String) return DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
+  if (value is Map) {
+    if (value.containsKey('seconds')) {
+      final seconds = value['seconds'] as int? ?? 0;
+      final nanos = value['nanoseconds'] as int? ?? 0;
+      return DateTime.fromMillisecondsSinceEpoch(seconds * 1000 + (nanos / 1000000).round());
+    }
+  }
+  return DateTime.fromMillisecondsSinceEpoch(0);
 }
 
-Timestamp _parseDateTime(_) {
-  return Timestamp.fromMicrosecondsSinceEpoch(_.microsecondsSinceEpoch);
+dynamic _parseDateTime(DateTime? dt) {
+  return dt?.toIso8601String();
 }

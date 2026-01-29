@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MainPromo extends StatefulWidget {
-  MainPromo({super.key});
+  const MainPromo({super.key});
 
   @override
   State<MainPromo> createState() => _MainPromoState();
@@ -35,7 +35,7 @@ class _MainPromoState extends State<MainPromo> {
           child: const Icon(Icons.add),
         ),
         appBar: AppBar(
-          backgroundColor: Get.theme.colorScheme.background,
+          backgroundColor: Get.theme.colorScheme.surface,
           elevation: 1,
           leading: IconButton(
               onPressed: () => Get.back(),
@@ -57,7 +57,7 @@ class _MainPromoState extends State<MainPromo> {
           width: Get.width,
           child: SingleChildScrollView(
               child: Padding(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: FutureBuilder<List<PromotionModel>?>(
               future: _promotionController.getPromotion(
                   merchantId: _merchantController.merchant.id!,
@@ -89,7 +89,7 @@ class _MainPromoState extends State<MainPromo> {
                     );
                   }
                 }
-                return SizedBox();
+                return const SizedBox();
               },
             ),
           )),

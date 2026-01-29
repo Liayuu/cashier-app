@@ -13,7 +13,7 @@ class UnderlineInputText extends StatelessWidget {
   TextAlign textAlign;
 
   UnderlineInputText(
-      {this.textEditingController,
+      {super.key, this.textEditingController,
       this.readOnly = false,
       this.maxLines,
       this.initValue,

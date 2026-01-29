@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:cashier_app/controllers/menu_controller.dart';
 import 'package:cashier_app/views/components/button_main.dart';
 import 'package:cashier_app/views/components/checkbox.dart';
-import 'package:cashier_app/views/components/profile_textfield.dart';
 
 class AddCategory extends StatelessWidget {
   final String merchantId;
@@ -22,7 +21,7 @@ class AddCategory extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        backgroundColor: Get.theme.colorScheme.background,
+        backgroundColor: Get.theme.colorScheme.surface,
         elevation: 1,
         leading: IconButton(
             onPressed: () => Get.back(),
@@ -44,7 +43,7 @@ class AddCategory extends StatelessWidget {
         child: FloatingActionButton(
           onPressed: () async {
             await Get.bottomSheet(
-                backgroundColor: Get.theme.colorScheme.background,
+                backgroundColor: Get.theme.colorScheme.surface,
                 elevation: 5,
                 isScrollControlled: true,
                 SizedBox(
@@ -59,7 +58,7 @@ class AddCategory extends StatelessWidget {
                           child: TextFormField(
                             controller: _categoryController,
                             keyboardType: TextInputType.name,
-                            decoration: InputDecoration(labelText: "Kategori"),
+                            decoration: const InputDecoration(labelText: "Kategori"),
                           ),
                         ),
                         ButtonMain(
@@ -135,7 +134,7 @@ class AddCategory extends StatelessWidget {
               Container(
                   height: Get.height * 0.085,
                   width: Get.width,
-                  color: Get.theme.colorScheme.background,
+                  color: Get.theme.colorScheme.surface,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ButtonMain(

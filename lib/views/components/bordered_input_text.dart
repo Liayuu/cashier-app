@@ -20,7 +20,7 @@ class BorderedInputText extends StatelessWidget {
   TextInputType? type;
 
   BorderedInputText(
-      {this.hint,
+      {super.key, this.hint,
       this.addSuffix = false,
       this.textEditingController,
       this.readOnly = false,

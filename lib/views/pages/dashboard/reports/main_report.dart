@@ -6,7 +6,6 @@ import 'package:cashier_app/views/pages/dashboard/home/components/line_chart.dar
 import 'package:cashier_app/views/pages/dashboard/menu/summary_order.dart';
 import 'package:cashier_app/views/pages/dashboard/reports/components/report_card.dart';
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 import 'package:get/get.dart';
 
 class MainReport extends StatelessWidget {
@@ -19,7 +18,7 @@ class MainReport extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        backgroundColor: Get.theme.colorScheme.background,
+        backgroundColor: Get.theme.colorScheme.surface,
         elevation: 1,
         leading: IconButton(
             onPressed: () => Get.back(),

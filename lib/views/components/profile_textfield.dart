@@ -59,8 +59,9 @@ class _ProfileTextfieldState extends State<ProfileTextfield> {
               isDense: true,
               suffixIcon: widget.keyboardType == TextInputType.visiblePassword
                   ? IconButton(
-                      icon:
-                          Icon(widget.obsecure ? Icons.visibility_off_outlined : Icons.visibility),
+                      icon: Icon(widget.obsecure
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility),
                       onPressed: () {
                         setState(() {
                           widget.obsecure = !widget.obsecure;
@@ -78,7 +79,7 @@ class _ProfileTextfieldState extends State<ProfileTextfield> {
               floatingLabelAlignment: widget.floatingLabelAlignment,
               floatingLabelBehavior: widget.floatingLabelBehavior),
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          style: Get.textTheme.bodyText1,
+          style: Get.textTheme.bodyMedium,
           cursorWidth: 2.0,
           controller: widget.controller,
           cursorColor: Get.theme.primaryColor,

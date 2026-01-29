@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 
 class VariantCard extends StatelessWidget {
@@ -42,7 +40,7 @@ class VariantCard extends StatelessWidget {
                             color: Colors.blue[400],
                           )),
                       IconButton(
-                          onPressed: () {}, icon: Icon(Icons.delete_rounded, color: Colors.red))
+                          onPressed: () {}, icon: const Icon(Icons.delete_rounded, color: Colors.red))
                     ],
                   )
                 ],

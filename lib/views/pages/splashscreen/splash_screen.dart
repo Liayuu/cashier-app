@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'package:cashier_app/themes/asset_dir.dart';
-import 'package:cashier_app/views/pages/authentication/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
+      body: SafeArea(
             child: SizedBox(
       height: Get.height,
       width: Get.width,

@@ -1,6 +1,4 @@
 import 'package:cashier_app/views/components/button_main.dart';
-import 'package:cashier_app/views/pages/dashboard/dasboard.dart';
-import 'package:cashier_app/views/pages/dashboard/menu/main_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';

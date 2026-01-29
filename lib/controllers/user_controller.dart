@@ -6,8 +6,7 @@ import 'package:cashier_app/controllers/enums/status_enum.dart';
 import 'package:cashier_app/models/employee_model.dart';
 import 'package:cashier_app/views/pages/authentication/login_page.dart';
 import 'package:cashier_app/views/pages/dashboard/dasboard.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cashier_app/services/local_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,62 +14,72 @@ class UserController extends GetxController {
   // static UserController get instance => Get.find();
   var userLoaded = false.obs;
   EmployeeModel userModel = EmployeeModel();
-  final _userControllerRef =
-      FirebaseFirestore.instance.collection(DocumentName.EMPLOYEE.name.toLowerCase());
-
-  final _auth = FirebaseAuth.instance;
-
-  late Rx<User?> firebaseUser;
+  final _collectionName = DocumentName.EMPLOYEE.name.toLowerCase();
 
   final email = TextEditingController();
   final password = TextEditingController();
 
   @override
   void onReady() {
-    Future.delayed(const Duration(milliseconds: 200)).then((value) {
-      firebaseUser = Rx<User?>(_auth.currentUser);
-      firebaseUser.bindStream(_auth.userChanges());
-      ever(firebaseUser, _setInitialScreen);
+    // keep initialization simple for local storage: if there is a logged-in user, fetch it
+    LocalDatabase.instance.getMeta('currentUser').then((meta) async {
+      if (meta == null || meta['uid'] == null) {
+        Get.offAll(() => const LoginPage());
+      } else {
+        await fetchUserData(meta['uid']);
+        await addOrUpdateUser();
+        Get.offAll(() => const MainDashboard());
+      }
     });
     super.onReady();
   }
 
-  _setInitialScreen(User? user) async {
-    if (user == null) {
-      Get.offAll(() => const LoginPage());
-    } else {
-      await fetchUserData(user.uid);
-      await addOrUpdateUser();
-      Get.offAll(() => const MainDashboard());
+  Future<void> createUserWithEmailAndPassword(
+      String email, String password) async {
+    // very small local auth: store email and password inside employee document (not encrypted)
+    try {
+      userModel.email = email;
+      userModel.createdAt = DateTime.now();
+      userModel.lastSignIn = DateTime.now();
+      // store password field locally (field name: _password) so we can validate on login
+      final data = userModel.copyWith().toJson();
+      data['_password'] = password;
+      final id =
+          await LocalDatabase.instance.addDocument(_collectionName, data);
+      userModel = EmployeeModel.fromJson(id, data);
+    } catch (e) {
+      log(e.toString(), error: "$runtimeType");
+      rethrow;
     }
   }
 
-  Future<void> createUserWithEmailAndPassword(String email, String password) async {
+  Future<void> loginUserWithEmailAndPassword(
+      String email, String password) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password).then((value) {
-        userModel.uuid = value.user!.uid;
-      });
-    } on FirebaseAuthException catch (e) {
-      // print(e.code);
-      log(e.code, error: "$runtimeType");
-      throw e.code;
-    }
-  }
-
-  Future<void> loginUserWithEmailAndPassword(String email, String password) async {
-    try {
-      await _auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) => _setInitialScreen(value.user));
-    } on FirebaseAuthException catch (e) {
-      // print(e.code);
-      log(e.code, error: "$runtimeType");
+      final users = await LocalDatabase.instance
+          .whereEquals(_collectionName, 'email', email);
+      if (users.isEmpty) {
+        log('No user found', error: '$runtimeType');
+        return;
+      }
+      final user = users.first;
+      if ((user['_password'] ?? '') == password) {
+        final uid = user['id'];
+        await LocalDatabase.instance.setMeta('currentUser', {'uid': uid});
+        await fetchUserData(uid);
+        await addOrUpdateUser();
+        Get.offAll(() => const MainDashboard());
+      } else {
+        log('Invalid password', error: '$runtimeType');
+      }
+    } catch (e) {
+      log(e.toString(), error: "$runtimeType");
     }
   }
 
   Future<void> logout() async {
     userModel = EmployeeModel();
-    await _auth.signOut();
+    await LocalDatabase.instance.setMeta('currentUser', {});
   }
 
   void registerUser(String email, String password) {
@@ -82,48 +91,42 @@ class UserController extends GetxController {
   }
 
   Future<void> fetchUserData(String uid) async {
-    await _userControllerRef
-        .where('firebaseUID', isEqualTo: uid)
-        .withConverter<EmployeeModel>(
-          fromFirestore: (snapshot, options) =>
-              EmployeeModel.fromJson(snapshot.id, snapshot.data()!),
-          toFirestore: (value, options) => value.toJson(),
-        )
-        .get()
-        .then((value) {
-      userModel = value.docs.first.data();
-    });
+    final users = await LocalDatabase.instance
+        .whereEquals(_collectionName, 'firebaseUID', uid);
+    if (users.isNotEmpty) {
+      userModel = EmployeeModel.fromJson(users.first['id'], users.first);
+    }
   }
 
   Future<void> addOrUpdateUser(
-      {DateTime? lastLogin, String? merchantId, List<String>? locationId}) async {
+      {DateTime? lastLogin,
+      String? merchantId,
+      List<String>? locationId}) async {
+    final now = DateTime.now();
     if (userModel.id != null) {
-      await _userControllerRef.doc(userModel.id).update(userModel
-          .copyWith(
-              updatedAt: DateTime.now(),
-              lastSignIn: lastLogin,
-              employeeAt: merchantId,
-              manageAt: locationId)
-          .toJson());
+      final updated = userModel.copyWith(
+          updatedAt: now,
+          lastSignIn: lastLogin,
+          employeeAt: merchantId,
+          manageAt: locationId);
+      await LocalDatabase.instance
+          .updateDocument(_collectionName, userModel.id!, updated.toJson());
     } else {
-      await _userControllerRef
-          .add(userModel
-              .copyWith(
-                  createdAt: DateTime.now(),
-                  employeeAt: merchantId,
-                  lastSignIn: DateTime.now(),
-                  manageAt: locationId,
-                  position: PositionEnum.OWNER,
-                  positionName: PositionEnum.OWNER.name,
-                  status: StatusEnum.ACTIVE,
-                  updatedAt: DateTime.now())
-              .toJson())
-          .then((value) async {
-        userModel = await value.get().then((val) => EmployeeModel.fromJson(val.id, val.data()!));
-
-        // await fetchUserData(value.id);
-        Get.offAll(() => const MainDashboard());
-      });
+      final data = userModel
+          .copyWith(
+              createdAt: now,
+              employeeAt: merchantId,
+              lastSignIn: now,
+              manageAt: locationId,
+              position: PositionEnum.OWNER,
+              positionName: PositionEnum.OWNER.name,
+              status: StatusEnum.ACTIVE,
+              updatedAt: now)
+          .toJson();
+      final id =
+          await LocalDatabase.instance.addDocument(_collectionName, data);
+      userModel = EmployeeModel.fromJson(id, data);
+      Get.offAll(() => const MainDashboard());
     }
   }
 }

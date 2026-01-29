@@ -12,8 +12,8 @@ class CustomBottomNavigationBar extends StatefulWidget {
   final Function(int)? onChange;
   final int currentIndex;
 
-  CustomBottomNavigationBar(
-      {required this.backgroundColor,
+  const CustomBottomNavigationBar(
+      {super.key, required this.backgroundColor,
       required this.itemColor,
       this.currentIndex = 0,
       this.selectedColor = Colors.white,

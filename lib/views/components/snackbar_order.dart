@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:cashier_app/views/components/snackbar.dart';
-import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class SnackbarOrder extends StatefulWidget {
@@ -28,7 +27,7 @@ class _SnackbarOrderState extends State<SnackbarOrder> with TickerProviderStateM
 
   @override
   void initState() {
-    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
 
     widget.stream!.listen((event) {
       if (event) {
@@ -78,7 +77,7 @@ class _SnackbarOrderState extends State<SnackbarOrder> with TickerProviderStateM
         alignment: Alignment.bottomCenter,
         child: SlideTransition(
           position:
-              Tween<Offset>(begin: Offset(0, 1), end: Offset.zero).animate(_animationController),
+              Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero).animate(_animationController),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: SnackbarTemplate(
@@ -96,11 +95,11 @@ class _SnackbarOrderState extends State<SnackbarOrder> with TickerProviderStateM
   void _showSnackbar() {
     if (_animationController.isCompleted) {
       _animationController.reverse();
-      Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         _animationController.forward();
       });
     } else {
-      Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         _animationController.forward();
       });
     }

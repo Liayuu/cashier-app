@@ -7,15 +7,18 @@ class InPageSearchBar extends StatelessWidget {
   final Function(String)? searchQuery;
   final Function(String)? onSubmitted;
   final FocusNode? focusNode;
-  const InPageSearchBar({Key? key, this.onSubmitted, this.focusNode, this.hint, this.searchQuery})
+  const InPageSearchBar(
+      {Key? key, this.onSubmitted, this.focusNode, this.hint, this.searchQuery})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String? _lastInput;
+    String? lastInput;
     return Container(
       decoration: BoxDecoration(
-        color: Get.isDarkMode ? Pallete.darkFormBackground : Pallete.lightFormBackground,
+        color: Get.isDarkMode
+            ? Pallete.darkFormBackground
+            : Pallete.lightFormBackground,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Center(
@@ -24,18 +27,19 @@ class InPageSearchBar extends StatelessWidget {
           child: TextField(
             onSubmitted: onSubmitted,
             focusNode: focusNode,
-            style: Get.textTheme.bodyText1,
+            style: Get.textTheme.bodyMedium,
             maxLines: 1,
             onChanged: (query) {
-              if (_lastInput != query) {
+              if (lastInput != query) {
                 searchQuery!(query);
-                _lastInput = query;
+                lastInput = query;
               }
             },
             decoration: InputDecoration(
               fillColor: Pallete.transparent,
               contentPadding: EdgeInsets.zero,
-              iconColor: Get.isDarkMode ? Pallete.lighterText : Pallete.darkText,
+              iconColor:
+                  Get.isDarkMode ? Pallete.lighterText : Pallete.darkText,
               prefixIcon: const Icon(Icons.search),
               hintText: hint,
               border: InputBorder.none,

@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:cashier_app/controllers/merchant_controller.dart';
 import 'package:cashier_app/controllers/transaction_controller.dart';
@@ -6,13 +5,12 @@ import 'package:cashier_app/controllers/user_controller.dart';
 import 'package:cashier_app/models/transaction/transaction_model.dart';
 import 'package:cashier_app/views/pages/dashboard/home/components/line_chart.dart';
 import 'package:cashier_app/views/pages/dashboard/menu/components/app_bar_menu.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
-  Home({super.key});
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
@@ -25,153 +23,165 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    _merchantController.initializeMerchant(_userController.userModel.employeeAt!);
+    _merchantController
+        .initializeMerchant(_userController.userModel.employeeAt!);
     return Scaffold(
       body: SafeArea(
-          child: SizedBox(
-        height: Get.height,
-        width: Get.width,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SizedBox(
-                  height: 100,
-                  width: Get.width,
-                  child: GetBuilder<MerchantController>(
+        child: SizedBox(
+          height: Get.height,
+          width: Get.width,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  SizedBox(
+                    height: 100,
+                    width: Get.width,
+                    child: GetBuilder<MerchantController>(
                       init: Get.find<MerchantController>(),
                       builder: (controller) {
                         return AppBarMenu(
-                            companyLogo: controller.branch.logoUrl!,
-                            companyName: controller.merchant.name!);
-                      }),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    "Statistik Hari ini",
-                    style: Get.textTheme.headlineSmall,
+                          companyLogo: controller.branch.logoUrl!,
+                          companyName: controller.merchant.name!,
+                        );
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                StreamBuilder<QuerySnapshot<TransactionModel>>(
-                  stream: _transactionController.streamDashboardReport(
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      'Statistik Hari ini',
+                      style: Get.textTheme.headlineSmall,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  FutureBuilder<List<TransactionModel>>(
+                    future: _transactionController.streamDashboardReport(
                       merchantId: _merchantController.merchant.id!,
-                      locationId: _merchantController.branch.id!),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: _miniCard(
+                      locationId: _merchantController.branch.id!,
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final docs = snapshot.data!;
+                        final count = docs.length;
+                        final totalIncome = docs.isNotEmpty
+                            ? docs
+                                .map((e) => e.grandTotal ?? 0)
+                                .fold<double>(0, (p, n) => p + n)
+                            : 0.0;
+                        final smallest = docs.isNotEmpty
+                            ? docs
+                                .map((e) => e.grandTotal ?? 0)
+                                .reduce((a, b) => a < b ? a : b)
+                            : 0.0;
+                        final largest = docs.isNotEmpty
+                            ? docs
+                                .map((e) => e.grandTotal ?? 0)
+                                .reduce((a, b) => a > b ? a : b)
+                            : 0.0;
+                        return Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: _miniCard(
                                       height: 100,
                                       child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 8),
-                                          child: _cardChild(
-                                              title: "Transaksi",
-                                              info: NumberFormat.compact()
-                                                  .format(snapshot.data?.docs.length)))),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 8),
+                                        child: _cardChild(
+                                          title: 'Transaksi',
+                                          info: NumberFormat.compact()
+                                              .format(count.toDouble()),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: _miniCard(
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: _miniCard(
                                       height: 100,
                                       child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 8),
-                                          child: _cardChild(
-                                              title: "Pemasukan",
-                                              info: snapshot.data!.docs.isNotEmpty
-                                                  ? NumberFormat.compact().format(snapshot
-                                                      .data?.docs
-                                                      .map((e) => e.data().grandTotal)
-                                                      .toList()
-                                                      .fold<double>(
-                                                          0,
-                                                          (previousValue, element) =>
-                                                              previousValue + element!))
-                                                  : 0.toString()))),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 8),
+                                        child: _cardChild(
+                                          title: 'Pemasukan',
+                                          info: NumberFormat.compact()
+                                              .format(totalIncome),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: _miniCard(
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: _miniCard(
                                       height: 100,
                                       child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 8),
-                                          child: _cardChild(
-                                              title: "Transaksi Terkecil",
-                                              info: snapshot.data!.docs.isNotEmpty
-                                                  ? NumberFormat.compact().format(snapshot
-                                                      .data?.docs
-                                                      .map((e) => e.data().grandTotal)
-                                                      .reduce((value, element) =>
-                                                          value! < element! ? value : element))
-                                                  : 0.toString()))),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 8),
+                                        child: _cardChild(
+                                          title: 'Transaksi Terkecil',
+                                          info: NumberFormat.compact()
+                                              .format(smallest),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: _miniCard(
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: _miniCard(
                                       height: 100,
                                       child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 8),
-                                          child: _cardChild(
-                                              title: "Transaksi Terbesar",
-                                              info: snapshot.data!.docs.isNotEmpty
-                                                  ? NumberFormat.compact().format(snapshot
-                                                      .data?.docs
-                                                      .map((e) => e.data().grandTotal)
-                                                      .reduce((value, element) =>
-                                                          value! > element! ? value : element))
-                                                  : 0.toString()))),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 8),
+                                        child: _cardChild(
+                                          title: 'Transaksi Terbesar',
+                                          info: NumberFormat.compact()
+                                              .format(largest),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              )
-                            ],
-                          ),
-                        ],
-                      );
-                    } else if (snapshot.hasError) {
-                      return const SizedBox();
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
-                _dashboardChart()
-              ],
+                              ],
+                            ),
+                          ],
+                        );
+                      } else if (snapshot.hasError) {
+                        return const SizedBox();
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
+                  _dashboardChart(),
+                ],
+              ),
             ),
           ),
         ),
-      )),
+      ),
     );
   }
 
@@ -187,7 +197,8 @@ class _HomeState extends State<Home> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.left,
-            style: Get.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w700),
+            style:
+                Get.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w700),
           ),
         ),
         Align(
@@ -197,9 +208,10 @@ class _HomeState extends State<Home> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.right,
-            style: Get.textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.w700),
+            style: Get.textTheme.headlineMedium!
+                .copyWith(fontWeight: FontWeight.w700),
           ),
-        )
+        ),
       ],
     );
   }
@@ -209,9 +221,10 @@ class _HomeState extends State<Home> {
       width: width,
       height: height,
       decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(12),
-          color: Get.theme.cardColor),
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(12),
+        color: Get.theme.cardColor,
+      ),
       child: const LineChartDashboard(),
     );
   }
@@ -221,9 +234,10 @@ class _HomeState extends State<Home> {
       width: width,
       height: height,
       decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(12),
-          color: Get.theme.cardColor),
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(12),
+        color: Get.theme.cardColor,
+      ),
       child: child,
     );
   }

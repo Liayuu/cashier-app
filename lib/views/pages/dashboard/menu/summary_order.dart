@@ -4,7 +4,6 @@ import 'package:cashier_app/controllers/enums/promotion_type_enum.dart';
 import 'package:cashier_app/controllers/merchant_controller.dart';
 import 'package:cashier_app/controllers/promotion_controller.dart';
 import 'package:cashier_app/controllers/transaction_controller.dart';
-import 'package:cashier_app/models/menu/menus_model.dart';
 import 'package:cashier_app/models/promotion/promotion_model.dart';
 import 'package:cashier_app/views/components/confirmation_popup.dart';
 import 'package:cashier_app/views/components/menu_popup.dart';
@@ -299,7 +298,7 @@ class _SummaryOrderState extends State<SummaryOrder> {
                             Container(
                                 height: Get.height * 0.085,
                                 width: Get.width,
-                                color: Get.theme.colorScheme.background,
+                                color: Get.theme.colorScheme.surface,
                                 child: Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -346,7 +345,7 @@ class _SummaryOrderState extends State<SummaryOrder> {
                   return Container(
                       height: Get.height * 0.085,
                       width: Get.width,
-                      color: Get.theme.colorScheme.background,
+                      color: Get.theme.colorScheme.surface,
                       child: const Center(
                         child: CircularProgressIndicator(),
                       ));
